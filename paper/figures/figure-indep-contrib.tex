@@ -1,0 +1,109 @@
+\begin{figure}[htp]
+%\setlength{\tabcolsep}{10pt}
+\begin{center}
+
+\resizebox{\textwidth}{!}{ 
+\pgfdeclarelayer{bg2}    % declare background layer
+\pgfdeclarelayer{bg1}    % declare background layer
+\pgfsetlayers{bg2,bg1,main}  % set the order of the layers (main is the standard layer)
+
+\begin{tikzpicture}
+    \node (A) at (0,0) {
+        \begin{tabular}{c@{\hskip 15pt}c@{\hskip 15pt}c@{\hskip 15pt}c}
+            \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/provo-decomp.png} &
+            \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/meco-decomp.png} &
+            \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/zuco-decomp.png} &
+            \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/uclet-decomp.png} \\
+        \end{tabular}
+    };
+    \begin{pgfonlayer}{bg1}    % select the background layer
+        \node[draw,rounded corners, thick, inner sep=1pt, fit=(A), fill=white] {};   % 
+    \end{pgfonlayer}
+    %\node[draw,rounded corners, thick, inner sep=1pt, fit=(A)] {};   % select the background layer
+    \node[fill=white, draw,above=of A, yshift=-1.04cm] {Eye Tracking};
+    \node[below=of A, xshift = -1.865cm, yshift =0.15cm] (B){
+    \begin{tabular}{c@{\hskip 15pt}c@{\hskip 15pt}c}
+        \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/uclspr-decomp.png} &
+        \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/brown-decomp.png} &
+        \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/natstorspr-decomp.png} \\
+    \end{tabular}
+    };
+    \node[below=of A, xshift = -1.865cm, yshift =0.15cm] (B){
+        \begin{tabular}{c@{\hskip 15pt}c@{\hskip 15pt}c}
+            \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/uclspr-decomp.png} &
+            \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/brown-decomp.png} &
+            \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/natstorspr-decomp.png} \\
+        \end{tabular}
+    };
+    \begin{pgfonlayer}{bg1}    % select the background layer
+        \node[draw, thick, rounded corners, inner sep=1pt, fit=(B), fill=white] {};
+    \end{pgfonlayer}
+    %\node[draw, thick, rounded corners, inner sep=1pt, fit=(B)] {};
+    \node[fill=white, draw,above=of B, yshift=-1.04cm] {Self-paced Reading};
+
+    \node[right=of B, xshift=-.84cm] (C) {
+        \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.208\textwidth]{emnlp2023-latex/figures/natstormaze-decomp.png}
+    };
+    \begin{pgfonlayer}{bg1}    % select the background layer
+        \node[draw, thick, rounded corners, inner sep=1pt, fit=(C), fill=white] {};
+    \end{pgfonlayer}
+    %\node[draw, thick, rounded corners, inner sep=1pt, fit=(C)] {};
+    \node[fill=white, draw,above=of C, yshift=-1.04cm] {Maze};
+
+    \node[anchor=west, yshift=-4cm] at (B.south west) (D) {
+    \begin{tabular}{c@{\hskip 15pt}c}
+        \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/pereira-decomp.png} &
+        \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/control-decomp.png} \\
+        \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/natstorfmri-decomp.png} &
+        \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/hp-decomp.png} \\
+    \end{tabular}
+};
+    \begin{pgfonlayer}{bg1}    % select the background layer
+        \node[draw, thick, rounded corners, fit=(D), inner sep = 1pt, fill=white] {};
+    \end{pgfonlayer}
+    % \node[draw, thick, rounded corners, fit=(D), inner sep = 1pt] {};
+    \node[fill=white, draw,above=of D, yshift=-1.04cm] {fMRI};
+    
+
+    % \node[below=of D, xshift = -1.865cm,yshift=0.27cm] (E){
+    %     \begin{tabular}{c@{\hskip 15pt}c}
+    %         \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/hp.png} &
+    %         \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/figures/pereira.png} \\
+    %     \end{tabular}
+    % };
+    \node[anchor=north west, xshift=.24cm] at (D.north east) (E) {
+        \includegraphics[trim={.36cm .1cm .22cm .25cm},clip,width=0.208\textwidth]{emnlp2023-latex/figures/ucln400-decomp.png}
+    };
+
+    \begin{pgfonlayer}{bg1}    % select the background layer
+        \node[draw, thick, rounded corners, inner sep=1pt, fit=(E), fill=white] {};
+    \end{pgfonlayer}
+    \begin{pgfonlayer}{bg1}    % select the background layer
+        \node[draw, thick, rounded corners, fit=(E), inner sep = 1pt, fill=white] {};
+    \end{pgfonlayer}
+    % \node[draw, thick, rounded corners, fit=(E), inner sep = 1pt] {};
+    \node[fill=white, draw,above=of E, yshift=-1.04cm] {EEG};
+    
+    %Legend
+
+    \node[fit=(D), inner sep = 5pt] (D1) {};
+    \node[fit=(E), inner sep = 5pt] (E1) {};
+
+    \begin{pgfonlayer}{bg2}    % select the background layer
+    \draw[thick, rounded corners, fill = blue!15] (D1.north west) -- (D1.south west) -- (D1.south east) -- ($(E1.south west)+(4pt, 0)$)  -- (E1.south east) -- (E1.north east) -- cycle;
+    \end{pgfonlayer} % ($(E1.south east)+(0, 3.95)$) 
+
+    \begin{pgfonlayer}{bg2}    % select the background layer
+        \node[draw, thick, rounded corners, fit=(A)(B)(C), inner sep = 5pt, fill=green!16] {};
+    \end{pgfonlayer}
+
+
+    \tikzstyle{wordnode} = [rectangle, rounded corners, draw=black, fill=green!16, text centered, minimum width=1.8cm, minimum height=.5cm, line width=1.1pt]
+    \tikzstyle{smallwordnode} = [rectangle, rounded corners, draw=black, fill=green!16, text centered, minimum width=1.1cm, minimum height=.5cm, line width=1.1pt]
+
+\end{tikzpicture}}
+\end{center}
+\caption{Predictivity of surprisal, frequency, and length with respect to the various neural and behavioral measurements; the models are fit with the predictors being analyzed individually (first three bars of each plot), with each two-predictor combination (second three bars), and with all three predictors (last bar). Length is associated with the highest predictivity in the eye-tracking datasets, whereas the three predictors obtain more homogeneous results in the self-paced and maze datasets. In the brain datasets, surprisal shows an advantage over the other predictors.}
+\label{fig:indep-contrib}
+
+\end{figure}

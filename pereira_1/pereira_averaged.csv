@@ -1,0 +1,628 @@
+,Sentence,EffectSize
+0,"A banana is a long fruit that grows in bunchs, with a soft edible inside.",0.45079163
+1,A bed is a piece of furniture used as a place to sleep or have sex in.,1.092356
+2,"A bed is made of a mattress and a box spring, plus sheets, pillows and covers.",0.7126885
+3,"A bee is a flying insect, with a black and yellow body and six legs.",0.08949184
+4,A bicycle is a vehicle with two wheels and pedals on a frame.,1.0369029
+5,A blacksmith creates objects by forging iron or steel.,0.033079397
+6,A blender is a kitchen appliance used to mix ingredients or puree food.,0.24945003
+7,A boy becomes a man after passing through puberty.,0.44045419
+8,A boy is a young male child who has not undergone puberty.,0.51020426
+9,A butterfly is a flying insect with four large wings.,0.33128917
+10,A car can be powered by a gasoline or electric engine.,0.34693107
+11,A carpenter is an artist or manual laborer who works with wood.,0.38879588
+12,A castle could easily control lands within a day's walk.,0.6191315
+13,A chair is a piece of furniture designed for people to sit on.,0.32610655
+14,A clarinet is a woodwind musical instrument.,0.21683091
+15,A cod is a fish that lives in the colder areas of the Atlantic.,-0.04214917
+16,A convicted murderer is often given a life sentence or the death penalty.,1.1046633
+17,A cooperative is a farm where many farmers share the land and equipment.,0.77874255
+18,A cubicle consists of a desk surrounded by partitions on three sides.,0.7646549
+19,A cyclone can move inland and seriously damage property.,0.63363373
+20,A desert is a natural environment where almost no rain falls.,0.42339113
+21,"A desk is a piece of furniture used for working at, sometimes with a computer.",0.7281135
+22,A door is a movable barrier to entrance or exit from an enclosed area.,0.52664316
+23,A dress is a piece of clothing that women sometimes wear.,0.393344
+24,"A dress is like a shirt attached to a long, matching skirt.",0.8502873
+25,"A dress is usually worn at formal occasions, such as a wedding or a dance.",0.50945926
+26,A drought is a persistent shortage of the water supply caused by lack of rain.,0.46006945
+27,A farm is land used to grow plants or raise animals for food.,0.68675035
+28,A fire investigation determines if a fire was caused by accident or arson.,0.7558304
+29,A flood is an overflow of an expanse of water that submerges inhabited land.,0.60860986
+30,"A floor is a horizontal surface inside a building, used for walking on.",0.41191456
+31,A foot is a body part on the end of a leg. ,0.32173836
+32,"A forest ecosystem has various types of trees and animals, as well as ground plants.",0.5918275
+33,A forest is an area with a high density of trees and canopy cover.,0.38003272
+34,"A fork is a tool for eating solid foods, with a handle and several tines.",0.35369578
+35,A freight train transports containers of goods or fuel over long distances.,0.22856869
+36,A frying pan is a small pan with sloping sides and a handle.,0.39307287
+37,A girl is a female human who has not yet reached maturity.,0.9002211
+38,A glove is a piece of clothing that covers the hand and fingers.,0.19626842
+39,A hammer is a tool used to deliver an impact to an object.,0.41328233
+40,A hand grenade is an explosive used as a weapon against people.,0.56354076
+41,"A horse has a tail and a mane on its neck, and is usually gray or brown.",0.4854094
+42,"A horse is a large hoofed mammal with four long, muscular legs.",0.14547151
+43,"A house can have rooms for purposes like sleeping, cooking or washing.",0.56527984
+44,A house is a permanent building or structure for people or families to live in.,0.397782
+45,"A human can ride a horse while it walks, trots or gallops.",0.8151346
+46,"A knife can be used to attack by slashing, stabbing or throwing. ",0.36289063
+47,A knife is a tool with a sharp edge that is used to cut things.,0.0486301
+48,A lawn mower is a machine with revolving blades that cut grass to an even height.,0.58814716
+49,"A library is a place where a collection of books, documents and media is kept.",0.5717599
+50,A local hospital has initiated new measures to reduce infections.,0.3219885
+51,A log cabin is a small house built from round logs.,0.3762194
+52,A luthier is a carpenter that makes and repairs musical instruments.,0.7871804
+53,A major strength of professional skiers is how they use ski poles.,0.41970083
+54,A man is a male human adult.,0.613067
+55,A mitten is a kind of glove where the four fingers are covered together.,0.41009867
+56,A mountain is a landform that rises steeply above surrounding land.,0.21930856
+57,A mug is a sturdy cup with a handle for drinking hot liquids.,0.35568652
+58,A mug is thick and has a ring base for thermal insulation.,0.75637394
+59,A painter must keep many elements in mind while completing a painting.,0.37590203
+60,A parrot is a bird that lives in warm and tropical regions.,0.2362505
+61,A peach is an orange-yellow fruit with a characteristic smell.,0.40451354
+62,A range of mountains forms due to tectonic plate collision.,0.6810843
+63,A raven is a large black bird that thrives in many climates.,0.065136276
+64,A refrigerator is a cooling device used to contain and preserve food.,0.14501487
+65,A rifle is a firearm that rests on the shoulder and has a barrel with twisting grooves.,0.53958577
+66,A saw is a tool that uses a hard blade or abrasive wire to cut hard materials.,0.36465225
+67,A scientist creates hypotheses and does experiments to test them.,0.23670337
+68,A scientist studies and produces new knowledge about the physical world.,0.4823043
+69,A screwdriver is a tool for inserting and tightening screws into something.,0.4224385
+70,A shark is a large fish with a cartilage skeleton.,0.35662255
+71,"A ship can be powered in the ocean by sails, steam, or diesel engines.",0.4399554
+72,A ship is a large vehicle that floats and travels on water.,0.3359279
+73,"A shoe is clothing for the foot, with a sole, an outsole and a heel.",0.57305646
+74,A single raspberry consists of many small fruits joined together.,0.58627313
+75,A sneaker is a shoe for sports and athletic activity.,0.41543147
+76,A soldier fights using weapons such as rifles and grenades.,0.5251229
+77,"A soldier in the militia must wear a uniform, usually camouflage.",0.79374903
+78,A soldier is a member of the national armed forces who fights on land.,0.85264826
+79,"A swamp is covered with shallow water, mud and vegetation.",0.14905544
+80,A sweater is a heavy garment worn on the torso for warmth.,0.32233882
+81,A sweater that opens down the front is called a cardigan.,0.27094418
+82,A table is a piece of furniture with a flat surface and legs.,0.13553411
+83,A television is an appliance with a screen that displays moving images.,0.44696537
+84,A toaster is a kitchen appliance for toasting bread using heating elements.,0.46231377
+85,A train is a connected series of cars that moves between stations on a track.,0.29140154
+86,A train station is a place where passengers get on or off a train.,0.44405922
+87,A tropical cyclone is a storm formed over warm tropical sea.,0.3539296
+88,A tuxedo jacket is a tailless dinner jacket with black silk lapels.,0.46272588
+89,A typical window is made of sheets of glass held in place by frames.,0.14188564
+90,A violinist holds the instrument between the chin and the collarbone.,0.49758127
+91,A wall is a solid structure that defines and sometimes protects an area.,1.0775874
+92,A whale is a very large mammal that lives in the ocean.,0.012364626
+93,A window is a transparent opening in a wall to let light through.,0.112276554
+94,A woman can become pregnant and bear children.,0.26779905
+95,A woman has different reproductive organs than a man.,0.715898
+96,A woman is a female human adult.,0.13435143
+97,A woman is stereotypically seen as a caregiver.,0.30878517
+98,Academic libraries support scholarly research and have specialized books.,0.47650263
+99,Accordions produce sound with bellows that blow air through reeds.,0.73424405
+100,"Acting, stage presence, and musical interpretation are all critical.",0.8723028
+101,"After climbing fifty feet up the side of the pyramid, the man gestured me into a small black entranceway.",0.7607457
+102,"Air pockets in snow insulate the space, and body heat warms it.",0.9182591
+103,All of the boys on the trip were new to rock climbing.,0.8325369
+104,"American ice cream is exported around the world, but different countries have different preferences.",0.61660546
+105,An accordion is a portable musical instrument with two keyboards.,0.3848778
+106,An accordionist plays both keyboards while opening and closing the bellows.,0.9755979
+107,An adult male behaving immaturely is often referred to as a boy.,0.89977264
+108,An apartment is a self-contained home that is part of a building.,0.87731934
+109,"An apple is a fruit that can be green, red or yellow.",-0.12833677
+110,An artist's eye is not a camera lens that has to record everything within its field of vision.,1.3412415
+111,"An automobile, or car, is a wheeled vehicle for transporting passengers.",0.66491354
+112,An earthquake at sea can displace the seabed and cause a tsunami.,0.51906466
+113,"An elephant has a long nose called a trunk, which can grab things or food.",0.68115896
+114,An igloo is a type of shelter made from blocks of snow by Inuit.,0.74970424
+115,"And for society, hip fractures involve substantial expense and time in the hospital.",0.7969832
+116,"Another type of bed is the hammock, a fabric sling suspended above the ground.",0.5770141
+117,"Apples can be eaten raw, roasted or baked in pies.",0.49288526
+118,"Apples have thin skin, a crisp, sweet pulp and seeds inside.",0.48364556
+119,Architects are still working to solve the mysteries of how pyramids were constructed.,0.31765556
+120,Arson can be done to cause damage to others or collect insurance.,0.815151
+121,Arson is the criminal act of burning a building or wildland.,0.52528185
+122,"Artisanal beekeepers go to extremes for their craft, but their product is worth the effort.",0.89660555
+123,Artisanal honey-making emphasizes quality and character over quantity and consistency.,0.9602041
+124,"As a painter, I learned to focus less on the actual scene and more on the painting itself.",0.7930649
+125,"As a passive form of agriculture, it does not require that native vegetation be cleared to make way for crops.",0.80856085
+126,"As part of the film crew for a polar bear documentary, I spent months capturing these shots.",1.1361848
+127,"As the beekeeper opens the hive, the deep hum of 40,000 bees fills the air.",0.6921223
+128,"As the field of computer graphics broadens, we must ask if graphics actually help students.",1.1158699
+129,Assault rifles can fire in bursts and are the standard infantry weapon.,0.94478416
+130,Astronauts practice to be able to perform construction and repair work on the outside of the space station.,0.6225837
+131,Astronauts train a long time for their spacewalks.,0.2563156
+132,At puberty the body of a girl develops into that of a woman.,0.6107694
+133,"At the doctor's office afterward, the x-ray clearly showed the fracture.",0.8861587
+134,"Automobiles vary in size, number of doors and the type of trunk.",0.6467124
+135,Axes are used by woodcutters and firemen entering buildings.,0.7886631
+136,Band-aids can increase the risk of infection by holding in heat and moisture.,0.7105704
+137,"Beekeepers also discourage the use of pesticides on crops, because they could kill the honeybees.",0.42336428
+138,Beekeeping encourages the conservation of local habitats.,0.43585232
+139,Bees are social insects and live together in a colony located in a hive.,0.6365919
+140,"Bees crawl across his bare arms and hands, but they don't sting, because they're gentle.",1.1685133
+141,Bees spread pollen between flowers as they collect nectar to make honey.,0.3102055
+142,Black tie trousers should be a perfect match to the tuxedo jacket.,0.738322
+143,Blacksmiths wears a thick apron and handle the metal with tongs.,0.64456105
+144,Blenders are used to make milk shakes and fruit smoothies.,0.28599894
+145,Brand new conferences have sprung up that are devoted to bridging the two cultures.,0.681408
+146,"Broccoli can be boiled, stir-fried or eaten raw.",0.40515918
+147,Broccoli is a plant in the cabbage family.,-0.053937275
+148,"Broccoli is high in vitamins, fiber and other nutrients.",0.30350572
+149,But faster and tighter turns increase the twisting force on the legs.,0.7584896
+150,"But her pure, strong voice is certainly the star of the show.",0.71501154
+151,"By establishing the parameters of legal blindness, resources can be focused on the legally blind.",1.004969
+152,"Carpenters build and repair houses, furniture, boats and other objects.",0.11922106
+153,Cats are small furry animals with four legs and a tail.,-0.16771625
+154,Cats like to groom themselves by licking their fur.,-0.10368237
+155,"Chairs can also have back and arm rests, as well as a cushion.",0.33660385
+156,"Chairs consist of a seat raised above floor level, supported by legs.",0.29553002
+157,"Clearly he had it tailored, as it fit the man perfectly.",0.7757735
+158,Climbers who are learning the sport can try scrambling on large boulders.,0.48688957
+159,"Cod flesh is white and mild-tasting, and flakes easily when cooked.",0.71548367
+160,"Cod has been caught, salted and traded since the time of the Vikings.",0.96470577
+161,Coffee contains a mild drug called caffeine that keeps people awake.,0.5696231
+162,"Coffee is made from coffee beans, the seeds of the coffee plant.",0.41084668
+163,Coffee is the world's seventh-largest legal agricultural export.,0.40980637
+164,Commuter trains transport people between suburbs and stations inside a city.,0.47908762
+165,Computers have been used in art for a long time by experimental artists.,0.60783297
+166,Cruise ships are floating hotels that take people between cities.,0.57926285
+167,Cyclones can produce very powerful winds and torrential rain.,0.29702997
+168,Dairy products such as cheese and butter are made from milk.,0.26265657
+169,Deforestation is the cutting down of forests disregarding regeneration.,1.3022534
+170,"Depending on the size and format, they can cut paper, hair or fabric.",0.59088403
+171,Different notes are made by fingering the neck with one hand while bowing.,0.91329736
+172,Disposable rubber or latex gloves are used to shield hands from germs or chemicals.,0.36797288
+173,Doctors consult with pharmacists because they know a lot about drug interactions and side effects.,0.9729953
+174,Drought will cause crops and plants to stop growing and die.,0.29603094
+175,Drunk drivers are caught by field sobriety and breathing tests.,0.5593862
+176,Drunk driving is the act of driving under the effects of alcohol.,0.5441483
+177,Drunk driving of any vehicle is a crime in most of the world.,0.90392494
+178,During a flood people evacuate and the contaminated water causes diseases.,0.6977023
+179,"During times of attack, peasants, livestock, and property could be brought inside the castle's walls for protection.",0.6514537
+180,"Each morning, participants in the study had to write down their dream experience from the previous night.",1.0101571
+181,Each person has his or her own response to potentially stressful situations.,0.29833832
+182,Eagles are large birds of prey that hunt during the day and have very good eyesight.,0.83866405
+183,Eagles live in eyries and some species eat fish and others small mammals.,0.952981
+184,"Early crews were all young men, but astronauts now are much more diverse.",0.6986595
+185,Early findings suggest that logging may have facilitated the barred owl's invasion.,0.84287786
+186,Early founders of opera chose tales from antiquity for their subject matter.,0.5869346
+187,Earthquakes shake the ground and can knock down buildings and other structures.,0.34745762
+188,Electric lawn mowers use as much electricity as an ordinary toaster.,0.7572709
+189,Electric lawnmowers are better for the environment because they do not create emissions.,0.6180577
+190,"Elephants are the largest kind of land mammal, weighing several tons.",0.47411332
+191,Even beginner rock climbing takes courage and strength.,0.5932502
+192,Eventually it froze enough that I couldn't turn the hand crank any more.,0.3211787
+193,"Every night while we sleep, our minds are as active as when we are awake.",1.3050632
+194,Every step felt like running on spikes.,0.5916869
+195,Extreme drought will eventually turn areas into desert and cause famine.,0.62604725
+196,Families have to adjust to the patient's loss of independence.,0.34620604
+197,Farmers are the people who run the farm and decide what to produce.,0.74732596
+198,Farmers often drain swamps to produce fertile arable land. ,0.70130885
+199,"Farms usually have a house for farmers, a silo and a barn.",0.59980476
+200,Female mosquitoes bite people and animals and suck their blood for protein.,0.6216093
+201,"Fingers are used for grasping, writing, grooming and other activities.",0.8517265
+202,"Floors may be made of bare concrete, tile, linoleum or wooden floorboards.",0.2585625
+203,For some operations or treatments patients have to stay for several weeks.,1.0048133
+204,"Forks are used in Western cultures, and there are special kinds for various foods.",0.8394736
+205,"Forks are usually  made of metal, or plastic, if disposable.",0.58891255
+206,"Fortunately, most skin infections can easily be treated once they are diagnosed.",0.7102564
+207,Free-climbing is one particular style of rock climbing.,0.28951344
+208,"Fresh cod is used for fish and chips, salted cod for elaborate dishes.",1.2631474
+209,Freshly squeezed orange juice often contains pulp as well.,0.20931037
+210,Frying pans are made of iron or teflon-clad steel.,-0.00026283332
+211,Gambling has become a very big but controversial business.,0.5884734
+212,Gambling may also be associated with personal bankruptcies and marriage problems.,0.6676906
+213,"Gambling was something I had to do, and I had already spent close to $10,000 doing it.",0.62297887
+214,Girls often like playing with dolls and social games.,0.65204716
+215,Girls sometimes grow long hair and wear dresses and skirts.,0.66342455
+216,Gloves to protect against cold are made of wool or lined waterproof material.,0.65545464
+217,Good data on the social and economic effects of legalized gambling are hard to come by.,0.7201061
+218,Grenades can also be fired from rifles or shoulder launchers.,0.6719547
+219,Grooms are also jazzing up their tuxedos with colorful shirts and satin ties.,0.750357
+220,"Halfway through the race, I heard a sound like someone snapping their fingers.",0.90148544
+221,Hammers vary in the shape of the head and handle length.,0.5009116
+222,Hand grenades are thrown and timed to explode a bit after that.,1.0940652
+223,Having someone else check their knots and harnesses helped them calm down.,0.83344644
+224,He hammers and bends hot iron on an anvil to change its shape.,0.5704014
+225,He recalled one evening at law school when he and the program director had pulled an all-nighter.,0.8410197
+226,He wanted to change things for the better.,0.15227628
+227,Her blindness was caused by a genetic condition that slowly damaged the eyes.,0.38697097
+228,Her job is not just about singing.,0.46488056
+229,High-priced premium ice cream is loaded with butterfat and natural flavorings.,0.4080232
+230,Hip fractures are a real problem for aging individuals.,0.0070791044
+231,"Historically, axe heads were made of stone and then metal.",0.86370826
+232,"Horses have been used for draft work, travel and entertainment.",0.7224516
+233,"Hospitals are staffed by professional physicians, surgeons, and nurses.",0.5522094
+234,Hot deserts are usually filled with sand dunes or rocks.,0.37737668
+235,"However, prominent painters had the social status of scholars and members of the royal court.",0.7727063
+236,Hurricanes can also bring a storm surge: a wall of ocean water that lurches onto land.,0.7878895
+237,Hurricanes can tear limbs off of trees and suck houses off their foundations.,0.43206072
+238,"I can't even taste sweetness well, so when I make cookies I add extra sugar.",1.0728408
+239,I felt a crunch and I knew instantly that my foot was broken.,0.643336
+240,I finally came to a stop at a flat part of the slope.,0.2444377
+241,"I followed him down the steep, dark, narrow passage.",0.1745078
+242,"I found nature provides useful information, but more than is needed for a good painting.",1.0368264
+243,"I have a recurring dream about exams, even though I'm no longer in college.",0.64605516
+244,I hesitantly skied down the steep trail that my buddies convinced me to try.,0.8946472
+245,"I know it's cliche, but I love the impact that I have on lives of my patients.",1.5023614
+246,I know many other people who have the same nightmare.,0.5814429
+247,"I like lots of hot sauce, and I drink my coffee with no cream, so it's very bitter.",1.2328947
+248,I made a bad turn and I found myself tumbling down.,0.27765337
+249,I remember making ice cream at home as a child.,0.45139393
+250,I think the pharmacy profession chose me as much as I chose to be a pharmacist.,1.0065299
+251,I use the two levers in front of me to control the machine.,0.1631338
+252,I was afraid our house would be ripped from its foundation.,0.4564642
+253,I was fascinated by the neatly arranged bottles in pharmacies as a child.,0.4579058
+254,I've never even done any of the reading assignments.,0.7293332
+255,"Ice cream is a mixture of milk or cream, sugar, flavorings, and up to half whipped-in air.",1.0602015
+256,"If not dealt with effectively, though, stress can take a real toll on health.",0.67256093
+257,"If the redness and swelling don't go away, contact your health care provider.",0.6320484
+258,"If you see these symptoms, clean the area and apply some ointment.",0.24688607
+259,"Igloos are often built in the shape of a dome, with an entrance tunnel.",0.41777685
+260,"Images, feelings, stories, and strange combinations of characters and places can fill our dreams.",0.82060844
+261,In a flood a river will flow out of its channel or break dams and levees.,0.59372306
+262,"In a volunteer army, a soldier is paid for his or her work.",1.0112641
+263,In buildings the floor often has pipes and electrical wiring under it.,0.6401843
+264,"In closed or simple fractures, the bone is broken but the skin is intact.",0.48566577
+265,"In developed countries, blindness is more likely to be caused by genetic problems.",0.28025708
+266,"In developing countries, blindness in children is usually caused by infectious disease and nutritional deficiencies.",0.71070224
+267,In folklore ravens are birds of ill-omen and also tricksters. ,0.93572795
+268,"In my dream, it's the day of my final exam and I suddenly realize I've never gone to class.",0.8334419
+269,"In open or compound fractures, the broken bone has punctured the skin and produced an open wound.",0.589227
+270,"In some tropical places, vanilla ice cream is topped with bananas and fresh mangos.",0.64266443
+271,"In the past, they were home to battles, plots and intrigue.",0.48637316
+272,"In waterbeds the mattress is filled with water, and in airbeds it is filled with air.",0.6804218
+273,Industrial espionage is theft of ideas and intellectual property.,0.5035651
+274,Insects have compound eyes made up of eye units facing in many directions.,0.65141433
+275,It began as an effort to rediscover and imitate Greek tragic performance.,0.8086756
+276,"It can be caused by heavy rain or rapid snow melt, as well as earthquakes at sea.",0.32029334
+277,"It can be eaten cold and raw, in salads and other dishes, or cooked.",0.72996557
+278,"It can be eaten raw in sushi or cooked by grilling, poaching or in other ways.",0.5805276
+279,It can be hard to climb stairs or ride a bike in a dress.,0.2737853
+280,It can have shelves and small compartments for different types of food.,0.28272492
+281,"It has a flat surface and can be made of wood, plastic or metal.",0.28297782
+282,It has a glass or plastic container with a rotating blade in the bottom.,0.11786464
+283,"It has a green flower head and a thick, tough stalk.",0.32029215
+284,"It has a pair of ivory tusks, for moving objects or digging into trees.",0.7228858
+285,"It has a roof and walls to keep out cold and rain, and windows to let light in.",0.7121976
+286,"It has a sweet, acid taste and contains a lot of vitamin C.",0.22737758
+287,It has ear tufts that stick up like horns.,0.11541674
+288,"It incorporates many of the elements of spoken theatre, such as acting, scenery, and costumes.",0.41399014
+289,It is a long black tube with a flare at the bottom.,0.41757476
+290,"It is a popular drink in many countries, and usually served hot.",0.5591888
+291,It is a serious crime because it deprives the victim of their existence.,0.9717988
+292,It is a symbol of American frontier life and humble origins.,0.5738955
+293,It is generally white and people often put magnets on its surface.,0.6783963
+294,It is in every beekeeper's interest to conserve local plants that produce pollen.,0.5951672
+295,It is most often used to drive nails into wood.,0.7527177
+296,"It is normally ceramic, but can also be made of metal or glass.",0.29220474
+297,It is often drunk at breakfast from a glass.,0.33423588
+298,It is propelled by the pedalling of a cyclist on the saddle.,0.6796012
+299,It is the smallest and highest pitched instrument in its family.,0.6249557
+300,"It is used to fry, sear and brown food.",0.26479688
+301,It looked like something a professional stylist would have picked out for a formal event.,0.83766145
+302,It may have drawers to store supplies and papers.,0.25926808
+303,"It may have one or more rooms, as well as a kitchen and a bathroom.",0.47174633
+304,It minimizes the need for upper body movements to regain lost balance while skiing.,0.53395116
+305,It plays a role in almost half of all vehicle-related deaths.,0.6424352
+306,It softens and changes color from green to red as it gets more ripe.,0.6024927
+307,It was made with rich fabric cut in the latest style.,0.22277094
+308,It was once believed that each taste bud responded to one of the four basic tastes.,0.87885135
+309,It's even worse when you are submerged in the frigid waters directly beneath the huge animal.,0.93079776
+310,It's unnerving to watch a polar bear stalk across floating sea ice.,0.682529
+311,"Its large orange eyes are downright creepy, and look like they could pierce right through you.",0.6984369
+312,Its purpose was to dominate its surroundings.,0.4265194
+313,"Killing in self-defense, accidentally or in war is not considered murder.",1.3338937
+314,Knives have also been used as weapons and instruments in rituals.,0.4190451
+315,Large numbers of people have to migrate away from dust bowls.,0.8374836
+316,Later operas branched out into different sources of stories and musical traditions.,0.46475825
+317,"Later that night, with the wind shaking the house, we fell asleep huddled on the sofa.",1.0539957
+318,Law school faculty often have minimal experience in actually practicing law.,0.6580208
+319,"Law schools often emphasize the theoretical, with classes on topics like property law in feudal England.",1.1334282
+320,Leaves of the raspberry are used fresh or dried in herbal teas.,0.83294874
+321,Lentils are commonly used in Indian and Mediterranean cuisines.,0.20878366
+322,Lentils are the seeds of a plant of the legume family.,0.42184076
+323,Lettuce is a biennial plant often grown in temperate climates as a leaf vegetable.,0.81410027
+324,Lettuce is considered fairly easy to grow and a suitable crop for beginners.,0.54301864
+325,Librarians work at libraries and are experts at finding and organizing information.,0.56397545
+326,Liquid produced from soybeans and coconuts is sometimes called milk.,0.4006142
+327,Log cabins were used as first shelters by european settlers.,0.55329186
+328,"Long ago, painters were employed more as skilled artisans than as creative artists.",0.61864775
+329,Manhood is associated with masculinity and virility.,0.8950638
+330,Many bees have stingers and can attack if they feel threatened.,0.7686437
+331,Many cultures have rules for behavior related to feet.,0.8715097
+332,Many people enjoy their ice cream flavored with local delicacies.,0.61830086
+333,Many vultures have a bald head without feathers for losing heat.,0.6651286
+334,Many were afraid of heights.,0.45711663
+335,"Men differ from women in height, weight, and body structure.",0.8520296
+336,Metamorphosis is the transformation of a caterpillar into a butterfly.,0.26229802
+337,Milk is a white liquid produced by female mammals to feed their young.,0.48951107
+338,Modern digital animation is a powerful tool for education.,0.65931284
+339,"Modern knives consist of a handle and a blade, usually made of metal.",0.26593578
+340,Modern opera started at the end of the sixteenth century.,0.44449055
+341,"More than just the tomb of the king, pyramids represented the pride of the nation.",0.9654018
+342,"Mosquito bites can spread yellow fever, malaria and other parasite diseases.",0.51503175
+343,Mosquitoes have mouthparts for piercing the skin of plants and animals.,0.3106271
+344,"Mosquitos are thin, small flying insects that emit a high-pitched sound.",0.32088116
+345,"Most animals have complex eyes which can detect color, motion and texture.",0.49388197
+346,Most doors are opened by pushing or pulling a handle after they are unlocked.,0.52925706
+347,Most doors have locks to control who gets to pass through them.,0.29118803
+348,Most earthquakes are caused by the release of energy in the Earth's crust.,0.33790743
+349,"Most importantly, the content of the painting should reveal a glimpse of the painter's soul.",0.57581264
+350,"Most lettuce leaves taste bitter, but some are bred to remove the bitterness.",0.75443923
+351,Most people leave the house to work and come back at night to eat and sleep.,0.9254229
+352,"Most sharks predate on fish and mammals, with powerful jaws.",1.0058045
+353,"Most states have instituted lotteries, and many have casinos as well.",0.9583018
+354,Mountaineers are people who climb or hike up mountains.,0.5593052
+355,Mountains rise higher than hills and sometimes have snow at the top.,0.26112133
+356,Mowing the lawn is a long task and it has taught me patience.,0.8571596
+357,Much of their training is conducted underwater.,0.40003154
+358,Mugs can be plain or have drawings imprinted or carved on them.,0.4657398
+359,Murder is the unlawful killing of another human being with intent.,1.0069362
+360,My friends were sick of watching me gamble my savings away.,0.6497022
+361,"My heart would race for no reason, and I even felt dizzy at times.",0.27667877
+362,"My sense of taste isn't very good, so I tend to eat foods with very strong flavors.",0.99804837
+363,My skis were nowhere to be found and my poles were lodged in a snow drift up the hill.,0.597851
+364,New ear piercings can become infected if they're not carefully cleaned.,0.39601493
+365,New ski designs and stiffer boots let skiers turn more quickly.,0.80680466
+366,Newborn animals must be fed milk before they can eat solid food.,0.31338504
+367,No one really knows exactly how a taste gets from your mouth to your brain.,0.5418795
+368,"Now that computers are more affordable and widespread, computer graphics have entered the mainstream art world.",0.7238498
+369,"Once they're comfortable with that, they can begin using ropes to safely climb vertical rock faces.",0.6277404
+370,"One astronaut loosened the bolts on the pipe, while the other fitted the replacement part into place.",0.9992134
+371,"One keyboard is used for individual notes, the other for chords.",0.5902523
+372,"One person may be devastated by unemployment, while another may find working fulltime stressful.",1.0942036
+373,Opera is an art form in which singers and musicians perform a play that combines words and music.,0.54351765
+374,Orange juice is a drink made from the liquid in orange pulp.,0.56790763
+375,"Other astronauts are trained as doctors, engineers, and scientists, who can run experiments in space.",0.9280181
+376,Other types of doors can slide or consist of a revolving chamber.,0.35815552
+377,Others speculate that ramps zigzagged up the exterior walls of the pyramid.,0.17477925
+378,Our tower rooms had an incredible but slightly scary view.,0.87277526
+379,"Over the past four decades, the cost of legal education has gone up relentlessly.",0.5677762
+380,"Over the past generation, there has been a dramatic expansion of legalized gambling.",0.81130165
+381,"Overhead, giant paws set down on the ice as the polar bear pursued its prey.",1.2092375
+382,"Parrots have brightly-colored feathers and a sharp, curved beak.",0.15708354
+383,"Participants then assigned each dream to a category, such as a flying dream, a bad dream, or a nightmare.",1.1896714
+384,Passengers or cargo enter trains from a platform next to the line.,0.71222126
+385,Patients are faced with the pain of the break and the difficult process of healing.,0.5238676
+386,"Peaches are sweet and delicate, and must be harvested after ripening.",0.7959833
+387,"Peaches have a large, red-brown stone inside which contains the seed.",0.30211297
+388,"People also use their feet to kick, in both fighting and sports.",0.57286245
+389,People can go to public libraries and borrow books to take home for several weeks.,0.455166
+390,People go to hospitals to be healed when they are sick or injured.,0.5946277
+391,"People often put carpets on a floor, for comfort and to dampen noise.",0.486683
+392,"People set cutlery, plates and food on a table to eat a meal together.",0.866425
+393,"People use bicycles for transportation, recreation and racing.",0.40554467
+394,"People use their feet when walking, running or standing straight.",0.4515519
+395,Performances are typically given in an opera house and accompanied by an orchestra.,0.28175756
+396,Pharmacists are increasingly involved in preventive care.,0.015403169
+397,Pharmacists are often a good source of information about public health.,0.5926173
+398,Pharmacists dispense prescription drugs to patients and offer advice about the safe use of medications.,1.1238275
+399,Pharmacists must have professional degrees and pass two exams in order to be licensed.,0.73190373
+400,"Physics, chemistry and biology are classic examples of sciences.",0.63770604
+401,"Piranhas are small, ferocious fish that live in South American rivers.",0.5495052
+402,Piranhas have very sharp teeth and are opportunistic carnivores.,0.94622284
+403,"Plants, animals and people must drink water in order to live.",0.5761888
+404,Polar bears are one of the few animals that will attack people for reasons other than fear or confusion.,0.7497744
+405,Pop-up toasters toast the bread placed in a slot and eject it once done.,1.1815602
+406,Pressing a piano key causes a felt-tipped hammer to hit a vibrating steel string.,0.6053308
+407,Primates usually have four fingers and a thumb on each hand.,0.68904376
+408,Private law school tuition has increased by a factor of four since the 1970s.,0.51131135
+409,Professors focus on writing law review articles for prestigious journals.,0.73339367
+410,Proper use of ski poles improves their balance and adds flair to their skiing.,0.8470834
+411,"Rain is water that falls from clouds in the sky, which are condensed vapor.",0.6573518
+412,Raspberries are eaten by themselves or cooked with sugar into jam.,0.9013898
+413,"Ravens feed on carrion, insects, berries or small animals. ",0.2676739
+414,Remember that it's your reaction to stress that determines if it will be harmful or beneficial.,1.1833948
+415,Research does suggest that vivid and engaging digital imagery can be effective in the classroom.,0.627985
+416,"Retaining walls provide a barrier to movement of earth, stone or water.",1.109326
+417,"Rifles are used in hunting and shooting sports, sometimes with scopes.",0.7901417
+418,Rope and bolts are the only equipment used.,0.38714346
+419,Salmon flesh is orange or red and has high protein content and a nice taste.,0.8844759
+420,Salmon is a fish that migrates from fresh water to the ocean and back to spawn.,0.66868806
+421,"Salmon is the most common farmed fish, though it can also be caught in the wild.",0.3953174
+422,"Saws are used extensively in forestry, construction, carpentry and medicine.",0.37756667
+423,"Saws can be worked by hand, or powered by an electric motor or gas engine.",0.26625174
+424,Scientists now think that a single taste bud can be sensitive to all of the basic tastes.,0.43900773
+425,Scientists publish their research in journals and conferences.,0.38226283
+426,Scientists think the process begins when a molecule of food touches a taste bud cell.,0.6320966
+427,Scientists use several methods to look for evidence of ancient hurricanes.,0.6743776
+428,Scissors are a two-bladed instrument used for cutting.,0.1348725
+429,Screwdrivers can also be used to remove screws after they are inserted.,0.37865102
+430,"Scrubbing a wound with soap or alcohol delays healing, which increases the risk of infection.",0.88283867
+431,Seats are fixed chairs located in vehicles or in places like cinemas.,0.8265296
+432,Seeing the internal structures in an animation on a screen is much clearer than squinting at X-rays.,1.3256211
+433,"Sharks have streamlined bodies, with a large dorsal fin.",0.67314214
+434,Sharks have very keen senses and can detect electrical fields.,0.7646744
+435,"She had no visual distractions, so she could concentrate more fully on her music.",0.6921579
+436,She has to execute the brush strokes with skill.,0.21836054
+437,"She has to use solid elements of design, like strong composition and lighting.",0.39729714
+438,She might have been a statue but for the glow of her eyes.,1.0154337
+439,"She pressed her wings to her sides and settled down, half-closing an eye.",0.8313825
+440,She told interviewers that being blind was an advantage to a pianist.,0.70053273
+441,She uses digital animation to help doctors understand structures within a patient's body.,0.7196005
+442,Shears are large scissors used for cutting shrubs or pieces of metal.,0.74163014
+443,Ships are used to fish in the ocean and to transport cargo containers.,0.48860517
+444,"Shoes are usually made of leather, canvas, rubber or plastic.",0.16480763
+445,Shorter jackets are on the cutting edge of wedding fashion for men.,0.63734996
+446,"Signs of infection include tenderness, swelling, or redness around the earlobe.",0.17932479
+447,Some animals and plants have adapted to live in deserts.,0.24717218
+448,"Some apartments are for single people, others for families.",0.71409285
+449,Some computer science conferences have art exhibitions that showcase the latest graphics technology.,0.5686789
+450,Some native people still use the spear for hunting and fishing.,0.57163066
+451,"Some patients go there for specialist diagnosis or therapy, leaving the same day.",1.1377928
+452,Some people can adapt to different levels of stress.,0.19115579
+453,Some people collect butterflies because of their colorful wings.,0.2355863
+454,Some refrigerators can have a small compartment at freezing temperature.,0.5600498
+455,Some studies indicate that having a casino nearby makes gambling problems more likely.,0.7478452
+456,Some think ramps were built inside the pyramid's walls to raise stone blocks.,0.3309244
+457,Some very tart apples are used to make cider.,0.5961917
+458,Some windows have multiple panes to increase insulation inside.,-0.059631653
+459,Spears are weapons that consist of a pole and sharpened head at one end.,0.32785648
+460,Spears were used for stabbing or throwing when fighting in war.,0.6672323
+461,Spectacular castles in dramatic locations provide a record of the stormy history of many regions.,1.0134834
+462,Speech sounds are controlled by tongue placement in the mouth.,0.4264819
+463,Spiders are insects with eight legs that make silk.,0.10322589
+464,Spiders build webs with silk and use them to catch insects.,0.4295662
+465,Spiders can be as small as a coin or as big as a bird.,0.74077845
+466,"Swamps are low, spongy land subject to frequent inundation.",0.45170122
+467,Swamps are nesting and breeding grounds for birds and reptiles.,0.24946605
+468,Sweaters are often knitted from wool but cotton is also common.,0.34968033
+469,"Sweaters differ in cut, collar and sleeve shape, as well as decoration.",0.55186677
+470,Tables are also used as surfaces to work or write on.,0.59787375
+471,Tear gas grenades are thrown into the middle of a mob to disperse it.,1.2070073
+472,Television content can be broadcast or received via cable or internet.,0.5615494
+473,Televisions are mostly used for watching programs or films.,0.34529242
+474,"That is, a taste bud on the tip of the tongue would respond only if you were eating something sweet.",0.5696387
+475,The adults set up climbing routes appropriate for beginners.,0.651639
+476,The axe is a tool used to split and cut wood.,0.38783738
+477,The axe usually consists of a head attached to a handle.,0.58873314
+478,The bald eagle has a bright white head and is the national bird of the United States.,0.608916
+479,The barred owl has spread well beyond its previous habitat.,0.36662892
+480,"The beekeeper checks honey stores, pollen supplies, and the bee nursery.",0.5771909
+481,The biggest hot desert is the Sahara in northern Africa.,0.49985442
+482,"The blades are usually metallic, with plastic or metal handles.",0.49491394
+483,The blades may be powered by muscle or the machine may have a motor.,1.0613571
+484,The blubber in a whale serves as an energy reservoir and as insulation.,0.48271984
+485,"The building can have a garage, a laundry facility or extra storage space.",0.6650698
+486,The butterfat in milk and cream is what makes it smooth and silky.,0.6610518
+487,The care that the pyramid builders took in their craft is evident.,0.7290246
+488,The cell carries a taste message to taste nerves beneath the cell.,0.9343457
+489,The clarinet is used both in jazz and classical music.,0.17867035
+490,The claw on the head can be used to remove nails.,0.38961956
+491,The claws of cats are retractable so that they keep sharp.,0.33315468
+492,The climber relies solely on her skill and physical strength to ascend a rock face.,0.6842275
+493,"The commanders of shuttle flights are always pilots, and many have backgrounds as military test pilots.",1.0351039
+494,The computer graphics specialist works with doctors to visualize medical conditions and surgical procedures.,0.678925
+495,The concert pianist went blind in adulthood.,0.22108622
+496,"The driver steers the car on roads, other passengers just sit.",0.6911025
+497,The eagle owl is an impressive bird.,0.017381677
+498,The elephant flaps its large ears to cool the blood in them and its body.,1.0849495
+499,The eye is an organ for sensing light and coding it for the visual cortex.,0.6367273
+500,"The fingertips are sensitive to temperature, pressure and vibration.",0.7060512
+501,The food is cooked on oil covering the bottom of the pan.,0.18203181
+502,The fovea is the center of the human eye and the most sensitive part of it.,0.6426912
+503,The government defines blindness as vision insufficient for the ordinary activities of life.,0.8908989
+504,"The greatest producers are tropical countries, such as India or Ecuador.",0.86713326
+505,The grooves make the bullets spin around the rifle axis as they fly through the air.,0.88131005
+506,The hardest part was the horror of leaving a casino after losing money I did not have.,1.3724061
+507,The hospital has seen infection rates drop since the new measures began.,0.4768543
+508,The man wore a jet black tuxedo with satin stripes.,0.3829341
+509,The market for admission to law school and for new lawyers could eventually crash.,1.1242169
+510,The medieval castle was not a structure built primarily for defense.,0.57977754
+511,The most common power source for lawn mowers is a small gas engine.,0.49211362
+512,The mouth has teeth to chew food and mix it with saliva.,0.7812097
+513,The mouth is also used for kissing and talking.,0.61849415
+514,The mouth is the face cavity we put food in when we eat.,1.1548018
+515,The nail protects the tip of the finger and can be grown or decorated.,0.7725548
+516,The opera singer has worked hard to win the role in the new production.,0.60536397
+517,The owl landed on a thick branch and gripped it with her talons.,0.6588146
+518,"The piano has an enormous note range, and pedals to change the sound quality.",0.84400773
+519,The piano is a popular musical instrument played by means of a keyboard.,0.48701558
+520,The piano repertoire is large and famous pianists can give solo concerts.,1.411375
+521,The player chooses notes by pressing keys and holes.,0.30228555
+522,The polar bear will crawl quietly forward and freeze in place when the seal looks around.,0.5057396
+523,The raspberry is a fruit that grows in forest clearings or fields.,0.43768933
+524,The reason he came to law school in the first place was cliche.,0.54933614
+525,The screwdriver tip applies the torque from rotating the handle.,0.81624836
+526,The seal is an important part of the polar bear's diet.,0.21465991
+527,The severity of the crime depends on whether people were harmed.,0.7140451
+528,The shaking can also trigger landslides and volcanic activity.,0.1791816
+529,The sharp blades underneath the lawn mower precisely sever each blade of grass.,0.5073361
+530,The shirt should always be plain white and the tie should be black and match the jacket lapels.,1.0680536
+531,"The skin of a peach is thin and covered in small, fine hairs.",0.36508188
+532,The small sharp points along the cutting side of the saw are called the teeth.,0.69849074
+533,The smell inside the pyramid was chalky and the air was thick.,0.55505484
+534,The stones covering the pyramid were precisely fitted together and polished until the structure gleamed.,0.5950824
+535,The strongest storms deposited layers of windblown beach sand at the bottoms of coastal lakes.,0.7051509
+536,The team of astronauts floated out together to the exterior of the space shuttle.,0.59048396
+537,The term is used to indicate sex distinctions relative to girls.,1.0698354
+538,The thick outside walls sheltered an inner courtyard hundreds of feet above the river.,0.9251893
+539,"The tomato is a shiny and smooth red fruit, with a savory taste.",0.27804047
+540,"The train is pulled by a locomotive, powered by diesel or electricity.",0.021765748
+541,The two major types of screwdrivers are Phillips and flathead.,0.52087617
+542,The type of forest depends on temperature and rainfall in its location.,0.39286655
+543,The violin is an instrument with four strings that is played with a bow.,0.28453824
+544,The wheels have rubber tires with an inner tube full of air.,0.5551232
+545,"The wind from the hurricane shook the house, shattering a window in the kitchen.",0.2660338
+546,The wings of butterflies can be very colorful and patterned.,0.14592709
+547,Theft is a crime and can be punishable with jail or fines.,0.1473972
+548,Theft is the taking of person's property without their consent.,0.5977022
+549,Their appearance and abilities makes them popular pets.,0.5994004
+550,Then I put the container of half-frozen ice cream into the freezer to harden.,0.54516596
+551,"Then, I started taking yoga to try to manage my stress level.",0.5010416
+552,There are a few different types of bone fracture.,-0.046908606
+553,"There are also traumatic stresses, such as divorce or loss of a child.",0.44873512
+554,"There are everyday stresses, like being stuck in traffic.",0.58914036
+555,"There are many varieties of tomato, with different sizes and tastes.",0.2664462
+556,There are usually chairs around a table for people to sit.,0.5973321
+557,There are waiting rooms and places to eat in a station.,0.54221463
+558,These causes can often be prevented by medicine and vitamin supplements.,0.35571966
+559,They allow bread to be cooked with toppings like garlic or cheese.,0.8662961
+560,They also conduct health and wellness screenings and provide vaccines.,0.4440435
+561,They also need less maintenance and are less expensive to run.,0.32173204
+562,They are also used to make cold alcoholic drinks with crushed ice.,0.26188344
+563,They are becoming front-line health advisers because people go to pharmacies often.,0.51484495
+564,They are built in places where snow covers the land most of the time.,0.60122776
+565,They are cooked by boiling and are a great source of protein.,0.49587643
+566,They are meant only to stop the climber if she falls.,0.521055
+567,They are used to lift food to the mouth or to hold food in place while cutting.,0.52733314
+568,They are used to play videogames when connected to a game console.,0.60574484
+569,They can also cause high waves and coastal flooding.,0.5887594
+570,"They can be red, green, brown, black or yellow.",0.39411435
+571,"They can hunt mice or birds, but are often fed by their owners.",0.3616074
+572,They can imitate the human voice if they hear it repeatedly.,0.58382976
+573,They carried tools needed to repair the broken part on the huge telescope.,0.5527605
+574,They dump heavy rains that can trigger floods and mudslides.,0.20526905
+575,"They eat fish, insects, lizards, mammals and carrion.",0.68995404
+576,They finally finished drafting a petition for several evicted families at sunrise.,0.90442675
+577,"They have hooked beaks for tearing flesh, strong legs and sharp talons.",0.64520097
+578,They have improved hand washing habits and ensured that infected patients are isolated from other patients.,0.58851033
+579,They have large brains and are capable of problem solving.,0.63287425
+580,They live and attack in schools and are most active during the day.,0.84461045
+581,"They make objects like weapons, horse shoes or iron furniture.",0.44266623
+582,They may attack out of hunger because they live in a food-scarce environment.,0.67001134
+583,They may spend 8 to 10 hours in the pool for every hour they will spend floating in space.,0.98359114
+584,"They recorded if they recalled any dreams, and described each dream and its emotional intensity.",0.9962787
+585,"They scout the fields, know when nectar flows, and select the best ways to extract honey.",1.2003855
+586,"They signed their work, decided on its subject and imagery, and established a personal relationship with their patrons.",0.74209356
+587,They use their large wings to soar for miles without flapping.,0.39100286
+588,"They use tools such as hammers, saws, pliers and planes.",0.29028463
+589,They use venomous fangs to paralyse their stuck prey.,0.7014549
+590,They were built using logs with notch joints at the ends.,0.21330766
+591,They were the most common personal weapon before the advent of firearms.,0.44643587
+592,"They will sneak up on people slowly, careful to conserve their energy.",0.8297731
+593,Thieves steal to own something or to sell it to receivers.,0.6780134
+594,"This has led to more injuries, particularly to ligaments in the skier's knee.",0.7307059
+595,This led into the chamber at the pyramid's center.,0.40845165
+596,This may overlook those who have vision problems but who do not meet the standard.,0.6375717
+597,"This owl hunts at night, flying swiftly and silently through the darkness.",0.045871377
+598,"To produce the finest honey, beekeepers become micromanagers of their honeybees.",0.93702036
+599,"Toaster ovens have a door on the side, a tray within and temperature control.",0.8834684
+600,"Today, they stand atop rocky cliffs overlooking beautiful landscapes and quaint villages.",0.42800555
+601,"Tomatoes can be used to make salads, soup or ketchup, as well as sauce.",0.67931396
+602,Traditionally boys like to play rough games and fight with each other.,0.43159384
+603,Train stations have counters or machines for purchasing tickets.,0.38351795
+604,Trees drenched by passing hurricanes preserve a record of each storm in their growth rings.,0.81803536
+605,Unripe bananas and plantains are staple foods and often cooked like potatoes.,0.85849035
+606,Upon leaving the train station we saw our hotel looming above:  a magnificent castle built on a cliff.,0.8866289
+607,"Vultures are scavenging birds, feeding mostly on the carcasses of dead animals.",0.25298503
+608,"Vultures seldom attack healthy animals, but may kill the wounded or sick.",0.889172
+609,"Walls are usually made of stone, brick, or cement, as well as drywall.",0.7717335
+610,"Walls delineate a building, support the roof, and divide the space into rooms.",1.0583327
+611,Water freezes at a low temperature and becomes solid ice.,0.2068395
+612,"Water is the most common liquid on Earth, covering 70% of its area.",0.6070078
+613,"We dream throughout the night, in cycles of about ninety minutes each.",0.96148425
+614,"We poured the cream mixture into a frozen tub, then started turning the crank to expose it to the cold.",0.4535787
+615,"We ran in, grabbed some food, slammed the door, and surrendered the kitchen to the hurricane.",0.8848923
+616,Whales breathe through blowholes on their heads when surfacing.,0.45229313
+617,"Whales have been hunted for meat, whale oil and ambergris.",0.89423233
+618,"When I decided to start playing cards, things went from bad to worse.",0.74052405
+619,"When I use the riding lawn mower, the uncomfortable chair makes my back hurt.",0.3939213
+620,"When hunting, they will wait by a seal's breathing hole, or stalk seals that are basking on the ice.",0.8432422
+621,"When my company was downsizing, I felt incredibly stressed and worried.",0.7396881
+622,"When open, a window will also let air and sound through.",0.35150635
+623,"When ripe it can be yellow, purple or red and have small brown spots.",0.43404087
+624,"While some owl species have become endangered, others are thriving.",0.5418389
+625,"While the tuxedo is still preferred, today's grooms are making personal statements in wedding attire.",1.0681671
+626,Women's shoes often have high heels and come in many styles and colors.,0.64111906

@@ -1,0 +1,355 @@
+\pdfoutput=1
+\documentclass[11pt]{article}
+\usepackage{EMNLP2023}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage{adjustbox}
+\usepackage[utf8]{inputenc}
+\usepackage{wrapfig}
+\usepackage{microtype}
+\usepackage{transparent}
+\usepackage{placeins}
+\usepackage{bm}
+\usepackage{dirtytalk}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{booktabs, xltabular, supertabular}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{etoolbox}
+\usepackage{tcolorbox}
+\usepackage{amsmath}
+\usepackage{inconsolata}
+\usepackage{expex}
+\lingset{glhangstyle=none, glspace=.3em, everygl=\small}
+
+% allow text around big figures 
+\renewcommand{\floatpagefraction}{.75} 
+\renewcommand{\textfraction}{.1} 
+\renewcommand{\topfraction}{.9} 
+\renewcommand{\bottomfraction}{.9} 
+
+\usetikzlibrary{positioning,fit,calc, backgrounds, shapes, decorations.pathreplacing, tikzmark, arrows.meta}
+
+\makeatletter
+\patchcmd{\@floatpagestyle}{\setfootnoterule{0\p@}}{}{}{}
+\makeatother
+
+\title{Behavioral and Brain Responses to Language Reflect \\ Different Levels of Linguistic Representation}
+
+\author{Andrea Gregor de Varda\textsuperscript{1} \\
+    {\tt devar\_ag@mit.edu} \\\And
+    Yevgeni Berzak\textsuperscript{1,2} \\
+    {\tt berzak@technion.ac.il} \\ \AND
+    Evelina Fedorenko\textsuperscript{1,3} \\
+    {\tt evelina9@mit.edu} \\\And
+    Roger Levy\textsuperscript{1} \\
+    {\tt rplevy@mit.edu} \\ \AND
+    {\normalfont  \textsuperscript{1}Massachusetts Institute of Technology \hspace{.4cm}
+    \textsuperscript{2}Technion \hspace{.4cm} \textsuperscript{3}Harvard University}
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+
+Human language processing can be studied through both behavior and brain activity, yet it remains unclear whether these two data types reflect sensitivity to the same information. One influential view holds that both behavioral and neural responses are largely determined by processing effort, often estimated by word surprisal together with the context-independent properties of word frequency and length. At the same time, neural responses have been shown to encode richer aspects of linguistic content, including meaning. Here, we use neural network language models to operationalize these alternatives and systematically compare, within the same analytic computational framework, the predictive power of low-dimensional effort-based predictors and high-dimensional embedding representations that encode contextualized linguistic content, including meaning. Across 8 behavioral datasets and 5 neural datasets (4 fMRI and 1 ERP), we find that processing effort captures substantial variance in both behavioral and neural measures of language processing, in line with much previous work. However, for brain responses---but not for behavioral measures---embedding representations carry predictive power beyond the estimates of processing effort. These results therefore suggest that neural data provide access to rich, high-dimensional dynamics of language comprehension, whereas behavioral data reflect a bottlenecking of these dynamics into a small set of theoretically motivated properties of contextualized linguistic input.
+
+\end{abstract}
+
+% \smallskip
+
+\section{Introduction} \label{sec:intro}
+
+Behavioral and brain responses both provide critical evidence for studying human language processing. However, although both are used to infer the latent computational mechanisms that underlie comprehension, they have largely been examined separately, by different scientific communities, and within different theoretical frameworks and methodological traditions. Crucially, it remains a key open question what precise information each type of data encodes: do behavioral and neural responses reflect sensitivity to the same or distinct aspects of linguistic input? Answering this question is essential for understanding how evidence from brain and behavior should be interpreted, compared, and ultimately integrated within a unified theory of language processing.
+
+\smallskip
+
+A long-standing view holds that both behavioral and neural responses to language are shaped by cognitive effort, and that this effort is well captured by a small set of word-level predictors: word surprisal or contextual predictability (measured as negative log probability), word frequency, and word length (henceforth \say{surprisal, frequency, length}, \textsc{sfl}). These variables are central to longstanding theoretical accounts of processing cost in incremental language comprehension \citep{just1980theory, rayner1996eye, rayner1986lexical, rayner1998eye, clifton2016eye}. By now, there is vast evidence that cognitive effort, as operationalized through \textsc{sfl}, explains a large proportion of the variance in behavioral measures of language processing, particularly reading behavior \citep[e.g.,][]{schilling1998comparing, demberg2008data, effectislogarithmic, berzak2022eye, shain_log}. Processing effort also accounts for a substantial amount of variance in brain responses, as seen in increased BOLD and ERP responses for more surprising or infrequent words \citep[][among others]{federmeier1999rose, n400, delong2005probabilistic, federmeier2007multiple, henderson2016language, brennan2020localizing, shain2020fmri, schmitt2021predicting, heilbron2022hierarchy, russo2022explaining, michaelov2022more, michaelov2023strong, tuckute2023driving}. Finally, behavioral measures of comprehension difficulty can predict activity in language-responsive brain regions \citep{wehbe2021incremental}, suggesting that processing effort explains shared variance across brain and behavior.
+
+\smallskip
+
+Yet, effort alone cannot fully explain the processes underpinning human language processing. The primary function of the language system is to support the construction and interpretation of meaning, and traditional effort-based predictors abstract away from much of this content. Two sentences may have nearly identical profiles of surprisal, frequency, and length---and would therefore be predicted to elicit comparable processing effort---yet differ completely in meaning, as in \say{The chef cooked the meal} and \say{The wolf caught the deer} (cf. \ref{gloss:chef} and \ref{gloss:wolf}). Conversely, two sentences may express every similar meanings but differ substantially in these predictors, as in \say{The wolf caught the deer} versus \say{The predator captured the ungulate} (cf. \ref{gloss:wolf} and \ref{gloss:predator}). Consistent with this intuition, a growing body of work shows that brain responses to language are modulated by semantic factors that cannot be straightforwardly reduced to processing effort, with perceptual and affective dimensions of meaning emerging as key organizing principles of neural representations \citep{huth2016natural, deniz2019representation, tuckute2023driving, tuckute2025two}. Behavioral responses are also sensitive to semantic properties \citep{juhasz2003investigating, arfe2023effects, yao2024emotion}, but these effects are typically weaker and less consistent than those observed in neural data \citep{magnabosco2024eye}. Together, these findings suggest that although effort-related signals are prominent in both kinds of data, brain responses may afford access to richer aspects of linguistic representation than behavior.
+
+\input{gll.tex}
+
+\smallskip
+
+To test this possibility---that brain responses retain richer linguistic representations than behavior---we need a way to operationalize both i) effort-related properties and ii) richer representational features that encompass the meaning of words in context. Neural network language models (LMs) allow us to operationalize both within a single computational framework. First, LMs allow us to derive next-word surprisal estimates---a core component of effort-based accounts of comprehension, together with the context-invariant properties of word frequency and length (our \textsc{sfl} predictors; Figure \ref{fig:methodscomp}, top). Such quantities have been widely used to model behavioral measures of language processing \citep{demberg2008data, perplexity, frank2019interaction, wilcox2020predictive, kuribayashi2021lower, recurrence_or_attention, oh2022does, berzak2022eye, boyce2023maze, shain_log, de2024locally}. And second, these models generate high-dimensional internal representations---word embeddings---that encode a wide range of linguistic properties, including form- and meaning-related information \citep{jawahar} that need not be reducible to surprisal, frequency, and length. Unlike \textsc{sfl}, these representations are not constrained by theories of effort; instead, they reflect learned properties learned to support prediction. Embedding representations have been extensively used to account for patterns of brain activity during language comprehension (\citealp{jain2018incorporating, gauthier2018does, gauthier2019linking, sun2019towards, schrimpf2021neural, aw2022training, oota2022joint, caucheteux2022brains, goldstein2022brain, antonello2023scaling, tang2023semantic, tuckute2023driving, de2025multilingual}; see \citealp{arana2023deep, tuckutereview} for reviews; Figure \ref{fig:methodscomp}, bottom), but have rarely been applied to the prediction of linguistic behavior \citep[but see][]{schrimpf2021neural, hollenstein-etal-2022-cmcl, lin2025vectors}. Further, past studies that have shown that model embeddings predict neural or behavioral language responses have not asked how much of the predictivity is due to the fact that the embeddings capture effort-relevant features.
+
+\input{emnlp2023-latex/img}
+
+\smallskip
+
+Here, we systematically investigate what kinds of information behavioral and neural measures of language processing are sensitive to. We hypothesize that behavioral responses reflect a \textit{bottlenecking} process, whereby language representations are compressed into a small set of effort-related dimensions---surprisal, frequency, and length---which influence observable behavior. Under this proposal, high-dimensional representations shape behavior only indirectly, via their contribution to \textsc{sfl}, whereas neural responses retain more direct access to representational content. We test this hypothesis by comparing the predictive power of \textsc{sfl}, \textsc{emb}, and their combination across a broad range of behavioral and neural datasets. \\
+
+\section{Results} \label{sec:results}
+
+Here, we systematically compared the \textsc{sfl} and \textsc{emb} approaches across behavioral and brain data. To this end, we linearly predicted human responses during sentence comprehension---as recorded using neural and behavioral measures---from either or both the \textsc{sfl} and \textsc{emb} predictors:
+
+\begin{enumerate}
+    \item \textsc{sfl}: surprisal, log-frequency, and length relative to the token $w_i$.
+    \item \textsc{emb}: the embedding representation of the token $w_i$, i.e., the model's activation in its final layer in response to $w_i$ (see Appendix \ref{sec:appendix-layerwise} for analyses considering all layers).
+    \item \textsc{sfl}$^\frown$\textsc{emb}: the concatenation of the two. 
+\end{enumerate}
+
+Our analyses were based on pre-existing datasets of language processing, including four eye-tracking datasets (Provo, Meco-en, ZuCo-2, UCL\textsubscript{ET}), three self-paced reading datasets (UCL\textsubscript{SPR}, Brown, NatStor\textsubscript{SPR}), one maze dataset (NatStor\textsubscript{Maze}), one ERP dataset (UCL\textsubscript{N400}), and four fMRI datasets (Wehbe2014, NatStor\textsubscript{fMRI}, Pereira2018, Tuckute2024; see Figure \ref{fig:datasets} for an overview and Table \ref{tab:datasets} for details). For the majority of the datasets, responses were measured incrementally while participants read or listened to linguistic materials; for Pereira2018 and Tuckute2024, responses were recorded for sentences presented all at once, so a single measure per sentence was used. All brain and behavioral data were modeled as univariate responses, to ensure comparability across measures. For the behavioral datasets, response times were averaged across participants. For the fMRI data, we averaged BOLD responses across voxels and then regions of interest \citep[comprising the language-selective network;][]{fedorenko2024language}, and participants. Finally, for the ERP data, we averaged the N400 amplitudes across 12 centro-parietal electrodes and across participants. 
+
+\smallskip
+
+In terms of the LMs, we considered the original GPT model and four GPT-2 model variants (GPT-2\textsubscript{124M}, GPT-2\textsubscript{355M}, GPT-2\textsubscript{774M}, GPT-2\textsubscript{1.5B}). Additional details on the models and the datasets can be found in §\ref{sec:methods} and are summarized in Table \ref{tab:datasets}. 
+
+\subsection{Behavioral responses reflect bottlenecking of representations into low-dimensional predictors}
+
+The results are summarized in Figure \ref{fig:results}. Across all behavioral datasets, responses are primarily driven by surprisal, frequency, and length. Embedding-based regressors capture little additional variance, suggesting that behavioral responses are mostly determined by cognitive effort.
+
+\smallskip 
+
+\input{emnlp2023-latex/fig-datasets}
+
+For the eye-tracking data (gaze duration, see Appendix \ref{sec:appendix-fixmeasures} for a replication with first fixation duration and total fixation duration), the general predictivity of \textsc{sfl} is higher than the one achieved by \textsc{emb} (see Appendix \ref{sec:appendix-sfl} for the individual contributions of surprisal, frequency, and length, as well as all pairwise combinations for this and other datasets). The average difference in predictivity across datasets and model sizes is $\Delta \bar{r}^{\scalebox{0.4}{SFL}}_{\scalebox{0.4}{EMB}} = 0.1102$. The concatenation of \textsc{emb} to \textsc{sfl} improves the results by a statistically significant but numerically small amount ($\Delta \bar{r}^{\scalebox{0.4}{SFL+EMB}}_{\scalebox{0.4}{SFL}} = 0.0187$). From a qualitative perspective, the results obtained across the four eye-tracking datasets are extremely consistent, with higher performance obtained by \textsc{sfl}$^\frown$\textsc{emb}, followed by \textsc{sfl} and lastly \textsc{emb} alone. The results obtained for the self-paced reading datasets are generally aligned with this trend, with \textsc{sfl} outperforming \textsc{emb} (although by a smaller amount; $\Delta \bar{r}^{\scalebox{0.4}{SFL}}_{\scalebox{0.4}{EMB}} = 0.0360$). In this case, however, \textsc{emb} and \textsc{sfl} appear to provide more complementary information, as the addition of \textsc{emb} to \textsc{sfl} increases the model fit by a relatively larger margin ($\Delta \bar{r}^{\scalebox{0.4}{SFL+EMB}}_{\scalebox{0.4}{SFL}} = 0.0459$). The evidence for complementarity is stronger in NatStor\textsubscript{SPR}, where \textsc{sfl} and \textsc{emb} achieve comparable predictivity, and the concatenation of the two increases the model fit. The Maze data (NatStor\textsubscript{Maze}), which are collected on the same sentence stimuli as NatStor\textsubscript{SPR}, are instead better predicted by \textsc{emb} ($\Delta \bar{r}^{\scalebox{0.4}{SFL}}_{\scalebox{0.4}{EMB}} = -0.0437$), and similar to what we found for NatStor\textsubscript{SPR}, \textsc{sfl}$^\frown$\textsc{emb} outperforms \textsc{sfl} ($\Delta \bar{r}^{\scalebox{0.4}{SFL+EMB}}_{\scalebox{0.4}{SFL}} = 0.0958$). 
+
+\smallskip 
+
+Across the behavioral datasets, the best results are, on average, obtained by GPT-2\textsubscript{124M}---the smallest GPT-2 variant we consider---, both when employing \textsc{sfl} and \textsc{emb} representations (GPT-2\textsubscript{355M} shows a slight advantage when using \textsc{sfl}$^\frown$\textsc{emb}), and more generally, we find that smaller models better account for the behavioral correlates of language comprehension. This \say{inverse scaling} trend replicates the previous finding that smaller models better account for human reading times (\citealp{oh2022does, oh2022comparison, shain_log, de2023scaling}; Figure \ref{fig:results}, panel A, bottom left).
+
+\subsection{Brain responses provide access to high-dimensional dynamics of language processing}
+
+The results obtained with brain data are  radically different: across all brain datasets, embedding-based predictors capture far more variance in brain activity than surprisal, frequency, and length.
+
+\smallskip 
+
+In the fMRI datasets, \textsc{emb} consistently displays higher predictivity than \textsc{sfl} (Pereira2018: $\Delta \bar{r}^{\scalebox{0.4}{SFL}}_{\scalebox{0.4}{EMB}} = -0.2822$; Tuckute2024: $\Delta \bar{r}^{\scalebox{0.4}{SFL}}_{\scalebox{0.4}{EMB}} = -0.1105$; NatStor\textsubscript{fMRI}: $\Delta \bar{r}^{\scalebox{0.4}{SFL}}_{\scalebox{0.4}{EMB}} = -0.0885$; Wehbe2014: $\Delta \bar{r}^{\scalebox{0.4}{SFL}}_{\scalebox{0.4}{EMB}} = -0.0879$) and \textsc{sfl}$^\frown$\textsc{emb} obtains performance scores similar to \textsc{emb} alone (Pereira2018: $\Delta \bar{r}^{\scalebox{0.4}{EMB+SFL}}_{\scalebox{0.4}{EMB}} = 0.0234$; Tuckute2024: $\Delta \bar{r}^{\scalebox{0.4}{EMB+SFL}}_{\scalebox{0.4}{EMB}} = 0.0132$; Wehbe2014: $\Delta \bar{r}^{\scalebox{0.4}{EMB+SFL}}_{\scalebox{0.4}{EMB}} = -0.0032$; NatStor\textsubscript{fMRI}: $\Delta \bar{r}^{\scalebox{0.4}{EMB+SFL}}_{\scalebox{0.4}{EMB}} = -0.0399$). Similar results are obtained with the ERP dataset, where \textsc{emb} consistently outperforms \textsc{sfl} in predicting N400 amplitudes ($\Delta \bar{r}^{\scalebox{0.4}{SFL}}_{\scalebox{0.4}{EMB}} = -0.0954$) and \textsc{sfl} adds little predictivity to \textsc{emb} ($\Delta \bar{r}^{\scalebox{0.4}{SFL+EMB}}_{\scalebox{0.4}{EMB}} = 0.0221$). We wish to stress the consistency of the pattern across measures and datasets, although due to the increased variability in the $r$ values obtained across folds, the pairwise comparisons between \textsc{emb} and \textsc{sfl} are not statistically significant in the Wehbe2014 dataset. Note that the asymmetry between the behavioral and the neural results cannot be simply attributed to a difference in the experimental stimuli, as a subset of our datasets (the UCL corpus) comprises both behavioral and brain responses to the same set of sentences, with the same temporal resolution. This strengthens the conclusion that the difference is rooted in the nature of the dependent measures themselves. 
+
+\smallskip 
+
+Concerning model comparison, the trend moves in the opposite direction from the behavioral results: within the GPT-2 family, larger models tend to outperform their smaller counterparts, especially with the \textsc{sfl} predictor (see Figure \ref{fig:results}, panel B, bottom right). Even with the other predictors (\textsc{emb} and \textsc{sfl}$^\frown$\textsc{emb}), the smallest GPT-2 model (GPT-2\textsubscript{124M}) always obtains the lowest performance in predicting brain responses. This pattern aligns with previous findings that larger-capacity neural architectures  obtain better brain encoding performance \citep{schrimpf2021neural, antonello2023scaling}, highlighting the representational richness of linguistic representations in the human brain.
+
+\smallskip 
+
+The diagram in Figure \ref{fig:results} (panel A, bottom right) graphically summarizes the comparison between the predictive power of \textsc{sfl} and \textsc{emb} across the considered datasets; it clearly shows that behavioral measures are more strongly associated with the traditional predictors of cognitive effort, whereas neural responses are better predicted by model embeddings.
+
+\smallskip
+
+The differences between brain and behavioral responses to language further emerge when comparing the individual predictivity of each component of \textsc{sfl}, which is mirrored across the two domains: behavioral responses---and especially fixations from eye movements during reading---are dominated by the context-independent properties of length and frequency, with surprisal playing a secondary role (Appendix \ref{sec:appendix-sfl}). Conversely, surprisal is the strongest predictor of brain responses, followed by frequency and length. 
+
+\input{emnlp2023-latex/figures/figure}
+
+\section{Discussion} \label{sec:discussion}
+
+In this paper, we showed that a low-dimensional, interpretable predictor quantifying cognitive effort---a combination of surprisal, word frequency, and length (\textsc{sfl})---excels at capturing variance in behavioral measures of incremental sentence processing. This predictor outperforms information-rich embedding representations in explaining eye-tracking and self-paced reading data, and adding \textsc{emb} to \textsc{sfl} yields only minor gains. This pattern suggests that the behavioral effects of model-derived representations are largely mediated by a small set of cognitively motivated features related to processing difficulty. 
+
+\smallskip
+
+The stronger predictivity of \textsc{sfl} for behavioral data is particularly informative given that its dimensionality is more than two orders of magnitude lower than \textsc{emb}. This disproportionate predictive power relative to dimensionality is in line with the long-standing interest that these predictors have received in psycholinguistic research over the last few decades, especially in the eye-movement literature (see for instance \citealp{just1980theory, rayner1996eye, rayner1986lexical}; see \citealp{rayner1998eye} for a review); their paramount relevance in reading behavior has led researchers to label them as the \say{The Big Three} of lexical processing \citep{clifton2016eye}. Their influence on processing cost is well motivated from the perspective of a rational information processor. The length of a word is proportional to the number of letters or sounds that need to be recognized; thus, longer words are expected to more strongly tax the early stages of word processing. Word frequency approximates the number of encounters with a certain word form; frequency effects can thus be interpreted as the outcome of a word learning process \citep{brysbaert2018word} or as reflecting general sensitivity of the human parser to local statistics \citep{goodkind2021local}. Then, word predictability effects captured by surprisal are predicted by the view of the language processor as an optimal incremental comprehension system that makes efficient use of the linguistic context \citep{levy2008, effectislogarithmic, berzak2022eye, shain_log}. Although our findings do not fully support the strongest version of the bottlenecking hypothesis---as \textsc{emb} still provides a minor improvement in some cases---the size of this improvement is generally small. These results are best understood as evidence that behavioral responses reflect a highly compressed encoding of linguistic information, sensitive primarily to the most salient dimensions of processing difficulty. 
+
+\smallskip
+
+For the neural responses during language processing, high-dimensional embedding representations produced by language models are the best predictors of both fMRI responses and the N400 ERP component, consistently outperforming \textsc{sfl} across datasets. Although effort-related components predict neural responses to some non-trivial extent, a substantial portion of additional variance is accounted for by high-dimensional embedding representations. In the context of prior work, this pattern reconciles two observations: robust neural sensitivity to processing difficulty and to higher-level aspects of linguistic representation, including the construction of linguistic meaning. Our results suggest that effort-related effects on brain responses reflect a constrained readout of richer contextual representations, capturing only a subset of the information encoded in the neural signal. Consistent with this view, adding \textsc{sfl} to \textsc{emb} provides little improvement, indicating that embeddings subsume the predictive contribution of the effort-related predictors.
+
+\smallskip 
+
+Two further observations support the interpretation that neural responses are sensitive to richer contextual representations. First, within the GPT-2 family, larger models yield better fits to brain data \citep[see also][]{schrimpf2021neural, antonello2023scaling}, in contrast to the inverse scaling trend observed for behavior. Second, when decomposing \textsc{sfl}, surprisal emerges as the dominant predictor of brain responses, and frequency and length play a secondary role---again opposite to the pattern found in behavioral data, where context-independent properties show the strongest influence. Together, these results suggest that, perhaps unsurprisingly, neural measures provide comparatively direct access to the representational processes underlying language comprehension, which involve the formation of rich, context-dependent representations of meaning.
+
+% dynamics of language comprehension that are closely tied to the context-sensitive representational geometry of language model embeddings.
+
+\smallskip
+
+Why, then, do behavioral measures show limited sensitivity to rich, high-dimensional linguistic representations, despite clear evidence that such information is encoded in the brain? Although this pattern may appear surprising given the widespread use of reading-based paradigms to support inferences about high-level linguistic processes, many models of reading treat eye movements as primarily governed by oculomotor constraints, and linguistic influences are either minimized or tightly constrained \citep{suppes1990eye, suppes1994, strategy-tactics-models}. Although there is now ample evidence that \textit{some} linguistic information affects reading times, the integration of higher-order syntactic or semantic content would arguably be too slow to reliably determine when and how the eyes move forward---and indeed, it has been demonstrated that during natural reading, the eyes often move onto the following words before the current word has been entirely processed \citep{clifton2016eye}. One possibility, therefore, is that language processing behavior during fluent reading is driven primarily by relatively shallow, rapidly available signals (\textsc{sfl}), as opposed to fully elaborated linguistic representations (\textsc{emb}). This view is instantiated in the E-Z Reader framework \citep{reichle1998toward, reichle1999eye, reichle2003ez}, which posits that word identification unfolds in two stages: an early stage that provides a fast estimate of whether word identification is imminent and initiates saccade programming, and a later stage that supports fuller linguistic processing but does not directly control overt eye movements. Under this account, higher-order syntactic and semantic representations can influence comprehension without being reliably expressed in moment-to-moment reading behavior. Broadly, this perspective suggests that behavioral measures obtained during fluent reading constitute a bottlenecked readout of language processing, selectively reflecting those aspects of linguistic computation that are available early enough to influence overt behavior.
+
+\smallskip 
+
+It is important to note that effects of higher-order linguistic processing are well documented, particularly in the domain of syntax and in cases where comprehension is disrupted (e.g., garden-path sentences; \citealp{frazier1982making, ferreira1991recovery}). Under such conditions, reading times may reflect not only fast, early estimates of lexical processing difficulty (which are well approximated by \textsc{sfl}), but also later costs related to unusually complex structure-building and re-analysis (possibly captured by \textsc{emb}). And indeed, the behavioral bottleneck discussed here should be understood as a property of \say{default} fluent reading, whereas higher-order processes may intervene in eye-movement control only when there is a need for re-analysis \citep[see also][]{reichle1998toward}. This interpretation also helps explain why the contrast between effort- and embedding-based predictors is less pronounced in the two behavioral NatStor datasets (Maze and self-paced reading), which contain many unusual syntactic constructions and thus deviate from default reading. In these materials, behavioral responses likely reflect not only shallow lexical processing difficulty, but also additional costs associated with complex syntactic integration and re-analysis. Some of these additional costs are captured by surprisal, which contributes more to behavioral predictivity in NatStor than in other datasets (Appendix \ref{sec:appendix-sfl}). However, surprisal has been shown to systematically fail to account for the costs of higher-order syntactic integration and re-analysis \citep{arehalli2022syntactic, van2021single, hahn2022resource, wilcox-etal-2021-targeted, huang2024large}. In those cases, embedding representations may capture the linguistic components that underlie these costs, predicting additional variance in language processing behavior over \textsc{sfl} alone. Future work should extend our approach to experimentally controlled, non-naturalistic materials to understand how and when richer representations affect both behavioral and neural responses.
+
+\section{Conclusion} \label{sec:conclusion}
+
+In this study, we compared \textsc{emb} and \textsc{sfl} in terms of their predictivity in relation to several brain and behavioral measures of incremental language processing. We showed that the relative fit of these two predictors critically depends on the outcome variable: \textsc{sfl} best accounts for behavioral responses, whereas \textsc{emb} better captures brain activity. Language processing behavior thus reflects a compressed bottleneck over a few theoretically motivated properties of the input, whereas neural data retain access to a richer, high-dimensional representational space. % These findings also speak to the use of LMs as cognitive models of language processing in light of the symmetry whereby the model's output---surprisal---best predicts human behavior, whereas its internal representations best predict brain activity.
+
+\smallskip 
+
+The analyses in this paper focused primarily on predictive performance. Beyond predictivity, \textsc{emb} and \textsc{sfl} also differ in the interpretative commitments they invoke. The functional significance of surprisal, frequency, and length can be explained in terms of rational information processing, and, in the case of surprisal, in algorithmic proposals specifying why the human processor should be sensitive to word predictability, for instance in terms of Bayesian inference \citep{marr1982vision, bicknell2010rational}. By contrast, convergence between model and human representations in the \textsc{emb} framework is often given a teleological reading \citep{cichy2019deep} and thus situated at the computational level of description \citep{marr1982vision}: brains and models would align because they are both optimized for prediction (\citealp{schrimpf2021neural, caucheteux2022brains}; cf. \citealp{antonello2024predictive}) or deeper language understanding \citep{aw2022training}. 
+
+\smallskip
+
+A second axis of comparison concerns model complexity and parsimony. Our analyses deliberately set aside one consideration that might otherwise guide model selection: the complexity of the predictive model itself. In philosophy of science, when competing models yield comparable predictions, parsimony is often invoked as a guiding principle \citep{occam1495quaestiones}; furthermore, common approaches in model comparison involve a penalty for complexity \citep{aic}. In this respect, the comparison between \textsc{emb} and \textsc{sfl} reflects a trade-off that characterizes many modeling efforts in science: the balance between simplicity and interpretability on one hand and predictivity on the other \citep{tuckute2023driving}. As models of behavioral data, \textsc{sfl} representations satisfy both desiderata: they are not only highly predictive of reading behavior, but also low-dimensional and interpretable. As such, they offer a compelling explanatory framework for the behavioral correlates of comprehension difficulty. When modeling brain data, however, the situation is more complex. \textsc{emb} obtains strong predictivity, but at the cost of increased model complexity; \textsc{sfl} is interpretable, but does not match the predictive capacity of \textsc{emb}. 
+
+\smallskip
+
+Nonetheless, the high complexity of \textsc{emb} should not make us think of it as a less valuable tool for understanding how language is encoded in the brain. Rather, it suggests that understanding brain responses to language may require engaging with the full representational richness encoded in language model embeddings. Future work may leverage post-hoc analytical tools to decompose the embedding space and isolate structured, interpretable components that drive its alignment with neural responses \citep{tuckute2023driving}. 
+
+\section{Methods} \label{sec:methods}
+
+\subsection{Models}
+
+In our analyses, we considered five GPT variants, namely the original GPT model \citep{gpt} and four models in the GPT-2 family with parameter size spanning from 124M to 1.5B (GPT-2\textsubscript{124M}, GPT-2\textsubscript{355M}, GPT-2\textsubscript{774M}, GPT-2\textsubscript{1.5B}; \citealp{gpt2}); we employed the same models to derive surprisal estimates and embedding representations. In the case of \textsc{emb}, word-level representations were obtained by averaging over sub-word tokens. Surprisal values were instead summed over sub-word tokens. In our analyses, we generally considered the embeddings and surprisal values relative to $w_i$; those corresponding to previous words were included in the analyses of neural and behavioral variables that are well-known to be responsive to spill-over effects, namely fMRI responses and self-paced reading times.
+
+\subsection{Datasets}
+
+Our analyses were performed on four eye-tracking, three self-paced reading, one maze, one ERP, and four fMRI datasets. We provide a summary of the datasets we considered in Table \ref{tab:datasets}. Given the high number of resources we considered in our analyses, we briefly describe each dataset individually in the Supplementary Information (\ref{sec:appendix-datasets}); we further redirect the reader to the original publications for additional details.
+
+\medskip 
+
+\begin{table}[t]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lllllcp{2.5cm}p{2.5cm}rrc}
+\hline
+\textbf{Type} & \textbf{Measure} & \textbf{Name} & \textbf{Citation} & \textbf{Resolution} & \textbf{Edited} & \textbf{Connected text} & \textbf{Modality} & \textbf{N} \ \ & \textbf{Part.} & \textbf{Reliability} \\
+\hline
+Beh & Eye-tracking & Provo & \citealp{provo} & Word &   & Short passages (2.5 sentences) & Visual & 2,659 & 84.00 & 0.93 \\
+Beh & Eye-tracking & Meco-en & \citealp{mecol1} & Word &   & Passages (8.25 sentences) & Visual & 2,096 & 40.13 & 0.87\\
+Beh & Eye-tracking & ZuCo-2 & \citealp{hollenstein2020zuco} & Word &   & Sentences & Visual & 6,461 & 17.44 & 0.76 \\
+Beh & Eye-tracking & UCL\textsubscript{ET} & \citealp{et_spr_corpus} & Word &   & Sentences & Visual & 1,726 & 42.00 & 0.84\\
+Beh & SPR & UCL\textsubscript{SPR} & \citealp{et_spr_corpus}  & Word &   & Sentences & Visual & 1,316 & 71.11 & 0.22 \\
+Beh & SPR & Brown & \citealp{effectislogarithmic} & Word &   & Passages & Visual & 5,862 & 19.05 & 0.39 \\
+Beh & SPR & NatStor\textsubscript{SPR} & \citealp{futrell2021natural} & Word & \checkmark & Stories (48.5 sentences) & Visual & 8,779 & 59.63 & 0.70 \\
+Beh & Maze & NatStor\textsubscript{Maze} & \citealp{boyce2023maze} & Word & \checkmark & Stories (48.5 sentences) & Visual & 9,779 & 5.86 & 0.47 \\
+Brain & N400 & UCL\textsubscript{N400} & \citealp{n400} & Word &   & Sentences & Visual (length-dependent presentation rate) & 1,505 & 24.00 & 0.22 \\
+Brain & BOLD & Wehbe2014 & \citealp{hp_fmri} & TR &   & Chapter & Visual (fixed presentation rate) & 1,211 & 8.00 & 0.16 \\
+Brain & BOLD & NatStor\textsubscript{fMRI} & \citealp{natstor_fmri} & TR & \checkmark & Stories (48.5 sentences) & Auditory & 1,516 & 27.18 & 0.61 \\
+Brain & BOLD & Pereira2018 & \citealp{pereira} & Sentence & \checkmark & Passages (4 sentences) & Visual & 627 & 7.84 & 0.28\\
+Brain & BOLD & Tuckute2024 & \citealp{tuckute2023driving} & Sentence &   & Sentences & Visual & 2,000 & 6.25 & 0.22 \\
+\hline
+\end{tabular}}
+\caption{Summary of behavioral and neural datasets considered in the analyses. The columns \textit{Type}, \textit{Measure}, \textit{Name}, and \textit{Authors} report basic information to identify the datasets. The column \textit{Resolution} indicates the granularity (words, sentences, TR intervals) of the responses. All the datasets are naturalistic, but some were edited to include specific constructions or cover certain topics; this information is reported in the column \textit{Edited}. The datasets varied in the amount of connected text that was presented to models and participants, from sentences to a whole chapter; this information is specified in \textit{Connected text}. \textit{Modality} indicates the presentation modality; in the case of visual presentation, all connected text (sentences, passages, stories) was presented simultaneously unless stated otherwise. \textit{N} refers to the actual number of data points included in the analyses, after data aggregation and trimming (see §\ref{sec:preproc}). \textit{Part.} indicates the number of participants per data point (i.e., how many observations were used to calculate the mean response at the granularity level specified in \textit{Resolution}). Split-half reliability is reported in the last column. See Appendix \ref{sec:appendix-reliab} for details on how reliability varies across different sample sizes.}
+\label{tab:datasets}
+\end{table}
+
+%\input{emnlp2023-latex/old/table-brackets}
+
+\subsection{Pre-processing} \label{sec:preproc}
+
+\subsubsection{Behavioral data}
+
+We analyzed the behavioral datasets following a consistent pre-processing pipeline. For eye-tracking data, we considered first-pass gaze duration times; words that were not fixated were counted as having a gaze duration time equal to zero. (Similar results were obtained using first fixation duration and total fixation duration; Appendix \ref{sec:appendix-fixmeasures}). Sentence-initial words were excluded from the analyses; apart from this criterion, we did not apply any other filtering unless stated otherwise. Word-level gaze duration times, self-paced reading reaction times, and Maze reading times were obtained by averaging responses across participants. Given that self-paced reading times are well-known to be sensitive to spill-over effects, the properties of the words $w_{i-2 \ldots i}$ were retained for the analyses. We did not include spill-over effects for eye-tracking data and Maze reading times since those two measurements have high temporal resolution and produce small spill-over effects, if any \citep{forster2009maze, boyce2023maze, wilcox2023testing}. 
+
+\subsubsection{Neural data}
+\textbf{fMRI datasets:} The fMRI datasets were analyzed differently depending on whether responses were recorded for continuous stories (Wehbe2014, NatStor\textsubscript{fMRI}) or individual sentences (Pereira2018, Tuckute2024). For the stories, functional data were acquired with repetition time (TR) equal to 2 seconds, and words were either visually presented at a fixed interval of 0.5 seconds (Wehbe2014) or recorded by a speaker, thus pronounced at a variable interval. Thus, to obtain TR-level predictors, both \textsc{emb} and \textsc{sfl} were downsampled by averaging over four words (Wehbe2014) or the number of words pronounced during the TR interval (NatStor\textsubscript{fMRI}). In the case of NatStor\textsubscript{fMRI}, word-by-word timestamps necessary to temporally align \textsc{emb} and \textsc{sfl} with the fMRI responses were extracted with the speech recognition model Whisper-timestamped \citep{whisper, whisper-timestamped}. Following \citet{aw2022training}, we employed as predictors the concatenation of the \textsc{sfl} and \textsc{emb} values relative to the four previous TRs, to account for the lag in the hemodynamic response recorded with fMRI. For the fMRI datasets including responses to sentences, sentence-aggregated \textsc{sfl} and \textsc{emb} regressors were obtained by averaging over word-level predictors. Across all four fMRI datasets, we considered as our core response variable the average activity across the language network \citep[see also][]{tuckute2023driving, de2025multilingual}. Aggregated responses were obtained by first averaging across the voxels within (functional) regions of interest (fROIs), then across fROIs, and lastly across participants, to obtain a univariate response, necessary for meaningful comparisons with the intrinsically univariate behavioral responses. In three datasets (NatStor\textsubscript{fMRI}, Tuckute2024, Pereira2018), regions of interest were identified functionally through a localizer task, whereas in the Wehbe2014 dataset, regions of interest were identified anatomically (see §\ref{sec:appendix-modeling-frois}). 
+
+\smallskip 
+
+\textbf{ERP dataset:} We considered N400 responses from the UCL\textsubscript{ERP} corpus, where words were visually presented at a word-length dependent presentation rate, considering N400 amplitudes from 12 centro-parietal electrodes. EEG responses were filtered following the exclusion criteria described in \citet{n400}; our analyses were based on the pre-computed word-by-word N400 amplitudes. Word-level N400 responses were obtained by averaging across participants. Words adjacent to punctuation signs were excluded after noticing during preliminary analyses that punctuation had a prominent effect on N400 responses, possibly due to wrap-up effects. Note however that the direction of the results reported in the paper was consistent regardless of the exclusion of punctuated words.
+
+
+\subsection{Analyses}
+
+With the \textsc{emb} approach, an important concern is to avoid overfitting. Indeed, the number of parameters of the regression models is typically larger than the number of observations. This complication must be contrasted with cross-validation and regularization. We used ridge regularization, due to its computational efficiency \citep{ridge}, and 10-fold cross-validation throughout our analyses. We selected the penalty term $\alpha$ in each training fold through nested cross-validation, considering 10 candidate penalties ranging from $10^{-5}$ to $10^4$ (logarithmically spaced). We adopted a sequential train-test split since with shuffled train-test splits it is possible to achieve high predictivity by simply relying on the temporal autocorrelation of the signal \citep{feghhi2024large, kauf2024lexical}. As a performance metric, we employed the Pearson correlation $r$ between the predictions of the regression model and the actual values of the behavioral or neural measure of interest, averaging across folds. To assess statistical significance, we used non-parametric paired-samples permutation tests. Prediction scores from each cross-validation fold were permuted between the two alternatives (e.g., \textsc{sfl} and \textsc{emb}), and the test statistic (the difference in mean $r$ values) was recomputed for all $2^n$ possible permutations. The $p$-value was defined as the proportion of permuted differences equal to or greater than the observed one. 
+
+\subsection{Data and code availability}
+
+All the code employed in this study and links to the employed datasets are publicly available.\footnote{\href{https://github.com/Andrea-de-Varda/LM-cognitive-probing}{https://github.com/Andrea-de-Varda/LM-cognitive-probing}} 
+
+%\section*{Acknowledgements}
+
+\FloatBarrier
+
+\bibliography{custom}
+\bibliographystyle{acl_natbib}
+
+\newpage
+
+\appendix
+
+\section{Supplementary information}
+
+\subsection{Data description}
+\label{sec:appendix-datasets}
+
+\subsubsection{Provo}
+The Provo corpus \citep{provo} comprises eye-tracking data from 84 native speakers of American English. Participants read 55 short passages from various sources, including news articles, science magazines, and public-domain fiction. %Fixations shorter than 80 ms and longer than 800 ms were removed by the authors.
+
+\subsubsection{Meco-en}
+
+The Meco corpus \citep{mecol1} is a collection of eye-movement data in 13 languages. For the purpose of this study, we focused on the English component of the corpus (Meco-en). Participants engaged in a naturalistic reading task, and were presented with 12 texts consisting of encyclopedic entries on a handful of topics. Meco-en includes data from 46 participants. %Data points that showed either very short first fixation durations (< 80 ms) or very long total fixation times (top 1\% of the participant-specific distribution) were discarded by the authors.
+
+\subsubsection{ZuCo-2}
+
+The ZuCo-2 corpus \citep{hollenstein2020zuco} is a dataset of simultaneous eye-tracking and electroencephalography recordings including data from 18 participants. In this study, we focused on the eye-tracking records. The resource comprises chronometric data from 349 sentences presented in a normal reading paradigm, and 390 presented in a task-specific paradigm, where the participants were instructed to actively search for certain semantic relations. As our main interest is natural reading, we conducted our analyses on the former portion of the dataset.
+
+\subsubsection{UCL\textsubscript{ET}}
+
+The UCL\textsubscript{ET} corpus \citep{et_spr_corpus} is a resource consisting of eye movement data on 205 sentences read by 43 participants. The sentences were extracted from publicly available unpublished novels, selecting those that contained only high-frequency words and could be interpreted out of context.
+
+\subsubsection{UCL\textsubscript{SPR}}
+The self-paced reading component of the UCL reading corpus \citep{et_spr_corpus} includes chronometric data from 117 participants reading 361 sentences. To increase the comparability with the eye-tracking component of the corpus, we only considered the 205 sentences shared with UCL\textsubscript{ET}. Words were presented at the center of the screen, and the current word was replaced by the next one at each subsequent keypress. 
+
+\subsubsection{Brown}
+
+The Brown corpus \citep{effectislogarithmic} is a resource of moving-window self-paced reading times collected from 32 participants, who read a varying portion of the corpus. The passages were drawn from the Brown corpus of American English. 
+
+\subsubsection{NatStor\textsubscript{SPR}}
+
+The NatStor\textsubscript{SPR} corpus \citep{futrell2021natural} includes moving-window self-paced reading times collected from 32 participants. The corpus consists of 10 stories developed by modifying publicly available texts to contain several rare syntactic structures (e.g., subject- and object-extracted relative clauses, clefts, topicalized structures). The syntactic editing of the texts aimed to maintain their meaning, and conserve a high degree of comprehensibility. Most participants read 5 out of the 10 stories. 
+
+\subsubsection{NatStor\textsubscript{Maze}}
+
+The NatStor\textsubscript{Maze} corpus \citep{boyce2023maze} is a resource of maze reading times collected on the same texts as NatStor\textsubscript{SPR}. In the Maze task, reaction times are recorded while participants iteratively choose between two words, presented simultaneously: a correct word that continues the sentence, and a distractor string which does not. In this dataset, an \say{error-correction} variant of the maze task was employed, in which when participants make an error, they see an error message and are asked to select again the correct word. Distractors were automatically generated. NatStor\textsubscript{Maze} includes maze reading time data from 63 participants; each participant read one of the 10 stories. Maze data were cleaned following the exclusion criteria described by \citet{boyce2023maze}.
+
+\subsubsection{UCL\textsubscript{ERP}}
+
+The UCL\textsubscript{ERP} corpus \citep{n400} includes amplitudes of six ERP components (N400, P600, and ELAN, LAN, PNP, and EPNP---four other ERP components which have received comparatively little attention in the literature). In this work, we focused on N400 amplitudes, which have been shown to be strongly responsive to surprisal in this dataset \citep{n400, de2024cloze}. The EEG recordings were collected from 24 participants reading 205 sentences. Words were serially presented at the center of the screen at a word-length dependent presentation rate. N400 amplitudes were operationalized as the average voltage of 12 centro-parietal electrodes 300-500 ms after the presentation of each word (electrodes sites 1, 14, 24, 25, 26, 29, 30, 31, 41, 42, 44, 45).
+
+\subsubsection{Wehbe2014}
+
+The Wehbe2014 dataset \citep{hp_fmri} comprises fMRI recordings of 8
+participants reading the ninth chapter of the book \textit{Harry Potter and the Sorceror’s Stone} \citep{rowling2000and}. The chapter's words (N = 5,176) were displayed sequentially at a fixed presentation rate of 0.5 seconds; they were split into four runs of comparable length. Functional imaging data were sampled with TR of 2 seconds. 
+
+\subsubsection{NatStor\textsubscript{fMRI}}
+The NatStor dataset contains fMRI recordings from participants who listened to naturalistic stories (approximately 5 minutes each). Data collection took place in the Fedorenko lab between 2014 and 2020. Initial results were reported in \citet{blank2014functional}, and subsequent analyses based on the expanded dataset appeared in several studies \citep{paunov2022differential, shain2020fmri, shain2022robust, sueoka2024language, wehbe2021incremental}. The datasets in its current form has been used by \citet{de2025multilingual}. The dataset includes 9 stories: 8 were edited to incorporate low-frequency syntactic constructions while preserving naturalness for native speakers \citep[see][]{futrell2021natural}, and 1 (an expository piece titled \say{Tree}) was adapted from Wikipedia \citep{paunov2022differential}. The number of participants per story ranged from 7 to 70, with a mean of 27.18.
+
+\subsubsection{Pereira2018}
+
+The Pereira2018 dataset (\citealp{pereira}; Experiments 2 and 3) includes fMRI recordings from 10 unique participants (9 in Experiment 2 and 6 in Experiment 3) reading 627 sentences (384 in Exp. 2, 243 in Exp. 3), grouped into passages of three to four sentences. All passages were encyclopedic texts providing basic information about a concept. Each participant saw each sentence between 1 and 4 times, with the majority seeing each sentence 3 times. The two sets of materials were constructed independently, and each spanned a broad range of content areas. Sentences were 7–18 words long in Experiment 2, and 5–20 words long in Experiment 3. The sentences were presented visually on a screen one at a time for 4 seconds (followed by 4 seconds of fixation, with additional 4 seconds of fixation at the end of each passage).
+
+\subsubsection{Tuckute2024}
+
+The Tuckute2024 dataset \citep{tuckute2023driving} comprises fMRI data from 10 participants who read a total of 2,000 sentences (with 6.25 responses per sentence, on average). These sentences, all six words in length, were sourced from written and transcribed spoken corpora to cover a wide range of content and styles. Sentences were displayed visually on a screen for 2 seconds each, followed by a 4-second fixation period. Data were collected over two or three separate scanning sessions.
+
+\input{emnlp2023-latex/figures/figure-indep-contrib}
+
+\subsection{fMRI pre-processing and first-level analysis}
+
+The Pereira2018, Tuckute2024, NatStor\textsubscript{fMRI} datasets were pre-processed following the same procedure (§\ref{sec:appendix-preproc-all}); across all three datasets, responses were recorded from five functional regions of interest (fROIs) defined in individual participants through a \say{localizer task} (§\ref{sec:appendix-modeling-frois}). We then averaged the responses across the voxels within each of the five fROIs, then across fROIs, and lastly, across participants, to obtain a univariate response for each dataset (thus comparable with the behavioral responses). The Wehbe2014 dataset did not include fROI information since no localizer was used during data collection. 
+
+\subsubsection{Pre-processing (shared between Pereira2018, Tuckute2024, NatStor\textsubscript{fMRI})} \label{sec:appendix-preproc-all}
+
+Data preprocessing was performed with SPM12 (using default parameters, unless specified otherwise) and custom scripts in MATLAB. Preprocessing of anatomical data included normalization into a common space (Montreal Neurological Institute [MNI] template) and segmentation into probabilistic maps of the gray matter (GM), white matter (WM), and cerebro-spinal fluid (CSF). A GM mask was generated from the GM probability map and resampled to 2 mm isotropic voxels to mask the functional data. Preprocessing of functional data included motion correction (realignment to the mean image using second-degree b-spline interpolation), normalization (estimated for the mean image using trilinear interpolation), resampling into 2 mm isotropic voxels, and smoothing with a 4 mm full-width, half-maximum (FWHM) Gaussian filter.
+
+\subsubsection{fMRI data modeling and definition of functional regions of interest (fROIs)} \label{sec:appendix-modeling-frois}
+The language localizer data and the Pereira2018 and NatStor\textsubscript{fMRI} were all modeled using the same setup (the setup was mostly similar in the Tuckute2024 dataset, with a few minor differences described in §\ref{sec:appendix-control-modeling}). Effects were estimated using a General Linear Model (GLM) in which each experimental condition was modeled with a boxcar function convolved with the canonical hemodynamic response function (HRF) (fixation was modeled implicitly, such that all timepoints that did not correspond to one of the conditions were assumed to correspond to a fixation period). Temporal autocorrelations in the BOLD signal timeseries were accounted for by a combination of high-pass filtering with a 128 seconds cutoff, and whitening using an AR(0.2) model (first-order autoregressive model linearized around the coefficient a=0.2) to approximate the observed covariance of the functional data in the context of Restricted Maximum Likelihood estimation (ReML). In addition to experimental condition effects, the GLM design included first-order temporal derivatives for each condition (included to model variability in the HRF delays), as well as nuisance regressors to control for the effect of slow linear drifts, subject-motion parameters, and potential outlier scans on the BOLD signal. Language fROIs were defined in individual participants \citep{fedorenko2010new, saxe2006divide} by combining two sources of information: (1) the participant’s activation map for the language localizer contrast \citep{fedorenko2010new} and (2) group-level constraints (‘parcels’) that delineated the expected gross locations of activations and were sufficiently large to encompass the variability in the locations of individual activations (all parcels are available for download from \url{https://www.evlab.mit.edu/resources-all/download-parcels}). The language localizer, described in detail in \citet{fedorenko2010new}, consisted of reading English sentences and lists of unconnected nonwords in a standard blocked design, with stimuli presented one (non)word at a time. The parcels were derived from a probabilistic activation overlap map using watershed parcellation, as described by \citet{fedorenko2010new}, for the sentences $>$ non-words contrast in 220 independent participants and covered extensive portions of the lateral frontal, temporal, and parietal cortices. Five language fROIs were defined (as the 10\% of voxels with the highest t-values for the sentences $>$ nonwords contrast) in the dominant hemisphere: three on the lateral surface of the frontal cortex and two on the lateral surface of the temporal and parietal cortex. 
+
+\subsubsection{fMRI data modeling -- Tuckute2024} \label{sec:appendix-control-modeling}
+Effects were estimated using a GLM in which each experimental condition (i.e., each sentence trial) was modeled using GLMsingle \citep{prince2022glmsingle}. Using this framework, a general linear model (GLM) was used to estimate the beta weights that represent the BOLD response amplitude evoked by each individual sentence trial (fixation was modeled implicitly, such that all time points that did not correspond to one of the conditions (sentences) were assumed to correspond to a fixation period). For each voxel, the HRF that provided the best fit to the data was identified (on the basis of the amount of variance explained). The data were modeled using a fixed number of noise regressors (five) and a fixed ridge regression fraction (0.05) (these parameters were determined empirically using a joint data modeling and data evaluation framework; see \citealp{tuckute2023driving}). By default, GLMsingle returns beta weights in units of percent signal change by dividing by the mean signal intensity observed at each voxel and multiplying by 100. To mitigate the effect of collecting data across multiple scanning sessions, the beta values were z-scored session-wise per voxel.
+
+\subsubsection{Pre-processing and modeling (Wehbe2014)}
+
+Functional data were preprocessed using SPM8 and custom MATLAB scripts. For each participant, preprocessing included realignment, slice timing correction, and co-registration of functional images to the anatomical scan, which was segmented into gray matter, white matter, and cerebrospinal fluid (CSF). The functional data were normalized to MNI space and smoothed with a 6 mm full-width at half maximum (FWHM) Gaussian kernel. Using PyMVPA \citep{hanke2009pymvpa}, the functional data were masked with the segmented anatomical image to exclude non-cortical voxels, including CSF. Temporal preprocessing included high-pass filtering at 0.005 Hz to remove low-frequency drifts and large-scale block effects, with the cutoff selected based on visual inspection of voxel time courses.
+
+ROIs were defined on the basis of the AAL atlas \citep{tzourio2002automated}. See \citet{hp_fmri} for additional details. Among those, we focused on regions that were considered in previous studies using this dataset, namely Posterior Temporal, Anterior Temporal, Angular Gyrus, Inferior Frontal Gyrus, Middle Frontal Gyrus, Inferior Frontal Gyrus (orbital part), and Posterior Cingulate \citep{aw2022training, merlin2024language}. 
+
+\subsection{Surprisal, frequency, and length} \label{sec:appendix-sfl}
+
+We report in Figure \ref{fig:indep-contrib} the predictivity associated with surprisal (\textsc{s}), frequency (\textsc{f}), and length (\textsc{l}) taken alone as predictors of reading behavior and language-dependent brain responses. We further report the results obtained with all the possible feature subsets (\textsc{sf}, \textsc{fl}, \textsc{sl}, \textsc{sfl}). The reported results were obtained with GPT-2\textsubscript{355M}, as the model obtained solid average predictivity across the behavioral and brain datasets. In the datasets where spill-over effects were taken into account, the features of $w_i, w_{i-1} \ldots w_{i-N}$ were jointly selected in the various combinations to avoid combinatorial explosion. The plots show that word length is the main determinant of gaze duration times, with little additional predictivity added by frequency and surprisal. When considering maze and self-paced reading times, the predictivity of the three features is more homogeneous, but word overall, surprisal lags behind the two context-independent predictors (although in the UCL\textsubscript{SPR} reading corpus, the highest predictive power is obtained by surprisal, and in the two NatStor datasets the predictivity of surprisal, frequency, and length is very similar). In the brain datasets, surprisal has an edge over frequency and length across all datasets but Wehbe2014, where the performance obtained by frequency alone is slightly better. Across all neural datasets, word length exerts a reduced predictivity on brain responses.
+
+\subsection{Additional fixation measures} \label{sec:appendix-fixmeasures}
+
+In the main body of the paper, we presented the results obtained with gaze duration as the main dependent variable when analyzing eye-tracking data. Here, we replicated the analyses considering two additional measures, namely first fixation duration (the first single fixation on $w_i$) and total fixation duration (the total amount of time the eyes spent on $w_i$, including fixations returning to the word after having left it). Results confirmed our previous observation that on reading times data, \textsc{sfl} outperforms \textsc{emb} in predicting word-by-word fixation times, and the concatenation of \textsc{sfl}$^\frown$\textsc{emb} yields reduced improvements over \textsc{sfl} alone. 
+
+\input{emnlp2023-latex/figures/figure_fix_measurements}
+
+\input{emnlp2023-latex/figures/figure-reliab-size}
+
+\subsection{Layer-wise analyses} \label{sec:appendix-layerwise}
+
+In the main analyses, we extracted embeddings from the final layer of each model. This choice maximizes comparability across datasets and is conservative in the case of brain data, where prior work has shown that intermediate layers often yield higher predictivity \citep{caucheteux2022brains, antonello2023scaling}. For behavioral data, however, this choice may obscure the full predictivity of \textsc{emb}: if embeddings from earlier layers better align with behavioral measures, then the gap in predictivity between \textsc{emb} and \textsc{sfl} may be overestimated. Indeed, \citet{kuribayashi2025large} found that surprisal values derived from earlier layers best predict reading times; although this approach differs from predicting responses from full embedding representations, it may suggest that earlier layers may encode psychometrically relevant information that is lost in later layers.
+
+To evaluate this possibility, we conducted a layer-wise analysis on behavioral data. For this supplementary analysis, we considered GPT-2\textsubscript{355M}, as this model was intermediate in size and obtained good average predictive power both with behavioral and brain data (see also §\ref{sec:appendix-sfl}). For each behavioral data type, we identified the model layer yielding the highest predictivity in a dataset (UCL\textsubscript{ET} for eye-tracking and UCL\textsubscript{SPR} for self-paced reading) and evaluated it on the held-out datasets. For eye-tracking data, the best performance was achieved using embeddings from layer 3; for self-paced reading, the last layer achieved the strongest predictivity. Since the last layer was already used in the main analyses, we limited our analyses based on earlier layer representations to the remaining eye-tracking datasets (Provo, Meco-en, ZuCo). The held-out evaluation generally confirmed the original findings in two out of three datasets. \textsc{sfl} outperformed \textsc{emb} both in Provo (\textit{r\textsubscript{\textsc{sfl}}} $= 0.8641$, SD $= 0.0193$; \textit{r\textsubscript{\textsc{emb}}} $= 0.8539$, SD $= 0.0194$) and Meco-en (\textit{r\textsubscript{\textsc{sfl}}} $= 0.8251$, SD $= 0.0301$; \textit{r\textsubscript{\textsc{emb}}} $= 0.8177$, SD $= 0.0271$) as in the original analyses. In ZuCo, however, \textsc{emb} outperformed \textsc{sfl}, differing from the main result (\textit{r\textsubscript{\textsc{sfl}}} $= 0.7607$, SD $= 0.0264$; \textit{r\textsubscript{\textsc{emb}}} $= 0.7863$, SD $= 0.0208$). These findings suggest that while intermediate layers may yield marginal gains for behavioral prediction in specific datasets, the overall pattern favoring \textsc{sfl} remains.
+
+\subsection{Reliability analysis by sample size} \label{sec:appendix-reliab}
+
+To quantify the internal consistency of each dataset and assess how it scales with the number of observations, we computed progressive split-half reliability curves. For each dataset, we represented individual data points (using each dataset's resolution, e.g., word-level reading times, TR-level fMRI responses, see Table \ref{tab:datasets}) as lists of item-level measurements. We then iteratively estimated reliability for increasing numbers of observations (from 2 up to half the maximum available) using the following procedure. At each iteration, we randomly split the selected number of observations for each item into two halves, computed the average in each half, and correlated the resulting values across all items. This process was repeated 10 times to obtain stable estimates of reliability and associated standard deviations. The results are reported in Figure \ref{fig:reliability-by-size}.
+
+\end{document}

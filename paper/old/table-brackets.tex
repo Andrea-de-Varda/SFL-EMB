@@ -1,0 +1,114 @@
+% Preamble:
+% \usepackage{tikz}
+% \usetikzlibrary{decorations.pathreplacing}
+% \usepackage{adjustbox}
+% \newcommand{\tikzmark}[1]{\tikz[remember picture] \coordinate (#1);}
+
+\begin{table}[t]
+\centering
+\small
+
+% >>> EVERYTHING (table + brackets) IS SCALED TOGETHER <<<
+\begin{adjustbox}{max width=\textwidth,center}
+
+\begin{tikzpicture}[remember picture]
+
+% ===== TABULAR =====
+\node[anchor=north west] (tbl) at (0,0) {%
+\begin{tabular}{lllcp{2.5cm}p{2cm}rrc}
+\hline
+\textbf{Name} & \textbf{Citation} & \textbf{Resolution} &
+\textbf{Edited} & \textbf{Connected text} &
+\textbf{Modality} & \textbf{N} \ \ &
+\textbf{Part.} & \textbf{Reliability} \\
+\hline
+
+\tikzmark{beh_start}\tikzmark{et_start}Provo & \citealp{provo} & Word &   &
+Short passages (2.5 sentences) & Visual & 2659 & 84.00 & 0.93 \\
+Meco-en & \citealp{mecol1} & Word &
+& Passages (8.25 sentences) & Visual & 2096 & 40.13 & 0.87\\
+ZuCo-2 & \citealp{hollenstein2020zuco} & Word &
+& Sentences & Visual & 6461 & 17.44 & 0.76 \\
+UCL\textsubscript{ET} & \citealp{et_spr_corpus} & Word &
+& Sentences & Visual & 1726 & 42.00 & 0.84\\
+
+\tikzmark{et_end}\tikzmark{spr_start}UCL\textsubscript{SPR} &
+\citealp{et_spr_corpus}  & Word &
+& Sentences & Visual & 1316 & 71.11 & 0.22 \\
+Brown & \citealp{effectislogarithmic} & Word &
+& Passages & Visual & 5862 & 19.05 & 0.39 \\
+NatStor\textsubscript{SPR} & \citealp{futrell2021natural} &
+Word & \checkmark & Stories (48.5 sentences) & Visual & 8779 & 59.63 & 0.70 \\
+
+\tikzmark{spr_end}\tikzmark{maze_row}\tikzmark{beh_end}%
+NatStor\textsubscript{Maze} & \citealp{boyce2023maze} &
+Word & \checkmark & Stories (48.5 sentences) & Visual & 9779 & 5.86 & 0.47 \\
+
+\tikzmark{brain_start}\tikzmark{n400_row}%
+UCL\textsubscript{N400} & \citealp{n400} & Word &
+& Sentences &
+Visual (length-dependent) & 1505 & 24.00 & 0.22 \\
+
+\tikzmark{bold_start}Wehbe2014 & \citealp{hp_fmri} & TR &
+& Chapter & Visual (fixed) & 1211 & 8.00 & 0.16 \\
+NatStor\textsubscript{fMRI} & \citealp{natstor_fmri} & TR &
+\checkmark & Stories (48.5 sentences) & Auditory & 1516 & 27.18 & 0.61 \\
+Pereira2018 & \citealp{pereira} & Sentence &
+\checkmark & Passages (4 sentences) & Visual & 627 & 7.84 & 0.28 \\
+
+\tikzmark{bold_end}\tikzmark{brain_end}%
+Tuckute2024 & \citealp{tuckute2023driving} &
+Sentence & & Sentences & Visual & 2000 & 6.25 & 0.22 \\
+
+\hline
+\end{tabular}
+};
+
+% ===== BRACKETS (all scaled with the table!) =====
+\begin{scope}[shift={(tbl.north west)},remember picture,overlay]
+
+% TYPE
+\draw[decorate,decoration={brace,amplitude=0.5em},thick]
+    ([shift={(-2em,-1.8ex)}]pic cs:beh_end)
+ -- ([shift={(-2em,0.7ex)}]pic cs:beh_start)
+ node[midway,xshift=-1.1em,rotate=90]{Behavioral};
+
+\draw[decorate,decoration={brace,amplitude=0.5em},thick]
+    ([shift={(-2em,-0.7ex)}]pic cs:brain_end)
+ -- ([shift={(-2em,2ex)}]pic cs:brain_start)
+ node[midway,xshift=-1.1em,rotate=90]{Neural};
+
+% MEASURES
+\draw[decorate,decoration={brace,amplitude=0.45em},thick]
+    ([shift={(-0.5em,2.7ex)}]pic cs:et_end)
+ -- ([shift={(-0.5em,0.7ex)}]pic cs:et_start)
+ node[midway,xshift=-1.1em,rotate=90]{Eye-tracking};
+
+\draw[decorate,decoration={brace,amplitude=0.45em},thick]
+    ([shift={(-0.5em,5ex)}]pic cs:spr_end)
+ -- ([shift={(-0.5em,1.8ex)}]pic cs:spr_start)
+ node[midway,xshift=-1.1em,rotate=90]{SPR};
+
+\draw[decorate,decoration={brace,amplitude=0.25em},thick]
+    ([shift={(-0.5em,-1.2ex)}]pic cs:maze_row)
+ -- ([shift={(-0.5em,3.7ex)}]pic cs:maze_row)
+ node[midway,xshift=-1.1em,rotate=90]{Maze};
+
+\draw[decorate,decoration={brace,amplitude=0.25em},thick]
+    ([shift={(-0.5em,-2.7ex)}]pic cs:n400_row)
+ -- ([shift={(-0.5em,1.7ex)}]pic cs:n400_row)
+ node[midway,xshift=-1.1em,rotate=90]{N400};
+
+\draw[decorate,decoration={brace,amplitude=0.45em},thick]
+    ([shift={(-0.5em,-0.7ex)}]pic cs:bold_end)
+ -- ([shift={(-0.5em,2.7ex)}]pic cs:bold_start)
+ node[midway,xshift=-1.1em,rotate=90]{BOLD};
+
+\end{scope}
+
+\end{tikzpicture}
+
+\end{adjustbox}
+
+\caption{Summary of behavioral and neural datasets considered in the analyses.}
+\end{table}

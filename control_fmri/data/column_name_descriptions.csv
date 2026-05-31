@@ -1,0 +1,40 @@
+﻿column_name,description
+response_target,BOLD response in brain region of interest. Every voxel z-scored session-wise prior to averaging.
+roi,Name of the brain region.
+target_UID,Participant identifier. Note that the participant numbers refer to unique identifiers in the lab internal database and can be cross-referenced with the Fedorenko lab’s studies on OSF.
+item_id,Sentence item id number. Every unique sentence has a unique item_id number.
+sentence,Sentence string.
+cond,"Sentence condition. Values are: B (baseline), D (drive), S (suppress)"
+cond_approach,"Sentence condition with D and S sentences named according to whether they were derived using the search or the modify approach. Values are: B (baseline), D_search (drive from the search approach), S_search (suppress from search), D_modify (drive from modify), S_modify (suppress from modify). "
+encoding_model_pred,"Prediction from the encoding model fitted based on the participant-averaged 5 train participants' data (n=1,000 sentences) "
+mapping_result_identifier,An identifier string which was used store results from encoding model fitting.
+session_id,Which fMRI scanning session a given sentence was presented in.
+run_id,Which fMRI run a given sentence was presented in.
+trial_num,Which number a given sentence was within an fMRI run.
+run_within_session,Which number a given fMRI run was during the scanning session.
+log-prob-5gram_mean,Log probability estimated from a 5-gram model. Mean over tokens in the sentence.
+log-prob-gpt2-xl_mean,Log probability estimated from GPT2-XL. Mean over tokens in the sentence.
+log-prob-pcfg_mean,Log probability estimated from a PCFG model. Mean over tokens in the sentence.
+rating_arousal_mean,Behavioral ratings for arousal. See task instructions in supplementary information.
+rating_conversational_mean,Behavioral ratings for perceived conversational frequency.
+rating_sense_mean,Behavioral ratings for plausibility.
+rating_gram_mean,Behavioral ratings for grammaticality.
+rating_frequency_mean,Behavioral ratings for perceived general frequency.
+rating_imageability_mean,Behavioral ratings for imageability.
+rating_others_thoughts_mean,Behavioral ratings for mental state content.
+rating_physical_mean,Behavioral ratings for physical object content.
+rating_places_mean,Behavioral ratings for places content.
+rating_valence_mean,Behavioral ratings for valence.
+response_target_non_norm,BOLD response in brain region of interest. No normalization.
+nc,Noise ceiling for a given brain regions. See SI 5.
+ncsnr,Signal-to-noise estimation. See SI 5.
+sd_signal,Signal standard deviation. See SI 5.
+sd_noise,Noise standard deviation. See SI 5.
+n_UIDs,Number of participants that were used to compute the noise celing.
+NC_n,Number of participants to estimate noise ceiling for (parameter in the denominator of Eq 5 in SI 5).
+UIDs,The participant identifiers for the noise ceiling computation.
+norm,"The normalization of the data. ""bySessVoxZ"" means that the voxels were z-scored prior to averaging."
+split_n_items,"For noise ceiling reliability estimation, how many sentences were in each split (see SI 5b)."
+split_half_se,Reliability (standard error) of the noise ceiling obtained via a split-half procedure. See SI 5b.
+split_UIDs,The participant identifiers for the noise ceiling reliability computation.
+nc_split_half_se_zero_overlap,Whether the reliability of the noise ceiling (split_half_se) overlaps with zero.

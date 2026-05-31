@@ -1,0 +1,62 @@
+
+\begin{figure*}[htp]
+%\setlength{\tabcolsep}{10pt}
+\begin{center}
+\resizebox{.65\textwidth}{!}{ 
+\pgfdeclarelayer{bg2}    % declare background layer
+\pgfdeclarelayer{bg1}    % declare background layer
+\pgfsetlayers{bg2,bg1,main}  % set the order of the layers (main is the standard layer)
+
+\begin{tikzpicture}
+    \node (A) at (0,0) {
+        \begin{tabular}{c@{\hskip 7pt}c@{\hskip 7pt}c@{\hskip 7pt}c}
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/anttemp_HP.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/PostTemp_HP.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/angularG_HP.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/pCingulate_HP.png} \\
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/MFG_HP.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/IFG_HP.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/IFGorb_HP.png} &
+            \raisebox{.6cm}{\includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.14\textwidth]{emnlp2023-latex/figures/legend.png}} \\
+        \end{tabular}
+    };
+    \begin{pgfonlayer}{bg1}    % select the background layer
+        \node[draw,rounded corners, thick, inner sep=1pt, fit=(A), fill=white] {};   % 
+    \end{pgfonlayer}
+    %\node[draw,rounded corners, thick, inner sep=1pt, fit=(A)] {};   % select the background layer
+    \node[fill=white, draw,above=of A, yshift=-1.04cm] {Harry Potter};
+    \node[below=of A] (B){
+        \begin{tabular}{c@{\hskip 7pt}c@{\hskip 7pt}c@{\hskip 7pt}c}
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/anttemp_pereira.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/posttemp_pereira.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/midanttemp_pereira.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/midposttemp_pereira.png} \\
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/MFG_pereira.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/IFG_pereira.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/IFGorb_pereira.png} &
+            \includegraphics[trim={.36cm .38cm .22cm .25cm},clip,width=0.2\textwidth]{emnlp2023-latex/neurofig/angularG_pereira.png} \\
+        \end{tabular}
+    };
+    \begin{pgfonlayer}{bg1}    % select the background layer
+        \node[draw, thick, rounded corners, inner sep=1pt, fit=(B), fill=white] {};
+    \end{pgfonlayer}
+    %\node[draw, thick, rounded corners, inner sep=1pt, fit=(B)] {};
+    \node[fill=white, draw,above=of B, yshift=-1.04cm] {Pereira};
+
+    % \begin{pgfonlayer}{bg2}    % select the background layer
+    % \draw[thick, rounded corners, fill = red!20] (D1.north west) -- (E1.south west) -- (E1.south east) -- ($(E1.south east)+(0, 3.95)$) -- (D1.south east) -- (D1.north east) -- cycle;
+    % \end{pgfonlayer}
+
+    \begin{pgfonlayer}{bg2}    % select the background layer
+        \node[draw, thick, rounded corners, fit=(A), inner sep = 5pt, fill=red!20] {};
+    \end{pgfonlayer}
+        \begin{pgfonlayer}{bg2}    % select the background layer
+        \node[draw, thick, rounded corners, fit=(B), inner sep = 5pt, fill=red!20] {};
+    \end{pgfonlayer}
+
+\end{tikzpicture}}
+\end{center}
+\caption{Results obtained by the regression models on the different ROIs in the language network, as identified by the studies releasing the fMRI data. \textsc{emb}-based regression achieves higher predictivity than \textsc{sfl} in most brain areas, and \textsc{emb}$^\frown$\textsc{sfl} obtains results that are comparable with \textsc{emb} alone.}
+\label{fig:roiresults}
+
+\end{figure*}

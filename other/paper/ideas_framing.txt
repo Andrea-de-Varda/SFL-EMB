@@ -1,0 +1,18 @@
+ideas for paper:
+
+NN as explanations, at least in linguistic theory (Piantadosi, Baroni); However, this disconsiders the fact that, all things being equal, simpler explanations are to be preferred to complex ones (Okham, Akaike). 
+
+From Tuckete: "[...] in explaining the world, scientists strive for models that both have high predictive power and are interpretable. Similarly, in neuroscience, understanding can come in the form of quantitatively accurate models that can predict how a brain cell, region, or network of regions will respond to a particular stimulus. But understanding can also come in the form of intuitive descriptions of stimulus properties that lead to stronger or weaker neural responses (e.g., 132,133). Here, we have coalesced these two kinds of understanding: we put predictive models to a strong test—assessing their ability to drive neural activity up or down— while, simultaneously, characterizing our stimuli in detail to gain insights into linguistic properties that modulate neural responses in the target brain areas."
+
+Trade-off between desiderata; balance between predictivity and simplicity. However, there must be a substantial increase in predictivity to prefer a more complex and less interpretable model. 
+
+EMB as a cognitive model - comp level of description (shrimpf, optimized for prediction); teleologic explanation. (also toneva, optimized for deeper understanding)
+In contrast, surprisal is plausible at least at algorithitmic (KL, bayesian reader) 
+
+
+If the class of phenomena to be modelled is fully homogenous, that is, all members of the class have the same properties, precision, realism, and generality can be achieved simultaneously. However, when this is not the case, a model cannot be fully precise (model each member of the class correctly) and general (model all members). 
+
+
+
+
+# most of the things are from tics paper btw
