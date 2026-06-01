@@ -12,10 +12,14 @@ import re
 import pyreadr
 import random
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 
 ########################################
@@ -31,7 +35,7 @@ def create_word_pos(sentences): # to recreate word and sentence indexes as in or
             sent_nr.append(sentnum)
     return word_pos, sent_nr
 
-natstor = pd.read_csv("/home/dev/Documents/Datasets/NaturalStories/NaturalStories_RAW.tsv", sep = "\t")
+natstor = pd.read_csv(PROJECT_ROOT / "main_data/NaturalStories/NaturalStories_RAW.tsv", sep = "\t")
 natstor = natstor[natstor["correct"] == 6]
 
 natst_sent = [re.sub("\n", "", s).split() for s in open("corpora/natural_stories.txt").readlines()] 
@@ -66,7 +70,7 @@ natstor_r = np.mean(natstor_r)
 # brown #
 #########
 
-brown = pd.read_csv("/home/dev/Documents/Datasets/Brown/brown_spr_RAW.csv")
+brown = pd.read_csv(PROJECT_ROOT / "main_data/Brown/brown_spr_RAW.csv")
 brown_sent = [re.sub("\n", "", s).split() for s in open("corpora/bnc_brown.txt").readlines()]
 
 participants = brown['subject'].unique()
@@ -99,7 +103,7 @@ brown_r = np.mean(brown_r)
 # ucl spr - et #
 ################
 
-eye = pd.read_csv('/home/dev/Documents/Datasets/UCL_ET_Corpus/eyetracking.RT.txt', sep="\t")
+eye = pd.read_csv(PROJECT_ROOT / "main_data/UCL_ET_CORPUS/eyetracking.RT.txt", sep="\t")
 eye = eye[eye.word_pos > 1] # in original analyses, excluded first word
 
 participants = eye['subj_nr'].unique()
@@ -131,7 +135,7 @@ eye_sent_nr = set(eye["sent_nr"])
 # spr #
 #######
 
-spr = pd.read_csv('/home/dev/Documents/Datasets/UCL_ET_Corpus/selfpacedreading.RT.txt', sep="\t")
+spr = pd.read_csv(PROJECT_ROOT / "main_data/UCL_ET_CORPUS/selfpacedreading.RT.txt", sep="\t")
 spr = spr[spr.sent_nr.isin(eye_sent_nr)]
 spr = spr[spr.word_pos > 3]
 
@@ -162,7 +166,7 @@ ucl_spr_r = np.mean(ucl_spr_r)
 # ucl ERP #
 ###########
 
-mat = scipy.io.loadmat('/home/dev/Documents/Datasets/ERP_Frank/stimuli_erp.mat')
+mat = scipy.io.loadmat(PROJECT_ROOT / "main_data/ERP_Frank/stimuli_erp.mat")
 mat.keys()
 
 ucl_n400_r = []
@@ -207,7 +211,7 @@ ucl_p600_r = np.mean(ucl_p600_r)
 
 # note: in provo, first word is already missing -- no need to exclude anything
 
-provo = pd.read_csv('/home/dev/Documents/Datasets/Provo/Provo_Corpus-Eyetracking_Data.csv', sep=",")
+provo = pd.read_csv(PROJECT_ROOT / "main_data/Provo/Provo_Corpus-Eyetracking_Data.csv", sep=",")
 provo = provo[['Participant_ID', 'Word_Number', 'Sentence_Number', 'Word_In_Sentence_Number', 'Word', 'IA_FIRST_FIXATION_DURATION', 'IA_FIRST_RUN_DWELL_TIME']]
 provo['IA_FIRST_FIXATION_DURATION'] = provo['IA_FIRST_FIXATION_DURATION'].fillna(0)
 provo['IA_FIRST_RUN_DWELL_TIME'] = provo['IA_FIRST_RUN_DWELL_TIME'].fillna(0)
@@ -246,7 +250,7 @@ provo_r = np.mean(provo_r)
 # maze #
 ########
 
-maze = pyreadr.read_r('/home/dev/Documents/Datasets/NaturalStories/natstor_maze.rds')
+maze = pyreadr.read_r(PROJECT_ROOT / "main_data/NaturalStories/natstor_maze.rds")
 df_maze = maze[None]
 
 maze = df_maze[df_maze["native"].isin(['ENG', 'ENGLISH', 'English','english'])]
@@ -327,7 +331,7 @@ maze_r = np.mean(maze_r)
 # MECO #
 ########
 
-meco = pd.read_csv("/home/dev/Documents/PhD/side-projects/eye-tracking/Meco_l1.csv", index_col=None)
+meco = pd.read_csv(PROJECT_ROOT / "main_data/Meco/Meco_l1.csv", index_col=None)
 meco = meco.iloc[: , 1:]; print("N (with NA) =", len(meco))
 meco = meco[meco['ia'].notna()]; print("N (no NA) =",len(meco))
 meco["trialid"] = meco.trialid.astype(int)
@@ -386,7 +390,7 @@ meco_r = np.mean(meco_r)
 # ZuCo #
 ########
 
-out = pd.read_csv("/media/drive2/Datasets/ZuCo/ET_data.csv")
+out = pd.read_csv(PROJECT_ROOT / "main_data/ZuCo/ET_data.csv")
 out = out.fillna(0)
 
 out["unique"] = out["idx"].astype(str) + "-" + out["word_idx"].astype(str)
@@ -420,31 +424,7 @@ zuco_r = np.mean(zuco_r)
 # Michaelov #
 #############
 
-df = pd.read_csv("/home/dev/Documents/Datasets/michaelov_n400/N400_data.csv")
-df1 = df.groupby(["Subject", "Sentence"], as_index=False, sort=False).agg({'Cloze':"mean", 'N400':"mean", 'PlausibilityJudgement':"mean", "Condition":"max"})
-
-subjects = df1['Subject'].unique()
-
-mich_r = []
-for n in range(100):
-    random.seed(n)
-    random.shuffle(subjects)
-    
-    half = len(subjects) // 2
-    group1_subjects = subjects[:half]
-    group2_subjects = subjects[half:]
-    
-    group1_data = df1[df1['Subject'].isin(group1_subjects)]
-    group2_data = df1[df1['Subject'].isin(group2_subjects)]
-    
-    group1_aggregated = group1_data.groupby('Sentence', as_index=False)['N400'].mean()
-    group2_aggregated = group2_data.groupby('Sentence', as_index=False)['N400'].mean()
-    
-    merged_data = pd.merge(group1_aggregated, group2_aggregated, on='Sentence', suffixes=('_group1', '_group2'))
-    
-    mich_r_temp, _ = pearsonr(merged_data['N400_group1'], merged_data['N400_group2'])
-    mich_r.append(mich_r_temp)
-mich_r = np.mean(mich_r)
+# [removed: Michaelov N400 dataset is not shipped with the repo]
 
 ###########
 # Pereira #
@@ -694,10 +674,9 @@ dict_corr = {"meco" : meco_r,
           "maze" :  maze_r,
           "ucl_n400" :  ucl_n400_r,
           "ucl_p600"  :  ucl_p600_r,
-          "michaelov" :  mich_r,
           "hp" : hp_r,
-          "pereira" : pereira_r, 
-          "control" : control_r, 
+          "pereira" : pereira_r,
+          "control" : control_r,
           "natstor_fmri" : natstor_fmri_r}
 
 for k, v in dict_corr.items():

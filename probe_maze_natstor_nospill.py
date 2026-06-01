@@ -18,7 +18,11 @@ import matplotlib.patches as mpatches
 import pyreadr
 import pickle
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 from utils import test_model_Ridge, base_plot, significance_testing, decompose_sfl, probe
@@ -27,7 +31,7 @@ from utils import test_model_Ridge, base_plot, significance_testing, decompose_s
 # reading maze data #
 #####################
 
-maze = pyreadr.read_r('/home/dev/Documents/Datasets/NaturalStories/natstor_maze.rds')
+maze = pyreadr.read_r(PROJECT_ROOT / "main_data/NaturalStories/natstor_maze.rds")
 df_maze = maze[None]
 
 maze = df_maze[df_maze["native"].isin(['ENG', 'ENGLISH', 'English','english'])]
@@ -81,7 +85,7 @@ maze = maze.groupby(["sent_n", "word_num", "word", "unique"], as_index=False, so
 # getting relevant psychometric data
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(f.values())
 
@@ -518,5 +522,5 @@ probe(med_filt, rt, 10, "maze_med_probing")
 ##########################
 dataname = "maze"
 tosave = [med_filt, rt]
-with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)

@@ -361,30 +361,9 @@ df_pred = pd.DataFrame(zip([" ".join(s) for s in sent], zscore(y_pred_emb), zsco
 df_pred = df_pred.sort_values(by="emb", ascending=False)
 
 
-affective = pd.read_csv("/home/dev/Documents/Datasets/affective-norms_Warriner_et_al_2013.csv")
-perceptual = pd.read_csv("/home/dev/Documents/Datasets/sensorimotor_Lynott-et-al_2020.csv")
-
-d_aff_v = {row.Word : row["V.Mean.Sum"] for index, row in affective.iterrows()}
-d_aff_a = {row.Word : row["A.Mean.Sum"] for index, row in affective.iterrows()}
-d_perceptual = {row.Word.lower() : row["Max_strength.perceptual"] for index, row in perceptual.iterrows()}
-
-def get_val(sentence, dict_):
-    words = sentence.split()
-    out = []
-    for word in words:
-        word = re.sub('[\.\,\:\-\?\!\)\(\"]', "", word)
-        try:
-            val = dict_[word]
-        except KeyError:
-            val = np.nan
-        out.append(val)
-    return np.nanmean(out)
-
-df_pred["Valence"] = [get_val(sentence, d_aff_v) for sentence in list(df_pred["sent"])]
-df_pred["Arousal"]  = [get_val(sentence, d_aff_a) for sentence in list(df_pred["sent"])]
-df_pred["Max percept. strength"]  = [get_val(sentence, d_perceptual) for sentence in list(df_pred["sent"])]
-
-#df_pred.to_csv("interpret_brain_results_Pereira.csv")
+# [removed: external semantic-norm files (Warriner affective, Lynott sensorimotor)
+#  are not shipped with the repo. The Valence/Arousal/Max-percept.-strength columns
+#  they produced are read from the precomputed interpret_brain_results_Pereira.csv below.]
 df_pred = pd.read_csv("interpret_brain_results_Pereira.csv")
 
 filt = ~np.isnan(list(df_pred["mean_ar"]))

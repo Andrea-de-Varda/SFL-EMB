@@ -14,7 +14,11 @@ from scipy.stats import pearsonr
 from glmnet import ElasticNet
 import matplotlib.patches as mpatches
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 from utils import test_model_Ridge, significance_testing, base_plot, decompose_sfl, probe
@@ -23,7 +27,7 @@ from utils import test_model_Ridge, significance_testing, base_plot, decompose_s
 # MECO #
 ########
 
-meco = pd.read_csv("/home/dev/Documents/PhD/side-projects/eye-tracking/Meco_l1.csv", index_col=None)
+meco = pd.read_csv(PROJECT_ROOT / "main_data/Meco/Meco_l1.csv", index_col=None)
 meco = meco.iloc[: , 1:]; print("N (with NA) =", len(meco))
 meco = meco[meco['ia'].notna()]; print("N (no NA) =",len(meco))
 meco["trialid"] = meco.trialid.astype(int)
@@ -116,7 +120,7 @@ if path.isfile(dirName+'/activations_gpt2_xl_meco.json') == False:
 ###########
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 
 minfreq = min(f.values())
@@ -444,8 +448,8 @@ probe(med_filt, fp, 10, "meco_med_probing")
 ##########################
 dataname = "meco"
 tosave = [med_filt, fp]
-with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
 
 ######################

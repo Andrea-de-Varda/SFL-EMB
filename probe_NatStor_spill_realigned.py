@@ -8,6 +8,11 @@ import torch
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+import os as _os; _os.chdir(str(PROJECT_ROOT))
 from utils import test_model_Ridge, significance_testing, base_plot, decompose_sfl
 
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")

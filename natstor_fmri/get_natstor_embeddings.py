@@ -15,7 +15,11 @@ from scipy.stats import pearsonr
 from tqdm import tqdm
 
 
-path = "/home/dev/Documents/PhD/MIT/project/natstor_fmri"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+path = str(PROJECT_ROOT / "natstor_fmri")
 chdir(path)
 
 parent_dir = os.path.abspath(os.path.join(path, '..'))
@@ -214,7 +218,7 @@ for story_n in range(1,11):
 ###########
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(f.values())
 

@@ -14,7 +14,11 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from mpl_toolkits.axes_grid.parasite_axes import SubplotHost
 
-chdir("/home/dev/Documents/PhD/MIT/project/fMRI")
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+chdir(str(PROJECT_ROOT / "fMRI"))
 
 SKIP_WORDS=20; END_WORDS=5176
 
@@ -201,7 +205,7 @@ xl_X    = embed_words(xl_filt)
 #######
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(f.values())
 

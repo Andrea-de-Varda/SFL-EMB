@@ -9,7 +9,11 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import re
 import pickle
 
-dirName = "/home/dev/Documents/PhD/MIT/project/ZuCo"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT / "ZuCo")
 chdir(dirName)
 
 parentdir = path.dirname(dirName)
@@ -17,7 +21,7 @@ sys.path.insert(0, parentdir)
 
 from utils import get_surprisal_tokens, loadmat1, test_model_Ridge, test_model_GAM, base_plot, significance_testing, decompose_sfl
 
-out_mean = pd.read_csv("/media/drive2/Datasets/ZuCo/ET_data_aggregated.csv") # NOTE: I changed the location
+out_mean = pd.read_csv(PROJECT_ROOT / "main_data/ZuCo/ET_data_aggregated.csv") # NOTE: I changed the location
 
 ff = np.array(out_mean[out_mean.word_idx != 0]["ff"])
 fp = np.array(out_mean[out_mean.word_idx != 0]["gd"])

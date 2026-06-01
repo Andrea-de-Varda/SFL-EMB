@@ -18,7 +18,11 @@ import warnings
 import pickle
 import sys
 
-path = "/home/dev/Documents/PhD/MIT/project/natstor_fmri"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+path = str(PROJECT_ROOT / "natstor_fmri")
 chdir(path)
 
 parent_dir = os.path.abspath(os.path.join(path, '..'))
@@ -358,5 +362,5 @@ probe(all_data, all_y, 10, "natstorfmri_med_probing")
 
 dataname = "natstor_fmri"
 tosave = [all_data, all_y]
-with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)

@@ -16,16 +16,20 @@ import torch
 from scipy.special import softmax
 import matplotlib.patches as mpatches
 import pyreadr
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
 from utils import test_model_Ridge, base_plot
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 #####################
 # reading maze data #
 #####################
 
-maze = pyreadr.read_r('/home/dev/Documents/Datasets/NaturalStories/natstor_maze.rds')
+maze = pyreadr.read_r(PROJECT_ROOT / "main_data/NaturalStories/natstor_maze.rds")
 df_maze = maze[None]
 
 maze = df_maze[df_maze["native"].isin(['ENG', 'ENGLISH', 'English','english'])]
@@ -75,7 +79,7 @@ maze = maze.groupby(["sent_n", "word_num", "word", "unique"], as_index=False, so
 # getting relevant psychometric data
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : row.Lg10WF for index, row in freq.iterrows()}
 minfreq = min(freq["Lg10WF"])
 

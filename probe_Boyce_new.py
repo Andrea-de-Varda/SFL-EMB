@@ -21,7 +21,11 @@ import matplotlib.patches as mpatches
 import pickle
 import pyreadr
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 from utils import test_model_Ridge, base_plot, significance_testing, decompose_sfl
@@ -100,7 +104,7 @@ maze_sent = [re.sub("\n", "", s).split() for s in open("corpora/boyce_sentences.
 # getting relevant psychometric data #
 ######################################
 
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(f.values())
 

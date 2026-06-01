@@ -1,7 +1,6 @@
 import os
 from os import chdir, path
 import numpy as np
-import h5py
 import sys
 from tqdm import tqdm
 import pandas as pd
@@ -9,72 +8,23 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import re
 import pickle
 
-dirName = "/home/dev/Documents/PhD/MIT/project/ZuCo"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT / "ZuCo")
 chdir(dirName)
 
-import data_loading_helpers as dh
-
-parentdir = path.dirname(dirName)
-sys.path.insert(0, parentdir) 
+parentdir = str(PROJECT_ROOT)
+sys.path.insert(0, parentdir)
 
 from utils import get_surprisal_tokens, loadmat1, test_model_Ridge, test_model_GAM, base_plot, significance_testing, decompose_sfl, probe
     
-task = "NR"
-
-rootdir = "/home/dev/Documents/Datasets/ZuCo/Matlab files/"
-
-out = []
-
-for file in tqdm(os.listdir(rootdir)):
-    if file.endswith(task+".mat"):
-        #print(file)
-
-        file_name = rootdir + file
-        subject = file_name.split("ts")[1].split("_")[0]
-
-        # exclude YMH due to incomplete data because of dyslexia
-        if subject != 'YMH':
-
-            f = h5py.File(file_name)
-            sentence_data = f['sentenceData']
-            rawData = sentence_data['rawData']
-            contentData = sentence_data['content']
-            omissionR = sentence_data['omissionRate']
-            wordData = sentence_data['word']
-            
-            for idx in range(len(rawData)):
-                obj_reference_content = contentData[idx][0]
-                sent = dh.load_matlab_string(f[obj_reference_content])
-
-                # get omission rate
-                obj_reference_omr = omissionR[idx][0]
-                omr = np.array(f[obj_reference_omr])
-                #print(omr)
-
-                # get word level data
-                word_data = dh.extract_word_level_data(f, f[wordData[idx][0]])
-
-                # number of tokens
-                # print(len(word_data))
-
-                for key, item in word_data.items():
-                    gd = item["GD"]
-                    ff = item["FFD"]
-                    gopast = item["GPT"]
-                    tt = item["TRT"]
-                    word = item["content"]
-                    word_idx = item["word_idx"]
-                    out.append([subject, idx, word_idx, word, ff, gd, gopast, tt])
-
-out = pd.DataFrame(out, columns=["subj", "idx", "word_idx", "word", "ff", "gd", "gopast", "tt"])
-out["unique"] = out["idx"].astype(str)+"_"+out["word_idx"].astype(str)
-#out.to_csv("/home/dev/Documents/Datasets/ZuCo/ET_data.csv")
-
-out = out.fillna(0)
-out_mean = out.groupby(["idx", "word_idx"], as_index=False, sort=False).agg({'ff':"mean", 'gd':"mean", 'gopast':"mean", 'tt':"mean", "word":"max", 'word_idx':"max",'idx':"max"})
-out_mean = out_mean.sort_values(["idx", "word_idx"], ascending=True)
-#out_mean.to_csv("/home/dev/Documents/Datasets/ZuCo/ET_data_aggregated.csv")
-out_mean = pd.read_csv("/media/drive2/Datasets/ZuCo/ET_data_aggregated.csv") # NOTE: I changed the location
+# Load the aggregated (participant-averaged) ZuCo eye-tracking data directly.
+# (The raw per-subject .mat reading that produced this file is no longer run;
+#  only the aggregated table is shipped with the repo. It is already
+#  participant-averaged, NaN-filled, and sorted by [idx, word_idx].)
+out_mean = pd.read_csv(PROJECT_ROOT / "main_data/ZuCo/ET_data_aggregated.csv")
 
 ff = np.array(out_mean[out_mean.word_idx != 0]["ff"])
 fp = np.array(out_mean[out_mean.word_idx != 0]["gd"])
@@ -200,7 +150,7 @@ s_xl = [s for sent in tqdm(sent) for s in get_surprisal_tokens(sent, sep = "Ġ",
 ################################
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(f.values())
 
@@ -418,8 +368,8 @@ probe(med_filt[filt_na], fp, 10, "zuco_med_probing")
 # save med_filt, y
 dataname = "zuco"
 tosave = [med_filt[filt_na], fp]
-with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 ###############################################################################
 ###########################

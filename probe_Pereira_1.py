@@ -11,7 +11,11 @@ from scipy.stats import pearsonr
 import matplotlib.pyplot as plt
 import pickle
 
-dirName = "/home/dev/Documents/PhD/MIT/project/pereira_1"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT / "pereira_1")
 chdir(dirName)
 
 parentdir = path.dirname(dirName)
@@ -137,7 +141,7 @@ s_xl = [s for sent in tqdm(sent) for s in get_surprisal_tokens(sent, sep = "Ġ",
 ################################
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(f.values())
 
@@ -269,30 +273,9 @@ r, _ = pearsonr(response, y_pred_sfl)
 df_pred = pd.DataFrame(zip([" ".join(s) for s in sent], zscore(y_pred_emb), zscore(y_pred_sfl), zscore(response)), columns = ["sent", "emb", "sfl", "brain"])
 df_pred = df_pred.sort_values(by="emb", ascending=False)
 
-affective = pd.read_csv("/home/dev/Documents/Datasets/affective-norms_Warriner_et_al_2013.csv")
-perceptual = pd.read_csv("/home/dev/Documents/Datasets/sensorimotor_Lynott-et-al_2020.csv")
-
-d_aff_v = {row.Word : row["V.Mean.Sum"] for index, row in affective.iterrows()}
-d_aff_a = {row.Word : row["A.Mean.Sum"] for index, row in affective.iterrows()}
-d_perceptual = {row.Word.lower() : row["Max_strength.perceptual"] for index, row in perceptual.iterrows()}
-
-def get_val(sentence, dict_):
-    words = sentence.split()
-    out = []
-    for word in words:
-        word = re.sub('[\.\,\:\-\?\!\)\(\"]', "", word)
-        try:
-            val = dict_[word]
-        except KeyError:
-            val = np.nan
-        out.append(val)
-    return np.nanmean(out)
-
-df_pred["Valence"] = [get_val(sentence, d_aff_v) for sentence in list(df_pred["sent"])]
-df_pred["Arousal"]  = [get_val(sentence, d_aff_a) for sentence in list(df_pred["sent"])]
-df_pred["Max percept. strength"]  = [get_val(sentence, d_perceptual) for sentence in list(df_pred["sent"])]
-
-#df_pred.to_csv("interpret_brain_results_Pereira.csv")
+# [removed: external semantic-norm files (Warriner affective, Lynott sensorimotor)
+#  are not shipped with the repo. The Valence/Arousal/Max-percept.-strength columns
+#  they produced are read from the precomputed interpret_brain_results_Pereira.csv below.]
 df_pred = pd.read_csv("interpret_brain_results_Pereira.csv")
 
 filt = ~np.isnan(list(df_pred["Arousal"]))
@@ -443,6 +426,6 @@ probe(med_filt, response, 10, "pereira_1_med_probing")
 # save med_filt, y
 dataname = "pereira_1"
 tosave = [med_filt, response]
-with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
 

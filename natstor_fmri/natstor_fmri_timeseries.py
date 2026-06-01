@@ -14,7 +14,11 @@ from math import ceil
 from tqdm import tqdm
 import pickle
 
-chdir("/home/dev/Documents/PhD/MIT/project/natstor_fmri")
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+chdir(str(PROJECT_ROOT / "natstor_fmri"))
 
 def save(file, name):
     with open(name, 'wb') as handle:

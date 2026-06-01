@@ -15,7 +15,11 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from mpl_toolkits.axes_grid.parasite_axes import SubplotHost
 
-dirName = "/home/dev/Documents/PhD/MIT/project/fMRI"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT / "fMRI")
 chdir(dirName)
 
 parentdir = path.dirname(dirName)
@@ -208,7 +212,7 @@ xl_X    = embed_words(xl_filt)
 #######
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(f.values())
 
@@ -544,7 +548,7 @@ probe(med_X, brain_data_avg["all"], 10, "hp_all_med_probing")
 # print(med)
 
 # from joblib import load
-# pca = load('/home/dev/Documents/PhD/MIT/project/probing_LMs/pca.pkl')
+# pca = load(PROJECT_ROOT / "probing_LMs/pca.pkl")
 # med_X_pca   = embed_words(pca.transform(med_filt))
 
 # # first-pass, activation only
@@ -557,5 +561,5 @@ probe(med_X, brain_data_avg["all"], 10, "hp_all_med_probing")
 # save med_filt, y
 dataname = "hp"
 tosave = [med_X, brain_data_avg["all"]]
-with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)

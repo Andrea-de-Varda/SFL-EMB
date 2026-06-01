@@ -18,7 +18,11 @@ from scipy.special import softmax
 import matplotlib.patches as mpatches
 import pickle
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 from utils import test_model_Ridge, significance_testing, base_plot, decompose_sfl, probe
@@ -147,7 +151,7 @@ if path.isfile(dirName+'/activations_gpt2_xl_brown.json') == False:
 ###############################
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 
 minfreq = min(f.values())
@@ -256,8 +260,8 @@ s_xl_natst = [s for sent in tqdm(natst_sent) for s in get_surprisal_tokens(sent,
 # FILTERING behav data (no sent initial words) #
 ################################################
 
-ns_spr = pd.read_csv('/home/dev/Documents/Datasets/NaturalStories/SPR/natural-stories.csv', sep=",")
-brown_spr = pd.read_csv('/home/dev/Documents/Datasets/Brown/bnc-brown.csv', sep=",")
+ns_spr = pd.read_csv(PROJECT_ROOT / "main_data/NaturalStories/SPR/natural-stories.csv", sep=",")
+brown_spr = pd.read_csv(PROJECT_ROOT / "main_data/Brown/bnc-brown.csv", sep=",")
 
 filt_brown = []
 for sent in brown_sent:
@@ -843,10 +847,10 @@ probe(med_filt_brown_spill, br_y, 10, "brown_med_probing")
 # save med_filt, y
 dataname = "natstor_spr"
 tosave = [med_filt_ns_spill, ns_y]
-with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
 dataname = "brown"
 tosave = [med_filt_brown_spill, br_y]
-with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)

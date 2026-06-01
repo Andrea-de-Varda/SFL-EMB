@@ -17,7 +17,11 @@ from scipy.special import softmax
 import matplotlib.patches as mpatches
 import pickle
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 from utils import test_model_Ridge, significance_testing, base_plot, decompose_sfl, probe
@@ -26,7 +30,7 @@ from utils import test_model_Ridge, significance_testing, base_plot, decompose_s
 # PROVO CORPUS #
 ################
 
-provo = pd.read_csv('/home/dev/Documents/Datasets/Provo/Provo_Corpus-Eyetracking_Data.csv', sep=",")
+provo = pd.read_csv(PROJECT_ROOT / "main_data/Provo/Provo_Corpus-Eyetracking_Data.csv", sep=",")
 provo = provo[['Text_ID','Word_Unique_ID','Word_Number', 'Sentence_Number', 'Word_In_Sentence_Number','Word', 'Word_Cleaned', 'Word_Length', 'IA_FIRST_FIXATION_DURATION','IA_FIRST_RUN_DWELL_TIME', 'IA_DWELL_TIME']]
 provo['IA_FIRST_FIXATION_DURATION'] = provo['IA_FIRST_FIXATION_DURATION'].fillna(0)
 provo['IA_FIRST_RUN_DWELL_TIME'] = provo['IA_FIRST_RUN_DWELL_TIME'].fillna(0)
@@ -39,11 +43,11 @@ set(provo["Sentence_Number"])
 set(provo["Text_ID"])
 
 # in DF, the first word is missing! Take it from stimuli data
-first_word = [s.split("\t")[2][1:-2].split()[0] for s in open("/home/dev/Documents/Datasets/Provo/sentences.txt").readlines()]
+first_word = [s.split("\t")[2][1:-2].split()[0] for s in open(PROJECT_ROOT / "main_data/Provo/sentences.txt").readlines()]
 d_f_w = {num+1 : first_word[num] for num in range(55)}
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(f.values())
 
@@ -447,8 +451,8 @@ probe(med_filt, fp, 10, "provo_med_probing")
 # save med_filt, y
 dataname = "provo"
 tosave = [med_filt, fp]
-with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 ###############################
 # OTHER FIXATION MEASUREMENTS #

@@ -6,7 +6,11 @@ import matplotlib.patches as mpatches
 import pickle
 from math import sqrt
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 from utils import plot_sem, plot_weights_sem, significance_testing
@@ -121,12 +125,12 @@ merged.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GP
 #plot_sem(merged, "act_fpass", "base_fpass", "all_fpass", "act_fpass_sem", "base_fpass_sem", "all_fpass_sem", "provo", title="Provo", subtract=True)
 np.mean(merged["base_fpass_sem"]-merged["base_fpass"])
 
-dirName = "/home/dev/Documents/PhD/MIT/project/ZuCo"
+dirName = str(PROJECT_ROOT / "ZuCo")
 chdir(dirName)
 merged = pd.read_csv("SEM/merged_zuco.csv")
 merged.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 #plot_sem(merged, "act_fpass", "base_fpass", "all_fpass", "act_fpass_sem", "base_fpass_sem", "all_fpass_sem", "zuco", title="ZuCo", subtract=True)
-dirName = "/home/dev/Documents/PhD/MIT/project"
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 np.mean(merged["base_fpass_sem"]-merged["base_fpass"])
 
@@ -191,29 +195,29 @@ np.mean(merged["base_sem"]-merged["base"])
 # fMRI #
 ########
 
-dirName = "/home/dev/Documents/PhD/MIT/project/fMRI"
+dirName = str(PROJECT_ROOT / "fMRI")
 chdir(dirName)
 roin =  ["all", "PostTemp", "AntTemp", "AngularG", "IFG", "MFG", "IFGorb", "pCingulate"]
 for roi in roin:
     merged = pd.read_csv("results/"+roi+"_results_sem.csv")
     merged.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
     plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", "hp_"+roi, title=roi, subtract=True, ylim1 = -.1)
-dirName = "/home/dev/Documents/PhD/MIT/project"
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 # Plotting ALL for paper
-dirName = "/home/dev/Documents/PhD/MIT/project/fMRI"
+dirName = str(PROJECT_ROOT / "fMRI")
 chdir(dirName)
 roi = "all"
 merged = pd.read_csv("results/"+roi+"_results_sem.csv")
 merged.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", "hp_"+roi, title="Harry Potter", subtract=True, ylim1 = 0)
 np.mean(merged["base_sem"]-merged["base"]) # 0.007336600
-dirName = "/home/dev/Documents/PhD/MIT/project"
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 
-dirName = "/home/dev/Documents/PhD/MIT/project/pereira"
+dirName = str(PROJECT_ROOT / "pereira")
 chdir(dirName)
 roin = ['LMidPostTemp', 'LPostTemp', 'LMidAntTemp', 'LIFG', 'LAntTemp', 'LIFGorb', 'LAngG', 'LMFG', 'all']
 for roi in roin:
@@ -225,17 +229,17 @@ for roi in roin:
         merged = pd.read_csv("results/"+roi+"_results_sem.csv")
         merged.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
         plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", "pereira_"+roi, title=roi[1:], subtract=False, ylim1 = -.1, asteriskshift=.02)
-dirName = "/home/dev/Documents/PhD/MIT/project"
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 # plotting ALL for paper
-dirName = "/home/dev/Documents/PhD/MIT/project/pereira"
+dirName = str(PROJECT_ROOT / "pereira")
 chdir(dirName)
 merged = pd.read_csv("results/"+roi+"_results_sem.csv")
 merged.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", "pereira_"+roi, title="Pereira", subtract=False, ylim1 = 0, asteriskshift=.02)
 np.mean(merged["base_sem"]) # not subtracting since already subtracted before (see probe_Pereira.py)
-dirName = "/home/dev/Documents/PhD/MIT/project"
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 merged["base_sem"]
@@ -265,10 +269,10 @@ theload_1("UCL_n400_small_base", "UCL_n400_small_base_sem")
 # significance_testing("UCL_fpass_small_base_sem", "UCL_fpass_small_base")
 
 
-dirName = "/home/dev/Documents/PhD/MIT/project/pereira"
+dirName = str(PROJECT_ROOT / "pereira")
 chdir(dirName)
 plot_weights_sem("pereira_all_small_base_sem", "Pereira, all", "weights")
-dirName = "/home/dev/Documents/PhD/MIT/project"
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 

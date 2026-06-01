@@ -21,7 +21,11 @@ from scipy.stats import zscore
 
 warnings.filterwarnings("ignore", message="Mean of empty slice")
 
-dirName = "/home/dev/Documents/PhD/MIT/project/control_fmri"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT / "control_fmri")
 chdir(dirName)
 
 parentdir = path.dirname(dirName)
@@ -145,7 +149,7 @@ tok_xl = AutoTokenizer.from_pretrained("gpt2-xl")
 s_xl = [s for sent in tqdm(sent) for s in get_surprisal_tokens(sent, sep = "Ġ", toker = tok_xl, model=xl, cased=True)]
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(f.values())
 
@@ -347,5 +351,5 @@ probe(med_filt, y, 10, "control_med_probing")
 # save med_filt, y
 dataname = "control"
 tosave = [med_filt, y]
-with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"../probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)

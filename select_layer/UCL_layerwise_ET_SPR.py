@@ -16,7 +16,11 @@ import matplotlib.patches as mpatches
 import neurox.data.loader as data_loader
 from sklearn.model_selection import KFold
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 from utils import test_model_Ridge, significance_testing, base_plot, plot_sem, get_sem, plot_weights_sem, decompose_sfl

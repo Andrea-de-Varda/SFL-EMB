@@ -26,7 +26,11 @@ import time
 from transformers import file_utils
 print(file_utils.default_cache_path)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 modelname = "TheBloke/Llama-2-7B-GGML"

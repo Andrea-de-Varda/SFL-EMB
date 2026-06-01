@@ -14,7 +14,11 @@ from scipy.special import softmax
 import re
 import matplotlib.patches as mpatches
 
-dirName = "/home/dev/Documents/PhD/MIT/project"
+# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
+from pathlib import Path as _Path
+_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
+PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
 from utils import test_model_Ridge, significance_testing, base_plot, plot_sem, get_sem, plot_weights_sem, decompose_sfl, probe
@@ -23,8 +27,8 @@ from utils import test_model_Ridge, significance_testing, base_plot, plot_sem, g
 # UCL READING CORPUS #
 ######################
 
-eye = pd.read_csv('/home/dev/Documents/Datasets/UCL_ET_Corpus/eyetracking.RT.txt', sep="\t")
-sentences = pd.read_csv('/home/dev/Documents/Datasets/UCL_ET_Corpus/stimuli.txt', sep="\t", encoding='cp1252')
+eye = pd.read_csv(PROJECT_ROOT / "main_data/UCL_ET_CORPUS/eyetracking.RT.txt", sep="\t")
+sentences = pd.read_csv(PROJECT_ROOT / "main_data/UCL_ET_CORPUS/stimuli.txt", sep="\t", encoding='cp1252')
 eye = eye[eye["RTfirstpass"]>0].groupby(["sent_nr", "word_pos"], as_index=False, sort=False).agg({'RTfirstfix':"mean", 'RTfirstpass':"mean", 'RTrightbound':"mean", 'RTgopast':"mean", "word":"max"})
 sent_map = {row.sent_nr:row.sentence.strip() for index, row in sentences.iterrows()}
 
@@ -33,7 +37,7 @@ with open("sentences.txt", 'w') as fp:
         fp.write("%s\n" % item)
     print('Done')
     
-spr =  pd.read_csv('/home/dev/Documents/Datasets/UCL_ET_Corpus/selfpacedreading.RT.txt', sep="\t")
+spr =  pd.read_csv(PROJECT_ROOT / "main_data/UCL_ET_CORPUS/selfpacedreading.RT.txt", sep="\t")
 spr = spr.groupby(["sent_nr", "word_pos"], as_index=False, sort=False).agg({'RT':"mean", "word":"max"})
 
 df_eye_spr = pd.merge(eye, spr, on=["sent_nr", "word_pos", "word"], how="left")
@@ -43,7 +47,7 @@ df_eye_spr["sentence"] = df_eye_spr["sent_nr"].map(sent_map)
 # ERP DATA #
 ############
 
-mat = scipy.io.loadmat('/home/dev/Documents/Datasets/ERP_Frank/stimuli_erp.mat')
+mat = scipy.io.loadmat(PROJECT_ROOT / "main_data/ERP_Frank/stimuli_erp.mat")
 mat.keys()
 
 # Frank has probabilities from 10 increasingly large corpora in RNN
@@ -179,7 +183,7 @@ df_all = pd.read_csv("UCL_reading_all.csv")
 ########################################################################################
 
 # frequency
-freq = pd.read_excel("/home/dev/Documents/Datasets/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 minfreq = min(freq["Lg10WF"])
 
@@ -997,26 +1001,26 @@ probe(med_filt_spill, spr_spill, 10, "UCL_spr_med_probing")
 # save med_filt, y
 dataname = "ucl_fpass"
 tosave = [med_filt, fp]
-with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
 # save med_filt, y
 dataname = "ucl_n400"
 tosave = [med_filt_f, n400]
-with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
 # save med_filt, y
 dataname = "ucl_p600"
 tosave = [med_filt_f, n400]
-with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
 # save med_filt, y
 dataname = "ucl_spr"
 tosave = [med_filt_spill, spr_spill]
-with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:
-    pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open(f"probing_LMs/XYdata/{dataname}", 'wb') as handle:  # [removed: probing_LMs sub-study]
+#     pickle.dump(tosave, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
 ##############################################################################
 ###############################

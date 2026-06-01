@@ -27,6 +27,10 @@ from scipy.stats import zscore
 import fasttext.util
 import copy
 from scipy import spatial
+from pathlib import Path as _Path
+
+# --- reproducible paths: utils.py lives at the repo root, so its parent IS the root ---
+PROJECT_ROOT = _Path(__file__).resolve().parent
 
 # model testing function that saves predictions (to look at later) and coefficients
 
@@ -362,9 +366,9 @@ def get_nearest_neighbor(word, k, candidates, ft):
     return [(candidates[i], 1 - distances[i]) for i in top_k_indices]
 
 def get_sem(wordlist):
-    ft = fasttext.load_model('/home/dev/Documents/PhD/MIT/project/cc.en.300.bin'); print("Loaded FastText model")
-    d_perceptual = load("/home/dev/Documents/PhD/MIT/project/SEM/d_perceptual.joblib")
-    d_affective  = load("/home/dev/Documents/PhD/MIT/project/SEM/d_affective.joblib"); print("Loaded dicts")
+    ft = fasttext.load_model(str(PROJECT_ROOT / "cc.en.300.bin")); print("Loaded FastText model")
+    d_perceptual = load(PROJECT_ROOT / "SEM/d_perceptual.joblib")
+    d_affective  = load(PROJECT_ROOT / "SEM/d_affective.joblib"); print("Loaded dicts")
     missing_a = 0
     missing_p = 0
     percept_words =  list(filter(lambda item: isinstance(item, str), list(d_perceptual.keys())))
