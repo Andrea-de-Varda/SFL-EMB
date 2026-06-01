@@ -67,3 +67,9 @@ probing_LMs/SentEval/
 *.swp
 .idea/
 .vscode/
+
+# ----- main_data/ is the curated input-data dir and IS tracked -----
+# (overrides the broad rules above, e.g. *.rds, so natstor_maze.rds is included;
+#  all files here are <100 MB, within GitHub's per-file limit)
+!main_data/
+!main_data/**
