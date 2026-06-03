@@ -232,60 +232,61 @@ df_results.to_csv("results/all_results.csv")
 
 base_plot(df_results, "act", "base", "all", title="NatStor$_{fMRI}$", ylim1=0, ylim2=1, cv_size = 9)
 
+# [removed: SEM follow-up — semantic-norm analysis is not part of the manuscript]
 #######
 # SEM #
 #######
 
 # EMB
-gpt, gpt_sd = cross_story_encoding(stories, "gpt", d, sem = True)
-small, small_sd = cross_story_encoding(stories, "gpt2_small", d, sem = True)
-med, med_sd = cross_story_encoding(stories, "gpt2_med", d, sem = True)
-large, large_sd = cross_story_encoding(stories, "gpt2_large", d, sem = True)
-xl, xl_sd = cross_story_encoding(stories, "gpt2_xl", d, sem = True)
+# gpt, gpt_sd = cross_story_encoding(stories, "gpt", d, sem = True)
+# small, small_sd = cross_story_encoding(stories, "gpt2_small", d, sem = True)
+# med, med_sd = cross_story_encoding(stories, "gpt2_med", d, sem = True)
+# large, large_sd = cross_story_encoding(stories, "gpt2_large", d, sem = True)
+# xl, xl_sd = cross_story_encoding(stories, "gpt2_xl", d, sem = True)
 
 # SFL
-base_gpt, base_gpt_sd = cross_story_encoding(stories, "gpt", d, condition="sfl", sem = True)
-base_small, base_small_sd = cross_story_encoding(stories, "gpt2_small", d, condition="sfl", sem = True)
-base_med, base_med_sd = cross_story_encoding(stories, "gpt2_med", d, condition="sfl", sem = True)
-base_large, base_large_sd = cross_story_encoding(stories, "gpt2_large", d, condition="sfl", sem = True)
-base_xl, base_xl_sd = cross_story_encoding(stories, "gpt2_xl", d, condition="sfl", sem = True)
+# base_gpt, base_gpt_sd = cross_story_encoding(stories, "gpt", d, condition="sfl", sem = True)
+# base_small, base_small_sd = cross_story_encoding(stories, "gpt2_small", d, condition="sfl", sem = True)
+# base_med, base_med_sd = cross_story_encoding(stories, "gpt2_med", d, condition="sfl", sem = True)
+# base_large, base_large_sd = cross_story_encoding(stories, "gpt2_large", d, condition="sfl", sem = True)
+# base_xl, base_xl_sd = cross_story_encoding(stories, "gpt2_xl", d, condition="sfl", sem = True)
 
 # ALL
-gpt_a, gpt_a_sd = cross_story_encoding(stories, "gpt", d, condition="all", sem = True)
-small_a, small_a_sd = cross_story_encoding(stories, "gpt2_small", d, condition="all", sem = True)
-med_a, med_a_sd = cross_story_encoding(stories, "gpt2_med", d, condition="all", sem = True)
-large_a, large_a_sd = cross_story_encoding(stories, "gpt2_large", d, condition="all", sem = True)
-xl_a, xl_a_sd = cross_story_encoding(stories, "gpt2_xl", d, condition="all", sem = True)
+# gpt_a, gpt_a_sd = cross_story_encoding(stories, "gpt", d, condition="all", sem = True)
+# small_a, small_a_sd = cross_story_encoding(stories, "gpt2_small", d, condition="all", sem = True)
+# med_a, med_a_sd = cross_story_encoding(stories, "gpt2_med", d, condition="all", sem = True)
+# large_a, large_a_sd = cross_story_encoding(stories, "gpt2_large", d, condition="all", sem = True)
+# xl_a, xl_a_sd = cross_story_encoding(stories, "gpt2_xl", d, condition="all", sem = True)
 
-df_results_sem = pd.DataFrame({
-    "base_sem":[base_gpt, base_small, base_med, base_large, base_xl],
-    "base_sem_sd":[base_gpt_sd, base_small_sd, base_med_sd, base_large_sd, base_xl_sd],
-    "act_sem":[gpt, small, med, large, xl],
-    "act_sem_sd":[gpt_sd, small_sd, med_sd, large_sd, xl_sd],
-    "all_sem":[gpt_a, small_a, med_a, large_a, xl_a],
-    "all_sem_sd":[gpt_a_sd, small_a_sd, med_a_sd, large_a_sd, xl_a_sd]
-    })
-df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# df_results_sem = pd.DataFrame({
+#     "base_sem":[base_gpt, base_small, base_med, base_large, base_xl],
+#     "base_sem_sd":[base_gpt_sd, base_small_sd, base_med_sd, base_large_sd, base_xl_sd],
+#     "act_sem":[gpt, small, med, large, xl],
+#     "act_sem_sd":[gpt_sd, small_sd, med_sd, large_sd, xl_sd],
+#     "all_sem":[gpt_a, small_a, med_a, large_a, xl_a],
+#     "all_sem_sd":[gpt_a_sd, small_a_sd, med_a_sd, large_a_sd, xl_a_sd]
+#     })
+# df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 
 # singificance testing 
-thebase = ["natstorfmri_gpt_base_sem", "natstorfmri_small_base_sem", "natstorfmri_med_base_sem", "natstorfmri_large_base_sem", "natstorfmri_xl_base_sem"]
-theemb  = ["natstorfmri_gpt_sem", "natstorfmri_small_sem", "natstorfmri_med_sem", "natstorfmri_large_sem", "natstorfmri_xl_sem"]
-theall     = ["natstorfmri_gpt_all_sem", "natstorfmri_small_all_sem", "natstorfmri_med_all_sem", "natstorfmri_large_all_sem", "natstorfmri_xl_all_sem"]
+# thebase = ["natstorfmri_gpt_base_sem", "natstorfmri_small_base_sem", "natstorfmri_med_base_sem", "natstorfmri_large_base_sem", "natstorfmri_xl_base_sem"]
+# theemb  = ["natstorfmri_gpt_sem", "natstorfmri_small_sem", "natstorfmri_med_sem", "natstorfmri_large_sem", "natstorfmri_xl_sem"]
+# theall     = ["natstorfmri_gpt_all_sem", "natstorfmri_small_all_sem", "natstorfmri_med_all_sem", "natstorfmri_large_all_sem", "natstorfmri_xl_all_sem"]
 
-p_all_sem = []
-for base, emb, all_ in zip(thebase, theemb, theall):
-    p_base_emb = significance_testing(emb, base)
-    p_all_base = significance_testing(all_, base)
-    p_all_emb  = significance_testing(all_, emb)
-    p_all_sem.append([p_base_emb, p_all_base, p_all_emb])
-p_all_sem = pd.DataFrame(p_all_sem, columns=["base_emb_sem", "all_base_sem", "all_emb_sem"])
+# p_all_sem = []
+# for base, emb, all_ in zip(thebase, theemb, theall):
+#     p_base_emb = significance_testing(emb, base)
+#     p_all_base = significance_testing(all_, base)
+#     p_all_emb  = significance_testing(all_, emb)
+#     p_all_sem.append([p_base_emb, p_all_base, p_all_emb])
+# p_all_sem = pd.DataFrame(p_all_sem, columns=["base_emb_sem", "all_base_sem", "all_emb_sem"])
 
-for df_column in p_all_sem.columns:
-    df_results_sem["p_"+df_column] = list(p_all_sem[df_column])
+# for df_column in p_all_sem.columns:
+#     df_results_sem["p_"+df_column] = list(p_all_sem[df_column])
 
-merged = pd.concat([df_results, df_results_sem], axis=1)
-merged.to_csv("results/all_results_sem.csv", index=False)
-plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", title="NatStor$_{fMRI}$", subtract=True, cv_size = 9)
+# merged = pd.concat([df_results, df_results_sem], axis=1)
+# merged.to_csv("results/all_results_sem.csv", index=False)
+# plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", title="NatStor$_{fMRI}$", subtract=True, cv_size = 9)
 
 #################
 # decompose SFL #
