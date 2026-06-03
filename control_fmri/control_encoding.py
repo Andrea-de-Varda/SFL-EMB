@@ -262,81 +262,82 @@ decompose_sfl(baseline_xl, y, "control_xl_base", idx_s = 0, idx_f = 2, idx_l = 1
 # Semantic variables #
 ######################
 
-from utils import plot_sem, get_sem, plot_weights_sem
+# [removed: SEM follow-up — semantic-norm analysis is not part of the manuscript]
+# from utils import plot_sem, get_sem, plot_weights_sem
 
-sem = get_sem(sent)
+# sem = get_sem(sent)
 
 # baseline
-gpt_base_sem   = np.concatenate((sem, baseline_gpt), axis=1)
-small_base_sem = np.concatenate((sem, baseline_small), axis=1)
-med_base_sem   = np.concatenate((sem, baseline_med), axis=1)
-large_base_sem = np.concatenate((sem, baseline_large), axis=1)
-xl_base_sem    = np.concatenate((sem, baseline_xl), axis=1)
+# gpt_base_sem   = np.concatenate((sem, baseline_gpt), axis=1)
+# small_base_sem = np.concatenate((sem, baseline_small), axis=1)
+# med_base_sem   = np.concatenate((sem, baseline_med), axis=1)
+# large_base_sem = np.concatenate((sem, baseline_large), axis=1)
+# xl_base_sem    = np.concatenate((sem, baseline_xl), axis=1)
 
 # embedding
-gpt_sem   = np.concatenate((sem, gpt_filt), axis=1)
-small_sem = np.concatenate((sem, small_filt), axis=1)
-med_sem   = np.concatenate((sem, med_filt), axis=1)
-large_sem = np.concatenate((sem, large_filt), axis=1)
-xl_sem    = np.concatenate((sem, xl_filt), axis=1)
+# gpt_sem   = np.concatenate((sem, gpt_filt), axis=1)
+# small_sem = np.concatenate((sem, small_filt), axis=1)
+# med_sem   = np.concatenate((sem, med_filt), axis=1)
+# large_sem = np.concatenate((sem, large_filt), axis=1)
+# xl_sem    = np.concatenate((sem, xl_filt), axis=1)
 
 # all
-gpt_all_sem   = np.concatenate((sem, gpt_all), axis=1)
-small_all_sem = np.concatenate((sem, small_all), axis=1)
-med_all_sem   = np.concatenate((sem, med_all), axis=1)
-large_all_sem = np.concatenate((sem, large_all), axis=1)
-xl_all_sem    = np.concatenate((sem, xl_all), axis=1)
+# gpt_all_sem   = np.concatenate((sem, gpt_all), axis=1)
+# small_all_sem = np.concatenate((sem, small_all), axis=1)
+# med_all_sem   = np.concatenate((sem, med_all), axis=1)
+# large_all_sem = np.concatenate((sem, large_all), axis=1)
+# xl_all_sem    = np.concatenate((sem, xl_all), axis=1)
 
 # baseline
-base_gpt, base_gpt_sd = test_model_Ridge(gpt_base_sem, y, 10, "control_gpt_base_sem")
-base_small, base_small_sd = test_model_Ridge(small_base_sem, y, 10, "control_small_base_sem")
-base_med, base_med_sd = test_model_Ridge(med_base_sem, y, 10, "control_med_base_sem")
-base_large, base_large_sd = test_model_Ridge(large_base_sem, y, 10, "control_large_base_sem")
-base_xl, base_xl_sd = test_model_Ridge(xl_base_sem, y, 10, "control_xl_base_sem")
+# base_gpt, base_gpt_sd = test_model_Ridge(gpt_base_sem, y, 10, "control_gpt_base_sem")
+# base_small, base_small_sd = test_model_Ridge(small_base_sem, y, 10, "control_small_base_sem")
+# base_med, base_med_sd = test_model_Ridge(med_base_sem, y, 10, "control_med_base_sem")
+# base_large, base_large_sd = test_model_Ridge(large_base_sem, y, 10, "control_large_base_sem")
+# base_xl, base_xl_sd = test_model_Ridge(xl_base_sem, y, 10, "control_xl_base_sem")
 
 # act
-gpt, gpt_sd = test_model_Ridge(gpt_sem, y, 10, "control_gpt_sem")
-small, small_sd = test_model_Ridge(small_sem, y, 10, "control_small_sem")
-med, med_sd = test_model_Ridge(med_sem, y, 10, "control_med_sem")
-large, large_sd = test_model_Ridge(large_sem, y, 10, "control_large_sem")
-xl, xl_sd = test_model_Ridge(xl_sem, y, 10, "control_xl_sem")
+# gpt, gpt_sd = test_model_Ridge(gpt_sem, y, 10, "control_gpt_sem")
+# small, small_sd = test_model_Ridge(small_sem, y, 10, "control_small_sem")
+# med, med_sd = test_model_Ridge(med_sem, y, 10, "control_med_sem")
+# large, large_sd = test_model_Ridge(large_sem, y, 10, "control_large_sem")
+# xl, xl_sd = test_model_Ridge(xl_sem, y, 10, "control_xl_sem")
 
 # all
-gpt_a, gpt_a_sd = test_model_Ridge(gpt_all_sem, y, 10, "control_gpt_all_sem")
-small_a, small_a_sd = test_model_Ridge(small_all_sem, y, 10, "control_small_all_sem")
-med_a, med_a_sd = test_model_Ridge(med_all_sem, y, 10, "control_med_all_sem")
-large_a, large_a_sd = test_model_Ridge(large_all_sem, y, 10, "control_large_all_sem")
-xl_a, xl_a_sd = test_model_Ridge(xl_all_sem, y, 10, "control_xl_all_sem")
+# gpt_a, gpt_a_sd = test_model_Ridge(gpt_all_sem, y, 10, "control_gpt_all_sem")
+# small_a, small_a_sd = test_model_Ridge(small_all_sem, y, 10, "control_small_all_sem")
+# med_a, med_a_sd = test_model_Ridge(med_all_sem, y, 10, "control_med_all_sem")
+# large_a, large_a_sd = test_model_Ridge(large_all_sem, y, 10, "control_large_all_sem")
+# xl_a, xl_a_sd = test_model_Ridge(xl_all_sem, y, 10, "control_xl_all_sem")
 
-df_results_sem = pd.DataFrame({
-    "base_sem":[base_gpt, base_small, base_med, base_large, base_xl],
-    "base_sem_sd":[base_gpt_sd, base_small_sd, base_med_sd, base_large_sd, base_xl_sd],
-    "act_sem":[gpt, small, med, large, xl],
-    "act_sem_sd":[gpt_sd, small_sd, med_sd, large_sd, xl_sd],
-    "all_sem":[gpt_a, small_a, med_a, large_a, xl_a],
-    "all_sem_sd":[gpt_a_sd, small_a_sd, med_a_sd, large_a_sd, xl_a_sd]
-    })
-df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# df_results_sem = pd.DataFrame({
+#     "base_sem":[base_gpt, base_small, base_med, base_large, base_xl],
+#     "base_sem_sd":[base_gpt_sd, base_small_sd, base_med_sd, base_large_sd, base_xl_sd],
+#     "act_sem":[gpt, small, med, large, xl],
+#     "act_sem_sd":[gpt_sd, small_sd, med_sd, large_sd, xl_sd],
+#     "all_sem":[gpt_a, small_a, med_a, large_a, xl_a],
+#     "all_sem_sd":[gpt_a_sd, small_a_sd, med_a_sd, large_a_sd, xl_a_sd]
+#     })
+# df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 
 # significance testing
-thebase = ["control_gpt_base_sem", "control_small_base_sem", "control_med_base_sem", "control_large_base_sem", "control_xl_base_sem"]
-theemb  = ["control_gpt_sem", "control_small_sem", "control_med_sem", "control_large_sem", "control_xl_sem"]
-theall  = ["control_gpt_all_sem", "control_small_all_sem", "control_med_all_sem", "control_large_all_sem", "control_xl_all_sem"]
+# thebase = ["control_gpt_base_sem", "control_small_base_sem", "control_med_base_sem", "control_large_base_sem", "control_xl_base_sem"]
+# theemb  = ["control_gpt_sem", "control_small_sem", "control_med_sem", "control_large_sem", "control_xl_sem"]
+# theall  = ["control_gpt_all_sem", "control_small_all_sem", "control_med_all_sem", "control_large_all_sem", "control_xl_all_sem"]
 
-p_sem = []
-for base, emb, all_ in zip(thebase, theemb, theall):
-    p_base_emb = significance_testing(emb, base)
-    p_all_base = significance_testing(all_, base)
-    p_all_emb  = significance_testing(all_, emb)
-    p_sem.append([p_base_emb, p_all_base, p_all_emb])
-p_sem = pd.DataFrame(p_sem, columns=["base_emb_sem", "all_base_sem", "all_emb_sem"])
+# p_sem = []
+# for base, emb, all_ in zip(thebase, theemb, theall):
+#     p_base_emb = significance_testing(emb, base)
+#     p_all_base = significance_testing(all_, base)
+#     p_all_emb  = significance_testing(all_, emb)
+#     p_sem.append([p_base_emb, p_all_base, p_all_emb])
+# p_sem = pd.DataFrame(p_sem, columns=["base_emb_sem", "all_base_sem", "all_emb_sem"])
 
-for df_column in p_sem.columns:
-    df_results_sem["p_"+df_column] = list(p_sem[df_column])
+# for df_column in p_sem.columns:
+#     df_results_sem["p_"+df_column] = list(p_sem[df_column])
 
-merged = pd.concat([df_results, df_results_sem], axis=1)
+# merged = pd.concat([df_results, df_results_sem], axis=1)
 # merged.to_csv("results/all_results_sem.csv", index=False)
-plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", title="Control", subtract=True)
+# plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", title="Control", subtract=True)
 
 ########################
 # for last probing exp #

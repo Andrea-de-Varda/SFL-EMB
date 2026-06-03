@@ -412,38 +412,39 @@ for df_column in p_maze.columns:
     
     
 #################################
+# [removed: SEM follow-up — semantic-norm analysis is not part of the manuscript]
 # FOLLOW-UP: SEMANTIC VARIABLES #
 #################################
 
-from utils import plot_sem, get_sem, plot_weights_sem
+# from utils import plot_sem, get_sem, plot_weights_sem
 
-words = [maze_sent[i] for i in set(maze.sent_n)]
-out = [s for sent in words for s in sent]
-wordlist = list(filt_act(out, filt))
-wordlist = [str(w) for w in wordlist]
+# words = [maze_sent[i] for i in set(maze.sent_n)]
+# out = [s for sent in words for s in sent]
+# wordlist = list(filt_act(out, filt))
+# wordlist = [str(w) for w in wordlist]
 
-sem = get_sem(wordlist)
+# sem = get_sem(wordlist)
 
 # baseline
-gpt_base_sem   = np.concatenate((sem, baseline_gpt), axis=1)
-small_base_sem = np.concatenate((sem, baseline_small), axis=1)
-med_base_sem   = np.concatenate((sem, baseline_med), axis=1)
-large_base_sem = np.concatenate((sem, baseline_large), axis=1)
-xl_base_sem    = np.concatenate((sem, baseline_xl), axis=1)
+# gpt_base_sem   = np.concatenate((sem, baseline_gpt), axis=1)
+# small_base_sem = np.concatenate((sem, baseline_small), axis=1)
+# med_base_sem   = np.concatenate((sem, baseline_med), axis=1)
+# large_base_sem = np.concatenate((sem, baseline_large), axis=1)
+# xl_base_sem    = np.concatenate((sem, baseline_xl), axis=1)
 
 # embedding
-gpt_sem   = np.concatenate((sem, gpt_filt), axis=1)
-small_sem = np.concatenate((sem, small_filt), axis=1)
-med_sem   = np.concatenate((sem, med_filt), axis=1)
-large_sem = np.concatenate((sem, large_filt), axis=1)
-xl_sem    = np.concatenate((sem, xl_filt), axis=1)
+# gpt_sem   = np.concatenate((sem, gpt_filt), axis=1)
+# small_sem = np.concatenate((sem, small_filt), axis=1)
+# med_sem   = np.concatenate((sem, med_filt), axis=1)
+# large_sem = np.concatenate((sem, large_filt), axis=1)
+# xl_sem    = np.concatenate((sem, xl_filt), axis=1)
 
 # all
-gpt_all_sem   = np.concatenate((sem, gpt_all), axis=1)
-small_all_sem = np.concatenate((sem, gpt2_small_all), axis=1)
-med_all_sem   = np.concatenate((sem, gpt2_med_all), axis=1)
-large_all_sem = np.concatenate((sem, gpt2_large_all), axis=1)
-xl_all_sem    = np.concatenate((sem, gpt2_xl_all), axis=1)
+# gpt_all_sem   = np.concatenate((sem, gpt_all), axis=1)
+# small_all_sem = np.concatenate((sem, gpt2_small_all), axis=1)
+# med_all_sem   = np.concatenate((sem, gpt2_med_all), axis=1)
+# large_all_sem = np.concatenate((sem, gpt2_large_all), axis=1)
+# xl_all_sem    = np.concatenate((sem, gpt2_xl_all), axis=1)
 
 # model testing
 
@@ -452,56 +453,56 @@ xl_all_sem    = np.concatenate((sem, gpt2_xl_all), axis=1)
 ###############################
 
 # with sem
-m_gpt_sem, sd_gpt_sem     = test_model_Ridge(gpt_sem, rt, 10, "maze_gpt_sem")
-m_small_sem, sd_small_sem = test_model_Ridge(small_sem, rt, 10, "maze_small_sem")
-m_med_sem, sd_med_sem     = test_model_Ridge(med_sem, rt, 10, "maze_med_sem")
-m_larg_sem, sd_larg_sem   = test_model_Ridge(large_sem, rt, 10, "maze_large_sem")
-m_xl_sem, sd_xl_sem       = test_model_Ridge(xl_sem, rt, 10, "maze_xl_sem")
-print(m_gpt_sem, m_small_sem, m_med_sem, m_larg_sem)
+# m_gpt_sem, sd_gpt_sem     = test_model_Ridge(gpt_sem, rt, 10, "maze_gpt_sem")
+# m_small_sem, sd_small_sem = test_model_Ridge(small_sem, rt, 10, "maze_small_sem")
+# m_med_sem, sd_med_sem     = test_model_Ridge(med_sem, rt, 10, "maze_med_sem")
+# m_larg_sem, sd_larg_sem   = test_model_Ridge(large_sem, rt, 10, "maze_large_sem")
+# m_xl_sem, sd_xl_sem       = test_model_Ridge(xl_sem, rt, 10, "maze_xl_sem")
+# print(m_gpt_sem, m_small_sem, m_med_sem, m_larg_sem)
 
 ########################
 # first-pass, baseline #
 ########################
 
 # with sem
-m_gpt_b_sem, sd_gpt_b_sem     = test_model_Ridge(gpt_base_sem, rt, 10, "maze_gpt_base_sem")
-m_small_b_sem, sd_small_b_sem = test_model_Ridge(small_base_sem, rt, 10, "maze_small_base_sem")
-m_med_b_sem, sd_med_b_sem     = test_model_Ridge(med_base_sem, rt, 10, "maze_med_base_sem")
-m_larg_b_sem, sd_larg_b_sem   = test_model_Ridge(large_base_sem, rt, 10, "maze_large_base_sem")
-m_xl_b_sem, sd_xl_b_sem       = test_model_Ridge(xl_base_sem, rt, 10, "maze_xl_base_sem")
-print(m_gpt_b_sem, m_small_b_sem, m_med_b_sem, m_larg_b_sem, m_xl_b_sem)
+# m_gpt_b_sem, sd_gpt_b_sem     = test_model_Ridge(gpt_base_sem, rt, 10, "maze_gpt_base_sem")
+# m_small_b_sem, sd_small_b_sem = test_model_Ridge(small_base_sem, rt, 10, "maze_small_base_sem")
+# m_med_b_sem, sd_med_b_sem     = test_model_Ridge(med_base_sem, rt, 10, "maze_med_base_sem")
+# m_larg_b_sem, sd_larg_b_sem   = test_model_Ridge(large_base_sem, rt, 10, "maze_large_base_sem")
+# m_xl_b_sem, sd_xl_b_sem       = test_model_Ridge(xl_base_sem, rt, 10, "maze_xl_base_sem")
+# print(m_gpt_b_sem, m_small_b_sem, m_med_b_sem, m_larg_b_sem, m_xl_b_sem)
 
 ###################
 # first-pass, all #
 ###################
 
 # with sem
-m_gpt_all_sem, sd_gpt_all_sem     = test_model_Ridge(gpt_all_sem, rt, 10, "maze_gpt_all_sem")
-m_small_all_sem, sd_small_all_sem = test_model_Ridge(small_all_sem, rt, 10, "maze_small_all_sem")
-m_med_all_sem, sd_med_all_sem     = test_model_Ridge(med_all_sem, rt, 10, "maze_med_all_sem")
-m_larg_all_sem, sd_larg_all_sem   = test_model_Ridge(large_all_sem, rt, 10, "maze_large_all_sem")
-m_xl_all_sem, sd_xl_all_sem       = test_model_Ridge(xl_all_sem, rt, 10, "maze_xl_all_sem")
-print(m_gpt_all_sem, m_small_all_sem, m_med_all_sem, m_larg_all_sem, m_xl_all_sem)
+# m_gpt_all_sem, sd_gpt_all_sem     = test_model_Ridge(gpt_all_sem, rt, 10, "maze_gpt_all_sem")
+# m_small_all_sem, sd_small_all_sem = test_model_Ridge(small_all_sem, rt, 10, "maze_small_all_sem")
+# m_med_all_sem, sd_med_all_sem     = test_model_Ridge(med_all_sem, rt, 10, "maze_med_all_sem")
+# m_larg_all_sem, sd_larg_all_sem   = test_model_Ridge(large_all_sem, rt, 10, "maze_large_all_sem")
+# m_xl_all_sem, sd_xl_all_sem       = test_model_Ridge(xl_all_sem, rt, 10, "maze_xl_all_sem")
+# print(m_gpt_all_sem, m_small_all_sem, m_med_all_sem, m_larg_all_sem, m_xl_all_sem)
 
-df_results_sem = pd.DataFrame({
-    "base_sem":[m_gpt_b_sem, m_small_b_sem, m_med_b_sem, m_larg_b_sem, m_xl_b_sem],
-    "base_sem_sd": [sd_gpt_b_sem, sd_small_b_sem, sd_med_b_sem, sd_larg_b_sem, sd_xl_b_sem],
-    "act_sem":[m_gpt_sem, m_small_sem, m_med_sem, m_larg_sem, m_xl_sem],
-    "act_sem_sd": [sd_gpt_sem, sd_small_sem, sd_med_sem, sd_larg_sem, sd_xl_sem],
-    "all_sem":[m_gpt_all_sem, m_small_all_sem, m_med_all_sem, m_larg_all_sem, m_xl_all_sem],
-    "all_sem_sd":[sd_gpt_all_sem, sd_small_all_sem, sd_med_all_sem, sd_larg_all_sem, sd_xl_all_sem]
-    })
-df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# df_results_sem = pd.DataFrame({
+#     "base_sem":[m_gpt_b_sem, m_small_b_sem, m_med_b_sem, m_larg_b_sem, m_xl_b_sem],
+#     "base_sem_sd": [sd_gpt_b_sem, sd_small_b_sem, sd_med_b_sem, sd_larg_b_sem, sd_xl_b_sem],
+#     "act_sem":[m_gpt_sem, m_small_sem, m_med_sem, m_larg_sem, m_xl_sem],
+#     "act_sem_sd": [sd_gpt_sem, sd_small_sem, sd_med_sem, sd_larg_sem, sd_xl_sem],
+#     "all_sem":[m_gpt_all_sem, m_small_all_sem, m_med_all_sem, m_larg_all_sem, m_xl_all_sem],
+#     "all_sem_sd":[sd_gpt_all_sem, sd_small_all_sem, sd_med_all_sem, sd_larg_all_sem, sd_xl_all_sem]
+#     })
+# df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 
-df_results = pd.read_csv("results_maze_nospill.csv")
-df_results.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# df_results = pd.read_csv("results_maze_nospill.csv")
+# df_results.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 
-merged = pd.concat([df_results, df_results_sem], axis=1)
+# merged = pd.concat([df_results, df_results_sem], axis=1)
 #merged.to_csv("SEM/merged_maze.csv")
 
-df_results = pd.read_csv("results_maze_nospill.csv")
+# df_results = pd.read_csv("results_maze_nospill.csv")
 
-plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", title="maze", subtract=True)
+# plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", title="maze", subtract=True)
 
 
 ########################

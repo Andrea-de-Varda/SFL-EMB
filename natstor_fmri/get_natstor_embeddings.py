@@ -323,14 +323,15 @@ for story_n in range(1,11):
 # get SEM #
 ###########
 
-def sem_natstor(lang, saveto):
-    df = pd.read_csv("transcribed/"+lang+".csv")
+# [removed: SEM follow-up — semantic-norm analysis is not part of the manuscript]
+# def sem_natstor(lang, saveto):
+#     df = pd.read_csv("transcribed/"+lang+".csv")
     # df = df[df["end"] <= 260]
-    text = df["text"].str.cat(sep=' ')
-    sem = get_sem(text.split()[1:])
-    save(sem, "sem_"+saveto+lang)
-    print(f"done {lang}")
-    return sem
+#     text = df["text"].str.cat(sep=' ')
+#     sem = get_sem(text.split()[1:])
+#     save(sem, "sem_"+saveto+lang)
+#     print(f"done {lang}")
+#     return sem
 
-for story_n in range(1,11):
-    story = sem_natstor(str(story_n), saveto = "")
+# for story_n in range(1,11):
+#     story = sem_natstor(str(story_n), saveto = "")

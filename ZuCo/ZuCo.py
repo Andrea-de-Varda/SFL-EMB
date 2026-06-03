@@ -259,36 +259,37 @@ for df_column in p_fpass.columns:
 
 
 #################################
+# [removed: SEM follow-up — semantic-norm analysis is not part of the manuscript]
 # FOLLOW-UP: SEMANTIC VARIABLES #
 #################################
 
-from utils import plot_sem, get_sem, plot_weights_sem
+# from utils import plot_sem, get_sem, plot_weights_sem
 
-wordlist = [word for s in sent for word in s[1:]]
-sem = get_sem(wordlist)
+# wordlist = [word for s in sent for word in s[1:]]
+# sem = get_sem(wordlist)
 # Missing affective = 69.99
 # Missing perceptual = 17.68
 
 # baseline
-gpt_base_sem   = np.concatenate((sem, baseline_gpt), axis=1)
-small_base_sem = np.concatenate((sem, baseline_small), axis=1)
-med_base_sem   = np.concatenate((sem, baseline_med), axis=1)
-large_base_sem = np.concatenate((sem, baseline_large), axis=1)
-xl_base_sem    = np.concatenate((sem, baseline_xl), axis=1)
+# gpt_base_sem   = np.concatenate((sem, baseline_gpt), axis=1)
+# small_base_sem = np.concatenate((sem, baseline_small), axis=1)
+# med_base_sem   = np.concatenate((sem, baseline_med), axis=1)
+# large_base_sem = np.concatenate((sem, baseline_large), axis=1)
+# xl_base_sem    = np.concatenate((sem, baseline_xl), axis=1)
 
 # embedding
-gpt_sem   = np.concatenate((sem, gpt_filt), axis=1)
-small_sem = np.concatenate((sem, small_filt), axis=1)
-med_sem   = np.concatenate((sem, med_filt), axis=1)
-large_sem = np.concatenate((sem, large_filt), axis=1)
-xl_sem    = np.concatenate((sem, xl_filt), axis=1)
+# gpt_sem   = np.concatenate((sem, gpt_filt), axis=1)
+# small_sem = np.concatenate((sem, small_filt), axis=1)
+# med_sem   = np.concatenate((sem, med_filt), axis=1)
+# large_sem = np.concatenate((sem, large_filt), axis=1)
+# xl_sem    = np.concatenate((sem, xl_filt), axis=1)
 
 # all
-gpt_all_sem   = np.concatenate((sem, gpt_all), axis=1)
-small_all_sem = np.concatenate((sem, gpt2_small_all), axis=1)
-med_all_sem   = np.concatenate((sem, gpt2_med_all), axis=1)
-large_all_sem = np.concatenate((sem, gpt2_large_all), axis=1)
-xl_all_sem    = np.concatenate((sem, gpt2_xl_all), axis=1)
+# gpt_all_sem   = np.concatenate((sem, gpt_all), axis=1)
+# small_all_sem = np.concatenate((sem, gpt2_small_all), axis=1)
+# med_all_sem   = np.concatenate((sem, gpt2_med_all), axis=1)
+# large_all_sem = np.concatenate((sem, gpt2_large_all), axis=1)
+# xl_all_sem    = np.concatenate((sem, gpt2_xl_all), axis=1)
 
 # model testing
 
@@ -297,54 +298,54 @@ xl_all_sem    = np.concatenate((sem, gpt2_xl_all), axis=1)
 ###############################
 
 # with sem
-m_gpt_fpass_sem, sd_gpt_fpass_sem     = test_model_Ridge(gpt_sem, fp, 10, "zuco_gpt_sem")
-m_small_fpass_sem, sd_small_fpass_sem = test_model_Ridge(small_sem, fp, 10, "zuco_small_sem")
-m_med_fpass_sem, sd_med_fpass_sem     = test_model_Ridge(med_sem, fp, 10, "zuco_med_sem")
-m_larg_fpass_sem, sd_larg_fpass_sem   = test_model_Ridge(large_sem, fp, 10, "zuco_large_sem")
-m_xl_fpass_sem, sd_xl_fpass_sem       = test_model_Ridge(xl_sem, fp, 10, "zuco_xl_sem")
-print(m_gpt_fpass_sem, m_small_fpass_sem, m_med_fpass_sem, m_larg_fpass_sem)
+# m_gpt_fpass_sem, sd_gpt_fpass_sem     = test_model_Ridge(gpt_sem, fp, 10, "zuco_gpt_sem")
+# m_small_fpass_sem, sd_small_fpass_sem = test_model_Ridge(small_sem, fp, 10, "zuco_small_sem")
+# m_med_fpass_sem, sd_med_fpass_sem     = test_model_Ridge(med_sem, fp, 10, "zuco_med_sem")
+# m_larg_fpass_sem, sd_larg_fpass_sem   = test_model_Ridge(large_sem, fp, 10, "zuco_large_sem")
+# m_xl_fpass_sem, sd_xl_fpass_sem       = test_model_Ridge(xl_sem, fp, 10, "zuco_xl_sem")
+# print(m_gpt_fpass_sem, m_small_fpass_sem, m_med_fpass_sem, m_larg_fpass_sem)
 
 ########################
 # first-pass, baseline #
 ########################
 
 # with sem
-m_gpt_fpass_b_sem, sd_gpt_fpass_b_sem     = test_model_Ridge(gpt_base_sem, fp, 10, "zuco_gpt_base_sem")
-m_small_fpass_b_sem, sd_small_fpass_b_sem = test_model_Ridge(small_base_sem, fp, 10, "zuco_small_base_sem")
-m_med_fpass_b_sem, sd_med_fpass_b_sem     = test_model_Ridge(med_base_sem, fp, 10, "zuco_med_base_sem")
-m_larg_fpass_b_sem, sd_larg_fpass_b_sem   = test_model_Ridge(large_base_sem, fp, 10, "zuco_large_base_sem")
-m_xl_fpass_b_sem, sd_xl_fpass_b_sem       = test_model_Ridge(xl_base_sem, fp, 10, "zuco_xl_base_sem")
-print(m_gpt_fpass_b_sem, m_small_fpass_b_sem, m_med_fpass_b_sem, m_larg_fpass_b_sem, m_xl_fpass_b_sem)
+# m_gpt_fpass_b_sem, sd_gpt_fpass_b_sem     = test_model_Ridge(gpt_base_sem, fp, 10, "zuco_gpt_base_sem")
+# m_small_fpass_b_sem, sd_small_fpass_b_sem = test_model_Ridge(small_base_sem, fp, 10, "zuco_small_base_sem")
+# m_med_fpass_b_sem, sd_med_fpass_b_sem     = test_model_Ridge(med_base_sem, fp, 10, "zuco_med_base_sem")
+# m_larg_fpass_b_sem, sd_larg_fpass_b_sem   = test_model_Ridge(large_base_sem, fp, 10, "zuco_large_base_sem")
+# m_xl_fpass_b_sem, sd_xl_fpass_b_sem       = test_model_Ridge(xl_base_sem, fp, 10, "zuco_xl_base_sem")
+# print(m_gpt_fpass_b_sem, m_small_fpass_b_sem, m_med_fpass_b_sem, m_larg_fpass_b_sem, m_xl_fpass_b_sem)
 
 ###################
 # first-pass, all #
 ###################
 
 # with sem
-m_gpt_fpass_all_sem, sd_gpt_fpass_all_sem     = test_model_Ridge(gpt_all_sem, fp, 10, "zuco_gpt_all_sem")
-m_small_fpass_all_sem, sd_small_fpass_all_sem = test_model_Ridge(small_all_sem, fp, 10, "zuco_small_all_sem")
-m_med_fpass_all_sem, sd_med_fpass_all_sem     = test_model_Ridge(med_all_sem, fp, 10, "zuco_med_all_sem")
-m_larg_fpass_all_sem, sd_larg_fpass_all_sem   = test_model_Ridge(large_all_sem, fp, 10, "zuco_large_all_sem")
-m_xl_fpass_all_sem, sd_xl_fpass_all_sem       = test_model_Ridge(xl_all_sem, fp, 10, "zuco_xl_all_sem")
-print(m_gpt_fpass_all_sem, m_small_fpass_all_sem, m_med_fpass_all_sem, m_larg_fpass_all_sem, m_xl_fpass_all_sem)
+# m_gpt_fpass_all_sem, sd_gpt_fpass_all_sem     = test_model_Ridge(gpt_all_sem, fp, 10, "zuco_gpt_all_sem")
+# m_small_fpass_all_sem, sd_small_fpass_all_sem = test_model_Ridge(small_all_sem, fp, 10, "zuco_small_all_sem")
+# m_med_fpass_all_sem, sd_med_fpass_all_sem     = test_model_Ridge(med_all_sem, fp, 10, "zuco_med_all_sem")
+# m_larg_fpass_all_sem, sd_larg_fpass_all_sem   = test_model_Ridge(large_all_sem, fp, 10, "zuco_large_all_sem")
+# m_xl_fpass_all_sem, sd_xl_fpass_all_sem       = test_model_Ridge(xl_all_sem, fp, 10, "zuco_xl_all_sem")
+# print(m_gpt_fpass_all_sem, m_small_fpass_all_sem, m_med_fpass_all_sem, m_larg_fpass_all_sem, m_xl_fpass_all_sem)
 
-df_results_sem = pd.DataFrame({
-    "base_fpass_sem":[m_gpt_fpass_b_sem, m_small_fpass_b_sem, m_med_fpass_b_sem, m_larg_fpass_b_sem, m_xl_fpass_b_sem],
-    "base_fpass_sem_sd": [sd_gpt_fpass_b_sem, sd_small_fpass_b_sem, sd_med_fpass_b_sem, sd_larg_fpass_b_sem, sd_xl_fpass_b_sem],
-    "act_fpass_sem":[m_gpt_fpass_sem, m_small_fpass_sem, m_med_fpass_sem, m_larg_fpass_sem, m_xl_fpass_sem],
-    "act_fpass_sem_sd": [sd_gpt_fpass_sem, sd_small_fpass_sem, sd_med_fpass_sem, sd_larg_fpass_sem, sd_xl_fpass_sem],
-    "all_fpass_sem":[m_gpt_fpass_all_sem, m_small_fpass_all_sem, m_med_fpass_all_sem, m_larg_fpass_all_sem, m_xl_fpass_all_sem],
-    "all_fpass_sem_sd":[sd_gpt_fpass_all_sem, sd_small_fpass_all_sem, sd_med_fpass_all_sem, sd_larg_fpass_all_sem, sd_xl_fpass_all_sem]
-    })
-df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# df_results_sem = pd.DataFrame({
+#     "base_fpass_sem":[m_gpt_fpass_b_sem, m_small_fpass_b_sem, m_med_fpass_b_sem, m_larg_fpass_b_sem, m_xl_fpass_b_sem],
+#     "base_fpass_sem_sd": [sd_gpt_fpass_b_sem, sd_small_fpass_b_sem, sd_med_fpass_b_sem, sd_larg_fpass_b_sem, sd_xl_fpass_b_sem],
+#     "act_fpass_sem":[m_gpt_fpass_sem, m_small_fpass_sem, m_med_fpass_sem, m_larg_fpass_sem, m_xl_fpass_sem],
+#     "act_fpass_sem_sd": [sd_gpt_fpass_sem, sd_small_fpass_sem, sd_med_fpass_sem, sd_larg_fpass_sem, sd_xl_fpass_sem],
+#     "all_fpass_sem":[m_gpt_fpass_all_sem, m_small_fpass_all_sem, m_med_fpass_all_sem, m_larg_fpass_all_sem, m_xl_fpass_all_sem],
+#     "all_fpass_sem_sd":[sd_gpt_fpass_all_sem, sd_small_fpass_all_sem, sd_med_fpass_all_sem, sd_larg_fpass_all_sem, sd_xl_fpass_all_sem]
+#     })
+# df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 
-df_results = pd.read_csv("results_zuco.csv")
-df_results.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# df_results = pd.read_csv("results_zuco.csv")
+# df_results.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 
-merged = pd.concat([df_results, df_results_sem], axis=1)
+# merged = pd.concat([df_results, df_results_sem], axis=1)
 #merged.to_csv("SEM/merged_zuco.csv")
 
-plot_sem(merged, "act_fpass", "base_fpass", "all_fpass", "act_fpass_sem", "base_fpass_sem", "all_fpass_sem", title="zuco", subtract=True)
+# plot_sem(merged, "act_fpass", "base_fpass", "all_fpass", "act_fpass_sem", "base_fpass_sem", "all_fpass_sem", title="zuco", subtract=True)
 
 
 ########################

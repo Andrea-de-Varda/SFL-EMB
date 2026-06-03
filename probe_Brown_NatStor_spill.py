@@ -647,175 +647,176 @@ for df, dfname in zip([p_natstor, p_brown], ["natstor", "brown"]):
 
 
 #################################
+# [removed: SEM follow-up — semantic-norm analysis is not part of the manuscript]
 # FOLLOW-UP: SEMANTIC VARIABLES #
 #################################
 
-from utils import plot_sem, get_sem, plot_weights_sem
+# from utils import plot_sem, get_sem, plot_weights_sem
 
-brown_words  = [t for w in brown_sent for t in w[1:]]
-natst_words  = [t for w in natst_sent for t in w[1:]]
+# brown_words  = [t for w in brown_sent for t in w[1:]]
+# natst_words  = [t for w in natst_sent for t in w[1:]]
 
-sem_brown = get_sem(brown_words)
+# sem_brown = get_sem(brown_words)
 # Missing affective = 74.73
 # Missing perceptual = 21.59
 # dump(sem_brown, "SEM/sem_brown.joblib") 
-sem_brown = load("SEM/sem_brown.joblib")
+# sem_brown = load("SEM/sem_brown.joblib")
 
-sem_natst = get_sem(natst_words)
+# sem_natst = get_sem(natst_words)
 # Missing affective = 73.04
 # Missing perceptual = 15.72
 #dump(sem_natst, "SEM/sem_natst.joblib")
-sem_natst = load("SEM/sem_natst.joblib")
+# sem_natst = load("SEM/sem_natst.joblib")
 
-sem_brown_spill   = filter_embeddings_spill(brown_spr, sem_brown)
-sem_natst_spill   = filter_embeddings_spill(ns_spr, sem_natst)
+# sem_brown_spill   = filter_embeddings_spill(brown_spr, sem_brown)
+# sem_natst_spill   = filter_embeddings_spill(ns_spr, sem_natst)
 
 # embedding
-gpt_sem_brown   = np.concatenate((sem_brown_spill, gpt_filt_brown_spill), axis=1)
-small_sem_brown = np.concatenate((sem_brown_spill, small_filt_brown_spill), axis=1)
-med_sem_brown   = np.concatenate((sem_brown_spill, med_filt_brown_spill), axis=1)
-large_sem_brown = np.concatenate((sem_brown_spill, large_filt_brown_spill), axis=1)
-xl_sem_brown    = np.concatenate((sem_brown_spill, xl_filt_brown_spill), axis=1)
+# gpt_sem_brown   = np.concatenate((sem_brown_spill, gpt_filt_brown_spill), axis=1)
+# small_sem_brown = np.concatenate((sem_brown_spill, small_filt_brown_spill), axis=1)
+# med_sem_brown   = np.concatenate((sem_brown_spill, med_filt_brown_spill), axis=1)
+# large_sem_brown = np.concatenate((sem_brown_spill, large_filt_brown_spill), axis=1)
+# xl_sem_brown    = np.concatenate((sem_brown_spill, xl_filt_brown_spill), axis=1)
 
-gpt_sem_natst     = np.concatenate((sem_natst_spill, gpt_filt_ns_spill), axis=1)
-small_sem_natst   = np.concatenate((sem_natst_spill, small_filt_ns_spill), axis=1)
-med_sem_natst     = np.concatenate((sem_natst_spill, med_filt_ns_spill), axis=1)
-large_sem_natst   = np.concatenate((sem_natst_spill, large_filt_ns_spill), axis=1)
-xl_sem_natst      = np.concatenate((sem_natst_spill, xl_filt_ns_spill), axis=1)
+# gpt_sem_natst     = np.concatenate((sem_natst_spill, gpt_filt_ns_spill), axis=1)
+# small_sem_natst   = np.concatenate((sem_natst_spill, small_filt_ns_spill), axis=1)
+# med_sem_natst     = np.concatenate((sem_natst_spill, med_filt_ns_spill), axis=1)
+# large_sem_natst   = np.concatenate((sem_natst_spill, large_filt_ns_spill), axis=1)
+# xl_sem_natst      = np.concatenate((sem_natst_spill, xl_filt_ns_spill), axis=1)
 
 # baseline
-gpt_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT", "logfreq", "length",
-                                                                      "s_GPT-1", "logfreq-1", "length-1",
-                                                                      "s_GPT-2", "logfreq-2", "length-2",]])), axis=1)
-small_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT2_small", "logfreq", "length",
-                                                                      "s_GPT2_small-1", "logfreq-1", "length-1",
-                                                                      "s_GPT2_small-2", "logfreq-2", "length-2",]])), axis=1)
-med_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT2_med", "logfreq", "length",
-                                                                      "s_GPT2_med-1", "logfreq-1", "length-1",
-                                                                      "s_GPT2_med-2", "logfreq-2", "length-2",]])), axis=1)
-large_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT2_large", "logfreq", "length",
-                                                                      "s_GPT2_large-1", "logfreq-1", "length-1",
-                                                                      "s_GPT2_large-2", "logfreq-2", "length-2",]])), axis=1)
-xl_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT2_xl", "logfreq", "length",
-                                                                      "s_GPT2_xl-1", "logfreq-1", "length-1",
-                                                                      "s_GPT2_xl-2", "logfreq-2", "length-2",]])), axis=1)
+# gpt_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT", "logfreq", "length",
+#                                                                       "s_GPT-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT-2", "logfreq-2", "length-2",]])), axis=1)
+# small_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT2_small", "logfreq", "length",
+#                                                                       "s_GPT2_small-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT2_small-2", "logfreq-2", "length-2",]])), axis=1)
+# med_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT2_med", "logfreq", "length",
+#                                                                       "s_GPT2_med-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT2_med-2", "logfreq-2", "length-2",]])), axis=1)
+# large_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT2_large", "logfreq", "length",
+#                                                                       "s_GPT2_large-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT2_large-2", "logfreq-2", "length-2",]])), axis=1)
+# xl_base_sem_brown = np.concatenate((sem_brown_spill, np.array(brown_spill[["s_GPT2_xl", "logfreq", "length",
+#                                                                       "s_GPT2_xl-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT2_xl-2", "logfreq-2", "length-2",]])), axis=1)
 
-gpt_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT", "logfreq", "length",
-                                                                      "s_GPT-1", "logfreq-1", "length-1",
-                                                                      "s_GPT-2", "logfreq-2", "length-2",]])), axis=1)
-small_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT2_small", "logfreq", "length",
-                                                                      "s_GPT2_small-1", "logfreq-1", "length-1",
-                                                                      "s_GPT2_small-2", "logfreq-2", "length-2",]])), axis=1)
-med_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT2_med", "logfreq", "length",
-                                                                      "s_GPT2_med-1", "logfreq-1", "length-1",
-                                                                      "s_GPT2_med-2", "logfreq-2", "length-2",]])), axis=1)
-large_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT2_large", "logfreq", "length",
-                                                                      "s_GPT2_large-1", "logfreq-1", "length-1",
-                                                                      "s_GPT2_large-2", "logfreq-2", "length-2",]])), axis=1)
-xl_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT2_xl", "logfreq", "length",
-                                                                      "s_GPT2_xl-1", "logfreq-1", "length-1",
-                                                                      "s_GPT2_xl-2", "logfreq-2", "length-2",]])), axis=1)
+# gpt_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT", "logfreq", "length",
+#                                                                       "s_GPT-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT-2", "logfreq-2", "length-2",]])), axis=1)
+# small_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT2_small", "logfreq", "length",
+#                                                                       "s_GPT2_small-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT2_small-2", "logfreq-2", "length-2",]])), axis=1)
+# med_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT2_med", "logfreq", "length",
+#                                                                       "s_GPT2_med-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT2_med-2", "logfreq-2", "length-2",]])), axis=1)
+# large_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT2_large", "logfreq", "length",
+#                                                                       "s_GPT2_large-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT2_large-2", "logfreq-2", "length-2",]])), axis=1)
+# xl_base_sem_natst = np.concatenate((sem_natst_spill, np.array(ns_spill[["s_GPT2_xl", "logfreq", "length",
+#                                                                       "s_GPT2_xl-1", "logfreq-1", "length-1",
+#                                                                       "s_GPT2_xl-2", "logfreq-2", "length-2",]])), axis=1)
 
 # all
-gpt_all_sem_brown   = np.concatenate((gpt_base_sem_brown, gpt_filt_brown_spill), axis=1)
-small_all_sem_brown = np.concatenate((small_base_sem_brown, small_filt_brown_spill), axis=1)
-med_all_sem_brown   = np.concatenate((med_base_sem_brown, med_filt_brown_spill), axis=1)
-large_all_sem_brown = np.concatenate((large_base_sem_brown, large_filt_brown_spill), axis=1)
-xl_all_sem_brown    = np.concatenate((xl_base_sem_brown, xl_filt_brown_spill), axis=1)
+# gpt_all_sem_brown   = np.concatenate((gpt_base_sem_brown, gpt_filt_brown_spill), axis=1)
+# small_all_sem_brown = np.concatenate((small_base_sem_brown, small_filt_brown_spill), axis=1)
+# med_all_sem_brown   = np.concatenate((med_base_sem_brown, med_filt_brown_spill), axis=1)
+# large_all_sem_brown = np.concatenate((large_base_sem_brown, large_filt_brown_spill), axis=1)
+# xl_all_sem_brown    = np.concatenate((xl_base_sem_brown, xl_filt_brown_spill), axis=1)
 
-gpt_all_sem_natst   = np.concatenate((gpt_base_sem_natst, gpt_filt_ns_spill), axis=1)
-small_all_sem_natst = np.concatenate((small_base_sem_natst, small_filt_ns_spill), axis=1)
-med_all_sem_natst   = np.concatenate((med_base_sem_natst, med_filt_ns_spill), axis=1)
-large_all_sem_natst = np.concatenate((large_base_sem_natst, large_filt_ns_spill), axis=1)
-xl_all_sem_natst    = np.concatenate((xl_base_sem_natst, xl_filt_ns_spill), axis=1)
+# gpt_all_sem_natst   = np.concatenate((gpt_base_sem_natst, gpt_filt_ns_spill), axis=1)
+# small_all_sem_natst = np.concatenate((small_base_sem_natst, small_filt_ns_spill), axis=1)
+# med_all_sem_natst   = np.concatenate((med_base_sem_natst, med_filt_ns_spill), axis=1)
+# large_all_sem_natst = np.concatenate((large_base_sem_natst, large_filt_ns_spill), axis=1)
+# xl_all_sem_natst    = np.concatenate((xl_base_sem_natst, xl_filt_ns_spill), axis=1)
 
 #################
 # MODEL TESTING #
 #################
 
-m_gpt_natstor, sd_gpt_natstor     = test_model_Ridge(gpt_sem_natst, ns_y, 10, "natstor_gpt_sem")
-m_small_natstor, sd_small_natstor = test_model_Ridge(small_sem_natst, ns_y, 10, "natstor_small_sem")
-m_med_natstor, sd_med_natstor     = test_model_Ridge(med_sem_natst, ns_y, 10, "natstor_med_sem")
-m_larg_natstor, sd_larg_natstor   = test_model_Ridge(large_sem_natst, ns_y, 10, "natstor_large_sem")
-m_xl_natstor, sd_xl_natstor       = test_model_Ridge(xl_sem_natst, ns_y, 10, "natstor_xl_sem") #########################
-print(m_gpt_natstor, m_small_natstor, m_med_natstor, m_larg_natstor, m_xl_natstor)
+# m_gpt_natstor, sd_gpt_natstor     = test_model_Ridge(gpt_sem_natst, ns_y, 10, "natstor_gpt_sem")
+# m_small_natstor, sd_small_natstor = test_model_Ridge(small_sem_natst, ns_y, 10, "natstor_small_sem")
+# m_med_natstor, sd_med_natstor     = test_model_Ridge(med_sem_natst, ns_y, 10, "natstor_med_sem")
+# m_larg_natstor, sd_larg_natstor   = test_model_Ridge(large_sem_natst, ns_y, 10, "natstor_large_sem")
+# m_xl_natstor, sd_xl_natstor       = test_model_Ridge(xl_sem_natst, ns_y, 10, "natstor_xl_sem") #########################
+# print(m_gpt_natstor, m_small_natstor, m_med_natstor, m_larg_natstor, m_xl_natstor)
 
 
 # brown
-m_gpt_brown, sd_gpt_brown     = test_model_Ridge(gpt_sem_brown, br_y, 10, "brown_gpt_sem")
-m_small_brown, sd_small_brown = test_model_Ridge(small_sem_brown, br_y, 10, "brown_small_sem")
-m_med_brown, sd_med_brown     = test_model_Ridge(med_sem_brown, br_y, 10, "brown_med_sem")
-m_larg_brown, sd_larg_brown   = test_model_Ridge(large_sem_brown, br_y, 10, "brown_large_sem")
-m_xl_brown, sd_xl_brown       = test_model_Ridge(xl_sem_brown, br_y, 10, "brown_xl_sem")
-print(m_gpt_brown, m_small_brown, m_med_brown, m_larg_brown, m_xl_brown)
+# m_gpt_brown, sd_gpt_brown     = test_model_Ridge(gpt_sem_brown, br_y, 10, "brown_gpt_sem")
+# m_small_brown, sd_small_brown = test_model_Ridge(small_sem_brown, br_y, 10, "brown_small_sem")
+# m_med_brown, sd_med_brown     = test_model_Ridge(med_sem_brown, br_y, 10, "brown_med_sem")
+# m_larg_brown, sd_larg_brown   = test_model_Ridge(large_sem_brown, br_y, 10, "brown_large_sem")
+# m_xl_brown, sd_xl_brown       = test_model_Ridge(xl_sem_brown, br_y, 10, "brown_xl_sem")
+# print(m_gpt_brown, m_small_brown, m_med_brown, m_larg_brown, m_xl_brown)
 
 #################
 # BASELINE ONLY #
 #################
 
 # natstor, baseline only
-m_gpt_natstor_b, sd_gpt_natstor_b     = test_model_Ridge(gpt_base_sem_natst, ns_y, 10, "natstor_gpt_base_sem")
-m_small_natstor_b, sd_small_natstor_b = test_model_Ridge(small_base_sem_natst, ns_y, 10, "natstor_small_base_sem")
-m_med_natstor_b, sd_med_natstor_b     = test_model_Ridge(med_base_sem_natst, ns_y, 10, "natstor_med_base_sem")
-m_larg_natstor_b, sd_larg_natstor_b   = test_model_Ridge(large_base_sem_natst, ns_y, 10, "natstor_large_base_sem")
-m_xl_natstor_b, sd_xl_natstor_b       = test_model_Ridge(xl_base_sem_natst, ns_y, 10, "natstor_xl_base_sem")
-print(m_gpt_natstor_b, m_small_natstor_b, m_med_natstor_b, m_larg_natstor_b, m_xl_natstor_b)
+# m_gpt_natstor_b, sd_gpt_natstor_b     = test_model_Ridge(gpt_base_sem_natst, ns_y, 10, "natstor_gpt_base_sem")
+# m_small_natstor_b, sd_small_natstor_b = test_model_Ridge(small_base_sem_natst, ns_y, 10, "natstor_small_base_sem")
+# m_med_natstor_b, sd_med_natstor_b     = test_model_Ridge(med_base_sem_natst, ns_y, 10, "natstor_med_base_sem")
+# m_larg_natstor_b, sd_larg_natstor_b   = test_model_Ridge(large_base_sem_natst, ns_y, 10, "natstor_large_base_sem")
+# m_xl_natstor_b, sd_xl_natstor_b       = test_model_Ridge(xl_base_sem_natst, ns_y, 10, "natstor_xl_base_sem")
+# print(m_gpt_natstor_b, m_small_natstor_b, m_med_natstor_b, m_larg_natstor_b, m_xl_natstor_b)
 
 # brown, baseline only
-m_gpt_brown_b, sd_gpt_brown_b     = test_model_Ridge(gpt_base_sem_brown, br_y, 10, "brown_gpt_base_sem")
-m_small_brown_b, sd_small_brown_b = test_model_Ridge(small_base_sem_brown, br_y, 10, "brown_small_base_sem")
-m_med_brown_b, sd_med_brown_b     = test_model_Ridge(med_base_sem_brown, br_y, 10, "brown_med_base_sem")
-m_larg_brown_b, sd_larg_brown_b   = test_model_Ridge(large_base_sem_brown, br_y, 10, "brown_large_base_sem")
-m_xl_brown_b, sd_xl_brown_b       = test_model_Ridge(xl_base_sem_brown, br_y, 10, "brown_xl_base_sem")
-print(m_gpt_brown_b, m_small_brown_b, m_med_brown_b, m_larg_brown_b, m_xl_brown_b)
+# m_gpt_brown_b, sd_gpt_brown_b     = test_model_Ridge(gpt_base_sem_brown, br_y, 10, "brown_gpt_base_sem")
+# m_small_brown_b, sd_small_brown_b = test_model_Ridge(small_base_sem_brown, br_y, 10, "brown_small_base_sem")
+# m_med_brown_b, sd_med_brown_b     = test_model_Ridge(med_base_sem_brown, br_y, 10, "brown_med_base_sem")
+# m_larg_brown_b, sd_larg_brown_b   = test_model_Ridge(large_base_sem_brown, br_y, 10, "brown_large_base_sem")
+# m_xl_brown_b, sd_xl_brown_b       = test_model_Ridge(xl_base_sem_brown, br_y, 10, "brown_xl_base_sem")
+# print(m_gpt_brown_b, m_small_brown_b, m_med_brown_b, m_larg_brown_b, m_xl_brown_b)
 
 ##########################
 # BASELINE + ACTIVATIONS #
 ##########################
 
 # all, natstor
-m_gpt_natstor_all, sd_gpt_natstor_all     = test_model_Ridge(gpt_all_sem_natst, ns_y, 10, "natstor_gpt_all_sem")
-m_small_natstor_all, sd_small_natstor_all = test_model_Ridge(small_all_sem_natst, ns_y, 10, "natstor_small_all_sem")
-m_med_natstor_all, sd_med_natstor_all     = test_model_Ridge(med_all_sem_natst, ns_y, 10, "natstor_med_all_sem")
-m_larg_natstor_all, sd_larg_natstor_all   = test_model_Ridge(large_all_sem_natst, ns_y, 10, "natstor_large_all_sem")
-m_xl_natstor_all, sd_xl_natstor_all       = test_model_Ridge(xl_all_sem_natst, ns_y, 10, "natstor_xl_all_sem")
-print(m_gpt_natstor_all, m_small_natstor_all, m_med_natstor_all, m_larg_natstor_all, m_xl_natstor_all)
+# m_gpt_natstor_all, sd_gpt_natstor_all     = test_model_Ridge(gpt_all_sem_natst, ns_y, 10, "natstor_gpt_all_sem")
+# m_small_natstor_all, sd_small_natstor_all = test_model_Ridge(small_all_sem_natst, ns_y, 10, "natstor_small_all_sem")
+# m_med_natstor_all, sd_med_natstor_all     = test_model_Ridge(med_all_sem_natst, ns_y, 10, "natstor_med_all_sem")
+# m_larg_natstor_all, sd_larg_natstor_all   = test_model_Ridge(large_all_sem_natst, ns_y, 10, "natstor_large_all_sem")
+# m_xl_natstor_all, sd_xl_natstor_all       = test_model_Ridge(xl_all_sem_natst, ns_y, 10, "natstor_xl_all_sem")
+# print(m_gpt_natstor_all, m_small_natstor_all, m_med_natstor_all, m_larg_natstor_all, m_xl_natstor_all)
 
 
 # all, brown
-m_gpt_brown_all, sd_gpt_brown_all     = test_model_Ridge(gpt_all_sem_brown, br_y, 10, "brown_gpt_all_sem")
-m_small_brown_all, sd_small_brown_all = test_model_Ridge(small_all_sem_brown, br_y, 10, "brown_small_all_sem")
-m_med_brown_all, sd_med_brown_all     = test_model_Ridge(med_all_sem_brown, br_y, 10, "brown_med_all_sem")
-m_larg_brown_all, sd_larg_brown_all   = test_model_Ridge(large_all_sem_brown, br_y, 10, "brown_large_all_sem")
-m_xl_brown_all, sd_xl_brown_all       = test_model_Ridge(xl_all_sem_brown, br_y, 10, "brown_xl_all_sem")
-print(m_gpt_brown_all, m_small_brown_all, m_med_brown_all, m_larg_brown_all, m_xl_brown_all)
+# m_gpt_brown_all, sd_gpt_brown_all     = test_model_Ridge(gpt_all_sem_brown, br_y, 10, "brown_gpt_all_sem")
+# m_small_brown_all, sd_small_brown_all = test_model_Ridge(small_all_sem_brown, br_y, 10, "brown_small_all_sem")
+# m_med_brown_all, sd_med_brown_all     = test_model_Ridge(med_all_sem_brown, br_y, 10, "brown_med_all_sem")
+# m_larg_brown_all, sd_larg_brown_all   = test_model_Ridge(large_all_sem_brown, br_y, 10, "brown_large_all_sem")
+# m_xl_brown_all, sd_xl_brown_all       = test_model_Ridge(xl_all_sem_brown, br_y, 10, "brown_xl_all_sem")
+# print(m_gpt_brown_all, m_small_brown_all, m_med_brown_all, m_larg_brown_all, m_xl_brown_all)
 
 
-df_results_sem = pd.DataFrame({
-    "base_natstor_sem":[m_gpt_natstor_b, m_small_natstor_b, m_med_natstor_b, m_larg_natstor_b, m_xl_natstor_b],
-    "base_natstor_sem_sd": [sd_gpt_natstor_b, sd_small_natstor_b, sd_med_natstor_b, sd_larg_natstor_b, sd_xl_natstor_b],
-    "base_brown_sem":  [m_gpt_brown_b, m_small_brown_b, m_med_brown_b, m_larg_brown_b, m_xl_brown_b],
-    "base_brown_sem_sd":  [sd_gpt_brown_b, sd_small_brown_b, sd_med_brown_b, sd_larg_brown_b, sd_xl_brown_b],
-    "act_natstor_sem":[m_gpt_natstor, m_small_natstor, m_med_natstor, m_larg_natstor, m_xl_natstor],
-    "act_natstor_sem_sd": [sd_gpt_natstor, sd_small_natstor, sd_med_natstor, sd_larg_natstor, sd_xl_natstor],
-    "act_brown_sem":  [m_gpt_brown, m_small_brown, m_med_brown, m_larg_brown, m_xl_brown],
-    "act_brown_sem_sd":  [sd_gpt_brown, sd_small_brown, sd_med_brown, sd_larg_brown, sd_xl_brown],
-    "all_natstor_sem":[m_gpt_natstor_all, m_small_natstor_all, m_med_natstor_all, m_larg_natstor_all, m_xl_natstor_all],
-    "all_natstor_sem_sd":[sd_gpt_natstor_all, sd_small_natstor_all, sd_med_natstor_all, sd_larg_natstor_all, sd_xl_natstor_all],
-    "all_brown_sem":[m_gpt_brown_all, m_small_brown_all, m_med_brown_all, m_larg_brown_all, m_xl_brown_all],
-    "all_brown_sem_sd":[sd_gpt_brown_all, sd_small_brown_all, sd_med_brown_all, sd_larg_brown_all, sd_xl_brown_all]
-    })
-df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# df_results_sem = pd.DataFrame({
+#     "base_natstor_sem":[m_gpt_natstor_b, m_small_natstor_b, m_med_natstor_b, m_larg_natstor_b, m_xl_natstor_b],
+#     "base_natstor_sem_sd": [sd_gpt_natstor_b, sd_small_natstor_b, sd_med_natstor_b, sd_larg_natstor_b, sd_xl_natstor_b],
+#     "base_brown_sem":  [m_gpt_brown_b, m_small_brown_b, m_med_brown_b, m_larg_brown_b, m_xl_brown_b],
+#     "base_brown_sem_sd":  [sd_gpt_brown_b, sd_small_brown_b, sd_med_brown_b, sd_larg_brown_b, sd_xl_brown_b],
+#     "act_natstor_sem":[m_gpt_natstor, m_small_natstor, m_med_natstor, m_larg_natstor, m_xl_natstor],
+#     "act_natstor_sem_sd": [sd_gpt_natstor, sd_small_natstor, sd_med_natstor, sd_larg_natstor, sd_xl_natstor],
+#     "act_brown_sem":  [m_gpt_brown, m_small_brown, m_med_brown, m_larg_brown, m_xl_brown],
+#     "act_brown_sem_sd":  [sd_gpt_brown, sd_small_brown, sd_med_brown, sd_larg_brown, sd_xl_brown],
+#     "all_natstor_sem":[m_gpt_natstor_all, m_small_natstor_all, m_med_natstor_all, m_larg_natstor_all, m_xl_natstor_all],
+#     "all_natstor_sem_sd":[sd_gpt_natstor_all, sd_small_natstor_all, sd_med_natstor_all, sd_larg_natstor_all, sd_xl_natstor_all],
+#     "all_brown_sem":[m_gpt_brown_all, m_small_brown_all, m_med_brown_all, m_larg_brown_all, m_xl_brown_all],
+#     "all_brown_sem_sd":[sd_gpt_brown_all, sd_small_brown_all, sd_med_brown_all, sd_larg_brown_all, sd_xl_brown_all]
+#     })
+# df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 #df_results_sem.to_csv("results_natstor_brown_spill_sem.csv")
 
-df_results = pd.read_csv("results_natstor_brown_spill.csv")
-df_results.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
-merged = pd.concat([df_results, df_results_sem], axis=1)
+# df_results = pd.read_csv("results_natstor_brown_spill.csv")
+# df_results.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# merged = pd.concat([df_results, df_results_sem], axis=1)
 #merged.to_csv("SEM/merged_natstor_brown.csv")
 
-plot_sem(merged, "act_natstor", "base_natstor", "all_natstor", "act_natstor_sem", "base_natstor_sem", "all_natstor_sem", title="NatStor", subtract=True)
+# plot_sem(merged, "act_natstor", "base_natstor", "all_natstor", "act_natstor_sem", "base_natstor_sem", "all_natstor_sem", title="NatStor", subtract=True)
 
-plot_sem(merged, "act_brown", "base_brown", "all_brown", "act_brown_sem", "base_brown_sem", "all_brown_sem", title="brown", subtract=True)
+# plot_sem(merged, "act_brown", "base_brown", "all_brown", "act_brown_sem", "base_brown_sem", "all_brown_sem", title="brown", subtract=True)
 
 
 ########################

@@ -446,98 +446,99 @@ df_results.to_csv("results/all_results.csv")
 # SEM #
 #######
 
-from utils import plot_sem, get_sem, plot_weights_sem
+# [removed: SEM follow-up — semantic-norm analysis is not part of the manuscript]
+# from utils import plot_sem, get_sem, plot_weights_sem
 
-wordlist = [w for s in sent for w in s]
+# wordlist = [w for s in sent for w in s]
 
-sem = get_sem(wordlist)
+# sem = get_sem(wordlist)
 # Missing affective = 81.09
 # Missing perceptual = 30.8
 
-sem0 = np.array([list(vec[:14]) for vec in sem])
-np.std(sem0, axis=0)
+# sem0 = np.array([list(vec[:14]) for vec in sem])
+# np.std(sem0, axis=0)
 # array([0.52271287, 0.51415222, 0.51965928, 0.55279225, 0.51729822, 0.49560875, 0.53796002, 0.49807445, 0.47240124, 0.51157359, 0.49651252, 0.50787201, 0.55548842, 0.51607958])
 
-sem = embed_words(sem)
+# sem = embed_words(sem)
 
 # baseline
-gpt_base_sem   = np.concatenate((sem, sfl_gpt_X), axis=1)
-small_base_sem = np.concatenate((sem, sfl_small_X), axis=1)
-med_base_sem   = np.concatenate((sem, sfl_med_X), axis=1)
-large_base_sem = np.concatenate((sem, sfl_large_X), axis=1)
-xl_base_sem    = np.concatenate((sem, sfl_xl_X), axis=1)
+# gpt_base_sem   = np.concatenate((sem, sfl_gpt_X), axis=1)
+# small_base_sem = np.concatenate((sem, sfl_small_X), axis=1)
+# med_base_sem   = np.concatenate((sem, sfl_med_X), axis=1)
+# large_base_sem = np.concatenate((sem, sfl_large_X), axis=1)
+# xl_base_sem    = np.concatenate((sem, sfl_xl_X), axis=1)
 
 # embedding
-gpt_sem   = np.concatenate((sem, gpt_X), axis=1)
-small_sem = np.concatenate((sem, small_X), axis=1)
-med_sem   = np.concatenate((sem, med_X), axis=1)
-large_sem = np.concatenate((sem, large_X), axis=1)
-xl_sem    = np.concatenate((sem, xl_X), axis=1)
+# gpt_sem   = np.concatenate((sem, gpt_X), axis=1)
+# small_sem = np.concatenate((sem, small_X), axis=1)
+# med_sem   = np.concatenate((sem, med_X), axis=1)
+# large_sem = np.concatenate((sem, large_X), axis=1)
+# xl_sem    = np.concatenate((sem, xl_X), axis=1)
 
 # all
-gpt_all_sem   = np.concatenate((sem, np.concatenate([gpt_X, sfl_gpt_X], axis=1)), axis=1)
-small_all_sem = np.concatenate((sem, np.concatenate([small_X, sfl_small_X], axis=1)), axis=1)
-med_all_sem   = np.concatenate((sem, np.concatenate([med_X, sfl_med_X], axis=1)), axis=1)
-large_all_sem = np.concatenate((sem, np.concatenate([large_X, sfl_large_X], axis=1)), axis=1)
-xl_all_sem    = np.concatenate((sem, np.concatenate([xl_X, sfl_xl_X], axis=1)), axis=1)
+# gpt_all_sem   = np.concatenate((sem, np.concatenate([gpt_X, sfl_gpt_X], axis=1)), axis=1)
+# small_all_sem = np.concatenate((sem, np.concatenate([small_X, sfl_small_X], axis=1)), axis=1)
+# med_all_sem   = np.concatenate((sem, np.concatenate([med_X, sfl_med_X], axis=1)), axis=1)
+# large_all_sem = np.concatenate((sem, np.concatenate([large_X, sfl_large_X], axis=1)), axis=1)
+# xl_all_sem    = np.concatenate((sem, np.concatenate([xl_X, sfl_xl_X], axis=1)), axis=1)
 
-for roi in roin:
-    print("\n\n\nProcessing", roi)
+# for roi in roin:
+#     print("\n\n\nProcessing", roi)
     # baseline
-    base_gpt, base_gpt_sd = test_model_Ridge(gpt_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_gpt_base_sem")
-    base_small, base_small_sd = test_model_Ridge(small_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_small_base_sem")
-    base_med, base_med_sd = test_model_Ridge(med_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_med_base_sem")
-    base_large, base_large_sd = test_model_Ridge(large_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_large_base_sem")
-    base_xl, base_xl_sd = test_model_Ridge(xl_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_xl_base_sem")
-    print(base_gpt, base_small, base_med, base_large, base_xl)
+#     base_gpt, base_gpt_sd = test_model_Ridge(gpt_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_gpt_base_sem")
+#     base_small, base_small_sd = test_model_Ridge(small_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_small_base_sem")
+#     base_med, base_med_sd = test_model_Ridge(med_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_med_base_sem")
+#     base_large, base_large_sd = test_model_Ridge(large_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_large_base_sem")
+#     base_xl, base_xl_sd = test_model_Ridge(xl_base_sem, brain_data_avg[roi], 10, "hp_"+roi+"_xl_base_sem")
+#     print(base_gpt, base_small, base_med, base_large, base_xl)
     
     # act
-    gpt, gpt_sd = test_model_Ridge(gpt_sem, brain_data_avg[roi], 10, "hp_"+roi+"_gpt_sem")
-    small, small_sd = test_model_Ridge(small_sem, brain_data_avg[roi], 10, "hp_"+roi+"_small_sem")
-    med, med_sd = test_model_Ridge(med_sem, brain_data_avg[roi], 10, "hp_"+roi+"_med_sem")
-    large, large_sd = test_model_Ridge(large_sem, brain_data_avg[roi], 10, "hp_"+roi+"_large_sem")
-    xl, xl_sd = test_model_Ridge(xl_sem, brain_data_avg[roi], 10, "hp_"+roi+"_xl_sem")
-    print(gpt, small, med, large, xl)
+#     gpt, gpt_sd = test_model_Ridge(gpt_sem, brain_data_avg[roi], 10, "hp_"+roi+"_gpt_sem")
+#     small, small_sd = test_model_Ridge(small_sem, brain_data_avg[roi], 10, "hp_"+roi+"_small_sem")
+#     med, med_sd = test_model_Ridge(med_sem, brain_data_avg[roi], 10, "hp_"+roi+"_med_sem")
+#     large, large_sd = test_model_Ridge(large_sem, brain_data_avg[roi], 10, "hp_"+roi+"_large_sem")
+#     xl, xl_sd = test_model_Ridge(xl_sem, brain_data_avg[roi], 10, "hp_"+roi+"_xl_sem")
+#     print(gpt, small, med, large, xl)
     
     # all
-    gpt_a, gpt_a_sd = test_model_Ridge(gpt_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_gpt_all_sem")
-    small_a, small_a_sd = test_model_Ridge(small_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_small_all_sem")
-    med_a, med_a_sd = test_model_Ridge(med_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_med_all_sem")
-    large_a, large_a_sd = test_model_Ridge(large_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_large_all_sem")
-    xl_a, xl_a_sd = test_model_Ridge(xl_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_xl_all_sem")
-    print(gpt_a, small_a, med_a, large_a, xl_a)
+#     gpt_a, gpt_a_sd = test_model_Ridge(gpt_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_gpt_all_sem")
+#     small_a, small_a_sd = test_model_Ridge(small_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_small_all_sem")
+#     med_a, med_a_sd = test_model_Ridge(med_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_med_all_sem")
+#     large_a, large_a_sd = test_model_Ridge(large_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_large_all_sem")
+#     xl_a, xl_a_sd = test_model_Ridge(xl_all_sem, brain_data_avg[roi], 10, "hp_"+roi+"_xl_all_sem")
+#     print(gpt_a, small_a, med_a, large_a, xl_a)
     
-    df_results = pd.DataFrame({
-        "base_sem":[base_gpt, base_small, base_med, base_large, base_xl],
-        "base_sem_sd":[base_gpt_sd, base_small_sd, base_med_sd, base_large_sd, base_xl_sd],
-        "act_sem":[gpt, small, med, large, xl],
-        "act_sem_sd":[gpt_sd, small_sd, med_sd, large_sd, xl_sd],
-        "all_sem":[gpt_a, small_a, med_a, large_a, xl_a],
-        "all_sem_sd":[gpt_a_sd, small_a_sd, med_a_sd, large_a_sd, xl_a_sd]
-        })
-    df_results.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+#     df_results = pd.DataFrame({
+#         "base_sem":[base_gpt, base_small, base_med, base_large, base_xl],
+#         "base_sem_sd":[base_gpt_sd, base_small_sd, base_med_sd, base_large_sd, base_xl_sd],
+#         "act_sem":[gpt, small, med, large, xl],
+#         "act_sem_sd":[gpt_sd, small_sd, med_sd, large_sd, xl_sd],
+#         "all_sem":[gpt_a, small_a, med_a, large_a, xl_a],
+#         "all_sem_sd":[gpt_a_sd, small_a_sd, med_a_sd, large_a_sd, xl_a_sd]
+#         })
+#     df_results.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
     
     # significance testing
-    thebase = ["hp_"+roi+"_gpt_base_sem","hp_"+roi+"_small_base_sem","hp_"+roi+"_med_base_sem","hp_"+roi+"_large_base_sem","hp_"+roi+"_xl_base_sem"]
-    theemb  = ["hp_"+roi+"_gpt_sem","hp_"+roi+"_small_sem","hp_"+roi+"_med_sem","hp_"+roi+"_large_sem","hp_"+roi+"_xl_sem"]
-    theall  = ["hp_"+roi+"_gpt_all_sem","hp_"+roi+"_small_all_sem","hp_"+roi+"_med_all_sem","hp_"+roi+"_large_all_sem","hp_"+roi+"_xl_all_sem"]
+#     thebase = ["hp_"+roi+"_gpt_base_sem","hp_"+roi+"_small_base_sem","hp_"+roi+"_med_base_sem","hp_"+roi+"_large_base_sem","hp_"+roi+"_xl_base_sem"]
+#     theemb  = ["hp_"+roi+"_gpt_sem","hp_"+roi+"_small_sem","hp_"+roi+"_med_sem","hp_"+roi+"_large_sem","hp_"+roi+"_xl_sem"]
+#     theall  = ["hp_"+roi+"_gpt_all_sem","hp_"+roi+"_small_all_sem","hp_"+roi+"_med_all_sem","hp_"+roi+"_large_all_sem","hp_"+roi+"_xl_all_sem"]
 
-    p = []
-    for base, emb, all_ in zip(thebase, theemb, theall):
-        p_base_emb = significance_testing(emb, base)
-        p_all_base = significance_testing(all_, base)
-        p_all_emb  = significance_testing(all_, emb)
-        p.append([p_base_emb, p_all_base, p_all_emb])
-    p = pd.DataFrame(p, columns=["base_emb_sem", "all_base_sem", "all_emb_sem"])
+#     p = []
+#     for base, emb, all_ in zip(thebase, theemb, theall):
+#         p_base_emb = significance_testing(emb, base)
+#         p_all_base = significance_testing(all_, base)
+#         p_all_emb  = significance_testing(all_, emb)
+#         p.append([p_base_emb, p_all_base, p_all_emb])
+#     p = pd.DataFrame(p, columns=["base_emb_sem", "all_base_sem", "all_emb_sem"])
 
-    for df_column in p.columns:
-        df_results["p_"+df_column] = list(p[df_column])
+#     for df_column in p.columns:
+#         df_results["p_"+df_column] = list(p[df_column])
     
-    df_old = pd.read_csv("results/"+roi+"_results.csv")
-    df_old.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
-    merged = pd.concat([df_old, df_results], axis=1)
-    merged.to_csv("results/"+roi+"_results_sem.csv", index=False)
-    plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", title=roi, subtract=True)
+#     df_old = pd.read_csv("results/"+roi+"_results.csv")
+#     df_old.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+#     merged = pd.concat([df_old, df_results], axis=1)
+#     merged.to_csv("results/"+roi+"_results_sem.csv", index=False)
+#     plot_sem(merged, "act", "base", "all", "act_sem", "base_sem", "all_sem", title=roi, subtract=True)
 
 
 ########################

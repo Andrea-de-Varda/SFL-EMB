@@ -662,290 +662,291 @@ plot_weights_spill_withEMB("UCL_spr_xl_all", " UCL, SPR", ymin = -0.4, ymax = .7
 
 
 
+# [removed: SEM follow-up — semantic-norm analysis is not part of the manuscript]
 #################################
 #            #######            #
 #            # SEM #            #
 #            #######            #
 #################################
 
-sem = get_sem(list(df_noinit["word"]))
+# sem = get_sem(list(df_noinit["word"]))
 # Missing affective = 70.97
 # Missing perceptual = 11.24
-sem_spill = spill_embeddings(sem, to_filt)
+# sem_spill = spill_embeddings(sem, to_filt)
 
 ###########
 # NoSpill #
 ###########
 
 # baseline
-gpt_base_sem   = np.concatenate((sem, np.array(df_noinit[["s_GPT", "logfreq", "length"]])), axis=1)
-small_base_sem = np.concatenate((sem, np.array(df_noinit[["s_GPT2_small", "logfreq", "length"]])), axis=1)
-med_base_sem   = np.concatenate((sem, np.array(df_noinit[["s_GPT2_med", "logfreq", "length"]])), axis=1)
-large_base_sem = np.concatenate((sem, np.array(df_noinit[["s_GPT2_large", "logfreq", "length"]])), axis=1)
-xl_base_sem    = np.concatenate((sem, np.array(df_noinit[["s_GPT2_xl", "logfreq", "length"]])), axis=1)
+# gpt_base_sem   = np.concatenate((sem, np.array(df_noinit[["s_GPT", "logfreq", "length"]])), axis=1)
+# small_base_sem = np.concatenate((sem, np.array(df_noinit[["s_GPT2_small", "logfreq", "length"]])), axis=1)
+# med_base_sem   = np.concatenate((sem, np.array(df_noinit[["s_GPT2_med", "logfreq", "length"]])), axis=1)
+# large_base_sem = np.concatenate((sem, np.array(df_noinit[["s_GPT2_large", "logfreq", "length"]])), axis=1)
+# xl_base_sem    = np.concatenate((sem, np.array(df_noinit[["s_GPT2_xl", "logfreq", "length"]])), axis=1)
 
 # embedding
-gpt_sem   = np.concatenate((sem, gpt_filt), axis=1)
-small_sem = np.concatenate((sem, small_filt), axis=1)
-med_sem   = np.concatenate((sem, med_filt), axis=1)
-large_sem = np.concatenate((sem, large_filt), axis=1)
-xl_sem    = np.concatenate((sem, xl_filt), axis=1)
+# gpt_sem   = np.concatenate((sem, gpt_filt), axis=1)
+# small_sem = np.concatenate((sem, small_filt), axis=1)
+# med_sem   = np.concatenate((sem, med_filt), axis=1)
+# large_sem = np.concatenate((sem, large_filt), axis=1)
+# xl_sem    = np.concatenate((sem, xl_filt), axis=1)
 
 # all
-gpt_all_sem   = np.concatenate((sem, gpt_all), axis=1)
-small_all_sem = np.concatenate((sem, gpt2_small_all), axis=1)
-med_all_sem   = np.concatenate((sem, gpt2_med_all), axis=1)
-large_all_sem = np.concatenate((sem, gpt2_large_all), axis=1)
-xl_all_sem    = np.concatenate((sem, gpt2_xl_all), axis=1)
+# gpt_all_sem   = np.concatenate((sem, gpt_all), axis=1)
+# small_all_sem = np.concatenate((sem, gpt2_small_all), axis=1)
+# med_all_sem   = np.concatenate((sem, gpt2_med_all), axis=1)
+# large_all_sem = np.concatenate((sem, gpt2_large_all), axis=1)
+# xl_all_sem    = np.concatenate((sem, gpt2_xl_all), axis=1)
 
 #########
 # spill #
 #########
 
 # baseline
-gpt_base_sem_spill     = np.concatenate((sem_spill, np.array(df_spill[["s_GPT", "logfreq", "length",
-                                                          "s_GPT-1", "logfreq-1", "length-1",
-                                                          "s_GPT-2", "logfreq-2", "length-2"]])), axis=1)
-small_base_sem_spill   = np.concatenate((sem_spill, np.array(df_spill[["s_GPT2_small", "logfreq", "length",
-                                                          "s_GPT2_small-1", "logfreq-1", "length-1",
-                                                          "s_GPT2_small-2", "logfreq-2", "length-2"]])), axis=1)
-med_base_sem_spill     = np.concatenate((sem_spill, np.array(df_spill[["s_GPT2_med", "logfreq", "length",
-                                                          "s_GPT2_med-1", "logfreq-1", "length-1",
-                                                          "s_GPT2_med-2", "logfreq-2", "length-2"]])), axis=1)
-large_base_sem_spill   = np.concatenate((sem_spill, np.array(df_spill[["s_GPT2_large", "logfreq", "length",
-                                                          "s_GPT2_large-1", "logfreq-1", "length-1",
-                                                          "s_GPT2_large-2", "logfreq-2", "length-2"]])), axis=1)
-xl_base_sem_spill      = np.concatenate((sem_spill, np.array(df_spill[["s_GPT2_xl", "logfreq", "length",
-                                                          "s_GPT2_xl-1", "logfreq-1", "length-1",
-                                                          "s_GPT2_xl-2", "logfreq-2", "length-2"]])), axis=1)
+# gpt_base_sem_spill     = np.concatenate((sem_spill, np.array(df_spill[["s_GPT", "logfreq", "length",
+#                                                           "s_GPT-1", "logfreq-1", "length-1",
+#                                                           "s_GPT-2", "logfreq-2", "length-2"]])), axis=1)
+# small_base_sem_spill   = np.concatenate((sem_spill, np.array(df_spill[["s_GPT2_small", "logfreq", "length",
+#                                                           "s_GPT2_small-1", "logfreq-1", "length-1",
+#                                                           "s_GPT2_small-2", "logfreq-2", "length-2"]])), axis=1)
+# med_base_sem_spill     = np.concatenate((sem_spill, np.array(df_spill[["s_GPT2_med", "logfreq", "length",
+#                                                           "s_GPT2_med-1", "logfreq-1", "length-1",
+#                                                           "s_GPT2_med-2", "logfreq-2", "length-2"]])), axis=1)
+# large_base_sem_spill   = np.concatenate((sem_spill, np.array(df_spill[["s_GPT2_large", "logfreq", "length",
+#                                                           "s_GPT2_large-1", "logfreq-1", "length-1",
+#                                                           "s_GPT2_large-2", "logfreq-2", "length-2"]])), axis=1)
+# xl_base_sem_spill      = np.concatenate((sem_spill, np.array(df_spill[["s_GPT2_xl", "logfreq", "length",
+#                                                           "s_GPT2_xl-1", "logfreq-1", "length-1",
+#                                                           "s_GPT2_xl-2", "logfreq-2", "length-2"]])), axis=1)
 
 # embedding
-gpt_sem_spill   = np.concatenate((sem_spill, gpt_filt_spill), axis=1)
-small_sem_spill = np.concatenate((sem_spill, small_filt_spill), axis=1)
-med_sem_spill   = np.concatenate((sem_spill, med_filt_spill), axis=1)
-large_sem_spill = np.concatenate((sem_spill, large_filt_spill), axis=1)
-xl_sem_spill    = np.concatenate((sem_spill, xl_filt_spill), axis=1)
+# gpt_sem_spill   = np.concatenate((sem_spill, gpt_filt_spill), axis=1)
+# small_sem_spill = np.concatenate((sem_spill, small_filt_spill), axis=1)
+# med_sem_spill   = np.concatenate((sem_spill, med_filt_spill), axis=1)
+# large_sem_spill = np.concatenate((sem_spill, large_filt_spill), axis=1)
+# xl_sem_spill    = np.concatenate((sem_spill, xl_filt_spill), axis=1)
 
 # all
-gpt_all_sem_spill   = np.concatenate((sem_spill, gpt_all_spill), axis=1)
-small_all_sem_spill = np.concatenate((sem_spill, gpt2_small_all_spill), axis=1)
-med_all_sem_spill   = np.concatenate((sem_spill, gpt2_med_all_spill), axis=1)
-large_all_sem_spill = np.concatenate((sem_spill, gpt2_large_all_spill), axis=1)
-xl_all_sem_spill    = np.concatenate((sem_spill, gpt2_xl_all_spill), axis=1)
+# gpt_all_sem_spill   = np.concatenate((sem_spill, gpt_all_spill), axis=1)
+# small_all_sem_spill = np.concatenate((sem_spill, gpt2_small_all_spill), axis=1)
+# med_all_sem_spill   = np.concatenate((sem_spill, gpt2_med_all_spill), axis=1)
+# large_all_sem_spill = np.concatenate((sem_spill, gpt2_large_all_spill), axis=1)
+# xl_all_sem_spill    = np.concatenate((sem_spill, gpt2_xl_all_spill), axis=1)
 
 ####################
 # ACTIVATIONS ONLY #
 ####################
 
 # first-pass, activation only
-m_gpt_fpass_sem, sd_gpt_fpass_sem     = test_model_Ridge(gpt_sem, fp, 10, "UCL_fpass_gpt_sem")
-m_small_fpass_sem, sd_small_fpass_sem = test_model_Ridge(small_sem, fp, 10, "UCL_fpass_small_sem")
-m_med_fpass_sem, sd_med_fpas_sems     = test_model_Ridge(med_sem, fp, 10, "UCL_fpass_med_sem")
-m_larg_fpass_sem, sd_larg_fpass_sem   = test_model_Ridge(large_sem, fp, 10, "UCL_fpass_large_sem")
-m_xl_fpass_sem, sd_xl_fpass_sem       = test_model_Ridge(xl_sem, fp, 10, "UCL_fpass_xl_sem")
-print(m_gpt_fpass_sem, m_small_fpass_sem, m_med_fpass_sem, m_larg_fpass_sem, m_xl_fpass_sem)
+# m_gpt_fpass_sem, sd_gpt_fpass_sem     = test_model_Ridge(gpt_sem, fp, 10, "UCL_fpass_gpt_sem")
+# m_small_fpass_sem, sd_small_fpass_sem = test_model_Ridge(small_sem, fp, 10, "UCL_fpass_small_sem")
+# m_med_fpass_sem, sd_med_fpas_sems     = test_model_Ridge(med_sem, fp, 10, "UCL_fpass_med_sem")
+# m_larg_fpass_sem, sd_larg_fpass_sem   = test_model_Ridge(large_sem, fp, 10, "UCL_fpass_large_sem")
+# m_xl_fpass_sem, sd_xl_fpass_sem       = test_model_Ridge(xl_sem, fp, 10, "UCL_fpass_xl_sem")
+# print(m_gpt_fpass_sem, m_small_fpass_sem, m_med_fpass_sem, m_larg_fpass_sem, m_xl_fpass_sem)
 
 # n400, activation only
-m_gpt_n400_sem, sd_gpt_n400_sem     = test_model_Ridge(gpt_sem[filtr], n400, 10, "UCL_n400_gpt_sem")
-m_small_n400_sem, sd_small_n400_sem = test_model_Ridge(small_sem[filtr], n400, 10, "UCL_n400_small_sem")
-m_med_n400_sem, sd_med_n400_sem     = test_model_Ridge(med_sem[filtr], n400, 10, "UCL_n400_med_sem")
-m_larg_n400_sem, sd_larg_n400_sem   = test_model_Ridge(large_sem[filtr], n400, 10, "UCL_n400_large_sem")
-m_xl_n400_sem, sd_xl_n400_sem       = test_model_Ridge(xl_sem[filtr], n400, 10, "UCL_n400_xl_sem")
-print(m_gpt_n400_sem, m_small_n400_sem, m_med_n400_sem, m_larg_n400_sem, m_xl_n400_sem)
+# m_gpt_n400_sem, sd_gpt_n400_sem     = test_model_Ridge(gpt_sem[filtr], n400, 10, "UCL_n400_gpt_sem")
+# m_small_n400_sem, sd_small_n400_sem = test_model_Ridge(small_sem[filtr], n400, 10, "UCL_n400_small_sem")
+# m_med_n400_sem, sd_med_n400_sem     = test_model_Ridge(med_sem[filtr], n400, 10, "UCL_n400_med_sem")
+# m_larg_n400_sem, sd_larg_n400_sem   = test_model_Ridge(large_sem[filtr], n400, 10, "UCL_n400_large_sem")
+# m_xl_n400_sem, sd_xl_n400_sem       = test_model_Ridge(xl_sem[filtr], n400, 10, "UCL_n400_xl_sem")
+# print(m_gpt_n400_sem, m_small_n400_sem, m_med_n400_sem, m_larg_n400_sem, m_xl_n400_sem)
 
 # p600, activation only
-m_gpt_p600_sem, sd_gpt_p600_sem     = test_model_Ridge(gpt_sem[filtr], p600, 10, "UCL_p600_gpt_sem")
-m_small_p600_sem, sd_small_p600_sem = test_model_Ridge(small_sem[filtr], p600, 10, "UCL_p600_small_sem")
-m_med_p600_sem, sd_med_p600_sem     = test_model_Ridge(med_sem[filtr], p600, 10, "UCL_p600_med_sem")
-m_larg_p600_sem, sd_larg_p600_sem   = test_model_Ridge(large_sem[filtr], p600, 10, "UCL_p600_large_sem")
-m_xl_p600_sem, sd_xl_p600_sem       = test_model_Ridge(xl_sem[filtr], p600, 10, "UCL_p600_xl_sem")
-print(m_gpt_p600_sem, m_small_p600_sem, m_med_p600_sem, m_larg_p600_sem, m_xl_p600_sem)
+# m_gpt_p600_sem, sd_gpt_p600_sem     = test_model_Ridge(gpt_sem[filtr], p600, 10, "UCL_p600_gpt_sem")
+# m_small_p600_sem, sd_small_p600_sem = test_model_Ridge(small_sem[filtr], p600, 10, "UCL_p600_small_sem")
+# m_med_p600_sem, sd_med_p600_sem     = test_model_Ridge(med_sem[filtr], p600, 10, "UCL_p600_med_sem")
+# m_larg_p600_sem, sd_larg_p600_sem   = test_model_Ridge(large_sem[filtr], p600, 10, "UCL_p600_large_sem")
+# m_xl_p600_sem, sd_xl_p600_sem       = test_model_Ridge(xl_sem[filtr], p600, 10, "UCL_p600_xl_sem")
+# print(m_gpt_p600_sem, m_small_p600_sem, m_med_p600_sem, m_larg_p600_sem, m_xl_p600_sem)
 
 # SPR, spill
-m_gpt_spr_sem, sd_gpt_spr_sem     = test_model_Ridge(gpt_sem_spill, spr_spill, 10, "UCL_spr_gpt_sem")
-m_small_spr_sem, sd_small_spr_sem = test_model_Ridge(small_sem_spill, spr_spill, 10, "UCL_spr_small_sem")
-m_med_spr_sem, sd_med_spr_sem     = test_model_Ridge(med_sem_spill, spr_spill, 10, "UCL_spr_med_sem")
-m_larg_spr_sem, sd_larg_spr_sem   = test_model_Ridge(large_sem_spill, spr_spill, 10, "UCL_spr_large_sem")
-m_xl_spr_sem, sd_xl_spr_sem       = test_model_Ridge(xl_sem_spill, spr_spill, 10, "UCL_spr_xl_sem")
-print(m_gpt_spr_sem, m_small_spr_sem, m_med_spr_sem, m_larg_spr_sem, m_xl_spr_sem)
+# m_gpt_spr_sem, sd_gpt_spr_sem     = test_model_Ridge(gpt_sem_spill, spr_spill, 10, "UCL_spr_gpt_sem")
+# m_small_spr_sem, sd_small_spr_sem = test_model_Ridge(small_sem_spill, spr_spill, 10, "UCL_spr_small_sem")
+# m_med_spr_sem, sd_med_spr_sem     = test_model_Ridge(med_sem_spill, spr_spill, 10, "UCL_spr_med_sem")
+# m_larg_spr_sem, sd_larg_spr_sem   = test_model_Ridge(large_sem_spill, spr_spill, 10, "UCL_spr_large_sem")
+# m_xl_spr_sem, sd_xl_spr_sem       = test_model_Ridge(xl_sem_spill, spr_spill, 10, "UCL_spr_xl_sem")
+# print(m_gpt_spr_sem, m_small_spr_sem, m_med_spr_sem, m_larg_spr_sem, m_xl_spr_sem)
 
 #################
 # BASELINE ONLY #
 #################
 
 # first-pass, baseline only
-m_gpt_fpass_b_sem, sd_gpt_fpass_b_sem     = test_model_Ridge(gpt_base_sem, fp, 10, "UCL_fpass_gpt_base_sem")
-m_small_fpass_b_sem, sd_small_fpass_b_sem = test_model_Ridge(small_base_sem, fp, 10, "UCL_fpass_small_base_sem")
-m_med_fpass_b_sem, sd_med_fpass_b_sem     = test_model_Ridge(med_base_sem, fp, 10, "UCL_fpass_med_base_sem")
-m_larg_fpass_b_sem, sd_larg_fpass_b_sem   = test_model_Ridge(large_base_sem, fp, 10, "UCL_fpass_large_base_sem")
-m_xl_fpass_b_sem, sd_xl_fpass_b_sem       = test_model_Ridge(xl_base_sem, fp, 10, "UCL_fpass_xl_base_sem")
-print(m_gpt_fpass_b_sem, m_small_fpass_b_sem, m_med_fpass_b_sem, m_larg_fpass_b_sem, m_xl_fpass_b_sem)
+# m_gpt_fpass_b_sem, sd_gpt_fpass_b_sem     = test_model_Ridge(gpt_base_sem, fp, 10, "UCL_fpass_gpt_base_sem")
+# m_small_fpass_b_sem, sd_small_fpass_b_sem = test_model_Ridge(small_base_sem, fp, 10, "UCL_fpass_small_base_sem")
+# m_med_fpass_b_sem, sd_med_fpass_b_sem     = test_model_Ridge(med_base_sem, fp, 10, "UCL_fpass_med_base_sem")
+# m_larg_fpass_b_sem, sd_larg_fpass_b_sem   = test_model_Ridge(large_base_sem, fp, 10, "UCL_fpass_large_base_sem")
+# m_xl_fpass_b_sem, sd_xl_fpass_b_sem       = test_model_Ridge(xl_base_sem, fp, 10, "UCL_fpass_xl_base_sem")
+# print(m_gpt_fpass_b_sem, m_small_fpass_b_sem, m_med_fpass_b_sem, m_larg_fpass_b_sem, m_xl_fpass_b_sem)
 
 # n400, baseline only
-m_gpt_n400_b_sem, sd_gpt_n400_b_sem     = test_model_Ridge(gpt_base_sem[filtr], n400, 10, "UCL_n400_gpt_base_sem")
-m_small_n400_b_sem, sd_small_n400_b_sem = test_model_Ridge(small_base_sem[filtr], n400, 10, "UCL_n400_small_base_sem")
-m_med_n400_b_sem, sd_med_n400_b_sem     = test_model_Ridge(med_base_sem[filtr], n400, 10, "UCL_n400_med_base_sem")
-m_larg_n400_b_sem, sd_larg_n400_b_sem   = test_model_Ridge(large_base_sem[filtr], n400, 10, "UCL_n400_large_base_sem")
-m_xl_n400_b_sem, sd_xl_n400_b_sem       = test_model_Ridge(xl_base_sem[filtr], n400, 10, "UCL_n400_xl_base_sem")
-print(m_gpt_n400_b_sem, m_small_n400_b_sem, m_med_n400_b_sem, m_larg_n400_b_sem, m_xl_n400_b_sem)
+# m_gpt_n400_b_sem, sd_gpt_n400_b_sem     = test_model_Ridge(gpt_base_sem[filtr], n400, 10, "UCL_n400_gpt_base_sem")
+# m_small_n400_b_sem, sd_small_n400_b_sem = test_model_Ridge(small_base_sem[filtr], n400, 10, "UCL_n400_small_base_sem")
+# m_med_n400_b_sem, sd_med_n400_b_sem     = test_model_Ridge(med_base_sem[filtr], n400, 10, "UCL_n400_med_base_sem")
+# m_larg_n400_b_sem, sd_larg_n400_b_sem   = test_model_Ridge(large_base_sem[filtr], n400, 10, "UCL_n400_large_base_sem")
+# m_xl_n400_b_sem, sd_xl_n400_b_sem       = test_model_Ridge(xl_base_sem[filtr], n400, 10, "UCL_n400_xl_base_sem")
+# print(m_gpt_n400_b_sem, m_small_n400_b_sem, m_med_n400_b_sem, m_larg_n400_b_sem, m_xl_n400_b_sem)
 
 # p600, baseline only
-m_gpt_p600_b_sem, sd_gpt_p600_b_sem     = test_model_Ridge(gpt_base_sem[filtr], p600, 10, "UCL_p600_gpt_base_sem")
-m_small_p600_b_sem, sd_small_p600_b_sem = test_model_Ridge(small_base_sem[filtr], p600, 10, "UCL_p600_small_base_sem")
-m_med_p600_b_sem, sd_med_p600_b_sem     = test_model_Ridge(med_base_sem[filtr], p600, 10, "UCL_p600_med_base_sem")
-m_larg_p600_b_sem, sd_larg_p600_b_sem   = test_model_Ridge(large_base_sem[filtr], p600, 10, "UCL_p600_large_base_sem")
-m_xl_p600_b_sem, sd_xl_p600_b_sem       = test_model_Ridge(xl_base_sem[filtr], p600, 10, "UCL_p600_xl_base_sem")
-print(m_gpt_p600_b_sem, m_small_p600_b_sem, m_med_p600_b_sem, m_larg_p600_b_sem, m_xl_p600_b_sem)
+# m_gpt_p600_b_sem, sd_gpt_p600_b_sem     = test_model_Ridge(gpt_base_sem[filtr], p600, 10, "UCL_p600_gpt_base_sem")
+# m_small_p600_b_sem, sd_small_p600_b_sem = test_model_Ridge(small_base_sem[filtr], p600, 10, "UCL_p600_small_base_sem")
+# m_med_p600_b_sem, sd_med_p600_b_sem     = test_model_Ridge(med_base_sem[filtr], p600, 10, "UCL_p600_med_base_sem")
+# m_larg_p600_b_sem, sd_larg_p600_b_sem   = test_model_Ridge(large_base_sem[filtr], p600, 10, "UCL_p600_large_base_sem")
+# m_xl_p600_b_sem, sd_xl_p600_b_sem       = test_model_Ridge(xl_base_sem[filtr], p600, 10, "UCL_p600_xl_base_sem")
+# print(m_gpt_p600_b_sem, m_small_p600_b_sem, m_med_p600_b_sem, m_larg_p600_b_sem, m_xl_p600_b_sem)
 
 # spr_spill, baseline only
-m_gpt_spr_b_sem, sd_gpt_spr_b_sem     = test_model_Ridge(gpt_base_sem_spill, spr_spill, 10, "UCL_spr_gpt_base_sem")
-m_small_spr_b_sem, sd_small_spr_b_sem = test_model_Ridge(small_base_sem_spill, spr_spill, 10, "UCL_spr_small_base_sem")
-m_med_spr_b_sem, sd_med_spr_b_sem     = test_model_Ridge(med_base_sem_spill, spr_spill, 10, "UCL_spr_med_base_sem")
-m_larg_spr_b_sem, sd_larg_spr_b_sem   = test_model_Ridge(large_base_sem_spill, spr_spill, 10, "UCL_spr_large_base_sem")
-m_xl_spr_b_sem, sd_xl_spr_b_sem       = test_model_Ridge(xl_base_sem_spill, spr_spill, 10, "UCL_spr_xl_base_sem")
-print(m_gpt_spr_b_sem, m_small_spr_b_sem, m_med_spr_b_sem, m_larg_spr_b_sem, m_xl_spr_b_sem)
+# m_gpt_spr_b_sem, sd_gpt_spr_b_sem     = test_model_Ridge(gpt_base_sem_spill, spr_spill, 10, "UCL_spr_gpt_base_sem")
+# m_small_spr_b_sem, sd_small_spr_b_sem = test_model_Ridge(small_base_sem_spill, spr_spill, 10, "UCL_spr_small_base_sem")
+# m_med_spr_b_sem, sd_med_spr_b_sem     = test_model_Ridge(med_base_sem_spill, spr_spill, 10, "UCL_spr_med_base_sem")
+# m_larg_spr_b_sem, sd_larg_spr_b_sem   = test_model_Ridge(large_base_sem_spill, spr_spill, 10, "UCL_spr_large_base_sem")
+# m_xl_spr_b_sem, sd_xl_spr_b_sem       = test_model_Ridge(xl_base_sem_spill, spr_spill, 10, "UCL_spr_xl_base_sem")
+# print(m_gpt_spr_b_sem, m_small_spr_b_sem, m_med_spr_b_sem, m_larg_spr_b_sem, m_xl_spr_b_sem)
 
 #######
 # ALL #
 #######
 
 # first-pass
-m_gpt_fpass_all_sem, sd_gpt_fpass_all_sem     = test_model_Ridge(gpt_all_sem, fp, 10, "UCL_fpass_gpt_all_sem")
-m_small_fpass_all_sem, sd_small_fpass_all_sem = test_model_Ridge(small_all_sem, fp, 10, "UCL_fpass_small_all_sem")
-m_med_fpass_all_sem, sd_med_fpass_all_sem     = test_model_Ridge(med_all_sem, fp, 10, "UCL_fpass_med_all_sem")
-m_larg_fpass_all_sem, sd_larg_fpass_all_sem   = test_model_Ridge(large_all_sem, fp, 10, "UCL_fpass_large_all_sem")
-m_xl_fpass_all_sem, sd_xl_fpass_all_sem       = test_model_Ridge(xl_all_sem, fp, 10, "UCL_fpass_xl_all_sem")
-print(m_gpt_fpass_all_sem, m_small_fpass_all_sem, m_med_fpass_all_sem, m_larg_fpass_all_sem, m_xl_fpass_all_sem)
+# m_gpt_fpass_all_sem, sd_gpt_fpass_all_sem     = test_model_Ridge(gpt_all_sem, fp, 10, "UCL_fpass_gpt_all_sem")
+# m_small_fpass_all_sem, sd_small_fpass_all_sem = test_model_Ridge(small_all_sem, fp, 10, "UCL_fpass_small_all_sem")
+# m_med_fpass_all_sem, sd_med_fpass_all_sem     = test_model_Ridge(med_all_sem, fp, 10, "UCL_fpass_med_all_sem")
+# m_larg_fpass_all_sem, sd_larg_fpass_all_sem   = test_model_Ridge(large_all_sem, fp, 10, "UCL_fpass_large_all_sem")
+# m_xl_fpass_all_sem, sd_xl_fpass_all_sem       = test_model_Ridge(xl_all_sem, fp, 10, "UCL_fpass_xl_all_sem")
+# print(m_gpt_fpass_all_sem, m_small_fpass_all_sem, m_med_fpass_all_sem, m_larg_fpass_all_sem, m_xl_fpass_all_sem)
 
 # n400
-m_gpt_n400_all_sem, sd_gpt_n400_all_sem     = test_model_Ridge(gpt_all_sem[filtr], n400, 10, "UCL_n400_gpt_all_sem")
-m_small_n400_all_sem, sd_small_n400_all_sem = test_model_Ridge(small_all_sem[filtr], n400, 10, "UCL_n400_small_all_sem")
-m_med_n400_all_sem, sd_med_n400_all_sem     = test_model_Ridge(med_all_sem[filtr], n400, 10, "UCL_n400_med_all_sem")
-m_larg_n400_all_sem, sd_larg_n400_all_sem   = test_model_Ridge(large_all_sem[filtr], n400, 10, "UCL_n400_large_all_sem")
-m_xl_n400_all_sem, sd_xl_n400_all_sem       = test_model_Ridge(xl_all_sem[filtr], n400, 10, "UCL_n400_xl_all_sem")
-print(m_gpt_n400_all_sem, m_small_n400_all_sem, m_med_n400_all_sem, m_larg_n400_all_sem, m_xl_n400_all_sem)
+# m_gpt_n400_all_sem, sd_gpt_n400_all_sem     = test_model_Ridge(gpt_all_sem[filtr], n400, 10, "UCL_n400_gpt_all_sem")
+# m_small_n400_all_sem, sd_small_n400_all_sem = test_model_Ridge(small_all_sem[filtr], n400, 10, "UCL_n400_small_all_sem")
+# m_med_n400_all_sem, sd_med_n400_all_sem     = test_model_Ridge(med_all_sem[filtr], n400, 10, "UCL_n400_med_all_sem")
+# m_larg_n400_all_sem, sd_larg_n400_all_sem   = test_model_Ridge(large_all_sem[filtr], n400, 10, "UCL_n400_large_all_sem")
+# m_xl_n400_all_sem, sd_xl_n400_all_sem       = test_model_Ridge(xl_all_sem[filtr], n400, 10, "UCL_n400_xl_all_sem")
+# print(m_gpt_n400_all_sem, m_small_n400_all_sem, m_med_n400_all_sem, m_larg_n400_all_sem, m_xl_n400_all_sem)
 
 # p600
-m_gpt_p600_all_sem, sd_gpt_p600_all_sem     = test_model_Ridge(gpt_all_sem[filtr], p600, 10, "UCL_p600_gpt_all_sem")
-m_small_p600_all_sem, sd_small_p600_all_sem = test_model_Ridge(small_all_sem[filtr], p600, 10, "UCL_p600_small_all_sem")
-m_med_p600_all_sem, sd_med_p600_all_sem     = test_model_Ridge(med_all_sem[filtr], p600, 10, "UCL_p600_med_all_sem")
-m_larg_p600_all_sem, sd_larg_p600_all_sem   = test_model_Ridge(large_all_sem[filtr], p600, 10, "UCL_p600_large_all_sem")
-m_xl_p600_all_sem, sd_xl_p600_all_sem       = test_model_Ridge(xl_all_sem[filtr], p600, 10, "UCL_p600_xl_all_sem")
-print(m_gpt_p600_all_sem, m_small_p600_all_sem, m_med_p600_all_sem, m_larg_p600_all_sem, m_xl_p600_all_sem)
+# m_gpt_p600_all_sem, sd_gpt_p600_all_sem     = test_model_Ridge(gpt_all_sem[filtr], p600, 10, "UCL_p600_gpt_all_sem")
+# m_small_p600_all_sem, sd_small_p600_all_sem = test_model_Ridge(small_all_sem[filtr], p600, 10, "UCL_p600_small_all_sem")
+# m_med_p600_all_sem, sd_med_p600_all_sem     = test_model_Ridge(med_all_sem[filtr], p600, 10, "UCL_p600_med_all_sem")
+# m_larg_p600_all_sem, sd_larg_p600_all_sem   = test_model_Ridge(large_all_sem[filtr], p600, 10, "UCL_p600_large_all_sem")
+# m_xl_p600_all_sem, sd_xl_p600_all_sem       = test_model_Ridge(xl_all_sem[filtr], p600, 10, "UCL_p600_xl_all_sem")
+# print(m_gpt_p600_all_sem, m_small_p600_all_sem, m_med_p600_all_sem, m_larg_p600_all_sem, m_xl_p600_all_sem)
 
 # spr
-m_gpt_spr_all_sem, sd_gpt_spr_all_sem     = test_model_Ridge(gpt_all_sem_spill, spr_spill, 10, "UCL_spr_gpt_all_sem")
-m_small_spr_all_sem, sd_small_spr_all_sem = test_model_Ridge(small_all_sem_spill, spr_spill, 10, "UCL_spr_small_all_sem")
-m_med_spr_all_sem, sd_med_spr_all_sem     = test_model_Ridge(med_all_sem_spill, spr_spill, 10, "UCL_spr_med_all_sem")
-m_larg_spr_all_sem, sd_larg_spr_all_sem   = test_model_Ridge(large_all_sem_spill, spr_spill, 10, "UCL_spr_large_all_sem")
-m_xl_spr_all_sem, sd_xl_spr_all_sem       = test_model_Ridge(xl_all_sem_spill, spr_spill, 10, "UCL_spr_xl_all_sem")
-print(m_gpt_spr_all_sem, m_small_spr_all_sem, m_med_spr_all_sem, m_larg_spr_all_sem, m_xl_spr_all_sem)
+# m_gpt_spr_all_sem, sd_gpt_spr_all_sem     = test_model_Ridge(gpt_all_sem_spill, spr_spill, 10, "UCL_spr_gpt_all_sem")
+# m_small_spr_all_sem, sd_small_spr_all_sem = test_model_Ridge(small_all_sem_spill, spr_spill, 10, "UCL_spr_small_all_sem")
+# m_med_spr_all_sem, sd_med_spr_all_sem     = test_model_Ridge(med_all_sem_spill, spr_spill, 10, "UCL_spr_med_all_sem")
+# m_larg_spr_all_sem, sd_larg_spr_all_sem   = test_model_Ridge(large_all_sem_spill, spr_spill, 10, "UCL_spr_large_all_sem")
+# m_xl_spr_all_sem, sd_xl_spr_all_sem       = test_model_Ridge(xl_all_sem_spill, spr_spill, 10, "UCL_spr_xl_all_sem")
+# print(m_gpt_spr_all_sem, m_small_spr_all_sem, m_med_spr_all_sem, m_larg_spr_all_sem, m_xl_spr_all_sem)
 
-df_results_sem = pd.DataFrame({
-    "base_fpass_sem":[m_gpt_fpass_b_sem, m_small_fpass_b_sem, m_med_fpass_b_sem, m_larg_fpass_b_sem, m_xl_fpass_b_sem],
-    "base_fpass_sem_sd": [sd_gpt_fpass_b_sem, sd_small_fpass_b_sem, sd_med_fpass_b_sem, sd_larg_fpass_b_sem, sd_xl_fpass_b_sem],
-    "base_n400_sem":  [m_gpt_n400_b_sem, m_small_n400_b_sem, m_med_n400_b_sem, m_larg_n400_b_sem, m_xl_n400_b_sem],
-    "base_n400_sem_sd":  [sd_gpt_n400_b_sem, sd_small_n400_b_sem, sd_med_n400_b_sem, sd_larg_n400_b_sem, sd_xl_n400_b_sem],
-    "base_p600_sem":  [m_gpt_p600_b_sem, m_small_p600_b_sem, m_med_p600_b_sem, m_larg_p600_b_sem, m_xl_p600_b_sem],
-    "base_p600_sem_sd":  [sd_gpt_p600_b_sem, sd_small_p600_b_sem, sd_med_p600_b_sem, sd_larg_p600_b_sem, sd_xl_p600_b_sem],
-    "base_spr_sem": [m_gpt_spr_b_sem, m_small_spr_b_sem, m_med_spr_b_sem, m_larg_spr_b_sem, m_xl_spr_b_sem],
-    "base_spr_sem_sd":[sd_gpt_spr_b_sem, sd_small_spr_b_sem, sd_med_spr_b_sem, sd_larg_spr_b_sem, sd_xl_spr_b_sem],
-    "act_fpass_sem":[m_gpt_fpass_sem, m_small_fpass_sem, m_med_fpass_sem, m_larg_fpass_sem, m_xl_fpass_sem],
-    "act_fpass_sem_sd": [sd_gpt_fpass_sem, sd_small_fpass_sem, sd_med_fpas_sems, sd_larg_fpass_sem, sd_xl_fpass_sem],
-    "act_n400_sem":  [m_gpt_n400_sem, m_small_n400_sem, m_med_n400_sem, m_larg_n400_sem, m_xl_n400_sem],
-    "act_n400_sem_sd":  [sd_gpt_n400_sem, sd_small_n400_sem, sd_med_n400_sem, sd_larg_n400_sem, sd_xl_n400_sem],
-    "act_p600_sem":  [m_gpt_p600_sem, m_small_p600_sem, m_med_p600_sem, m_larg_p600_sem, m_xl_p600_sem],
-    "act_p600_sem_sd":  [sd_gpt_p600_sem, sd_small_p600_sem, sd_med_p600_sem, sd_larg_p600_sem, sd_xl_p600_sem],
-    "act_spr_sem": [m_gpt_spr_sem, m_small_spr_sem, m_med_spr_sem, m_larg_spr_sem, m_xl_spr_sem],
-    "act_spr_sem_sd":[sd_gpt_spr_sem, sd_small_spr_sem, sd_med_spr_sem, sd_larg_spr_sem, sd_xl_spr_sem],
-    "all_fpass_sem":[m_gpt_fpass_all_sem, m_small_fpass_all_sem, m_med_fpass_all_sem, m_larg_fpass_all_sem, m_xl_fpass_all_sem],
-    "all_fpass_sem_sd":[sd_gpt_fpass_all_sem, sd_small_fpass_all_sem, sd_med_fpass_all_sem, sd_larg_fpass_all_sem, sd_xl_fpass_all_sem],
-    "all_n400_sem":[m_gpt_n400_all_sem, m_small_n400_all_sem, m_med_n400_all_sem, m_larg_n400_all_sem, m_xl_n400_all_sem],
-    "all_n400_sem_sd":[sd_gpt_n400_all_sem, sd_small_n400_all_sem, sd_med_n400_all_sem, sd_larg_n400_all_sem, sd_xl_n400_all_sem],
-    "all_p600_sem":[m_gpt_p600_all_sem, m_small_p600_all_sem, m_med_p600_all_sem, m_larg_p600_all_sem, m_xl_p600_all_sem],
-    "all_p600_sem_sd":[sd_gpt_p600_all_sem, sd_small_p600_all_sem, sd_med_p600_all_sem, sd_larg_p600_all_sem, sd_xl_p600_all_sem],
-    "all_spr_sem":[m_gpt_spr_all_sem, m_small_spr_all_sem, m_med_spr_all_sem, m_larg_spr_all_sem, m_xl_spr_all_sem],
-    "all_spr_sem_sd":[sd_gpt_spr_all_sem, sd_small_spr_all_sem, sd_med_spr_all_sem, sd_larg_spr_all_sem, sd_xl_spr_all_sem]
-    })
-df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# df_results_sem = pd.DataFrame({
+#     "base_fpass_sem":[m_gpt_fpass_b_sem, m_small_fpass_b_sem, m_med_fpass_b_sem, m_larg_fpass_b_sem, m_xl_fpass_b_sem],
+#     "base_fpass_sem_sd": [sd_gpt_fpass_b_sem, sd_small_fpass_b_sem, sd_med_fpass_b_sem, sd_larg_fpass_b_sem, sd_xl_fpass_b_sem],
+#     "base_n400_sem":  [m_gpt_n400_b_sem, m_small_n400_b_sem, m_med_n400_b_sem, m_larg_n400_b_sem, m_xl_n400_b_sem],
+#     "base_n400_sem_sd":  [sd_gpt_n400_b_sem, sd_small_n400_b_sem, sd_med_n400_b_sem, sd_larg_n400_b_sem, sd_xl_n400_b_sem],
+#     "base_p600_sem":  [m_gpt_p600_b_sem, m_small_p600_b_sem, m_med_p600_b_sem, m_larg_p600_b_sem, m_xl_p600_b_sem],
+#     "base_p600_sem_sd":  [sd_gpt_p600_b_sem, sd_small_p600_b_sem, sd_med_p600_b_sem, sd_larg_p600_b_sem, sd_xl_p600_b_sem],
+#     "base_spr_sem": [m_gpt_spr_b_sem, m_small_spr_b_sem, m_med_spr_b_sem, m_larg_spr_b_sem, m_xl_spr_b_sem],
+#     "base_spr_sem_sd":[sd_gpt_spr_b_sem, sd_small_spr_b_sem, sd_med_spr_b_sem, sd_larg_spr_b_sem, sd_xl_spr_b_sem],
+#     "act_fpass_sem":[m_gpt_fpass_sem, m_small_fpass_sem, m_med_fpass_sem, m_larg_fpass_sem, m_xl_fpass_sem],
+#     "act_fpass_sem_sd": [sd_gpt_fpass_sem, sd_small_fpass_sem, sd_med_fpas_sems, sd_larg_fpass_sem, sd_xl_fpass_sem],
+#     "act_n400_sem":  [m_gpt_n400_sem, m_small_n400_sem, m_med_n400_sem, m_larg_n400_sem, m_xl_n400_sem],
+#     "act_n400_sem_sd":  [sd_gpt_n400_sem, sd_small_n400_sem, sd_med_n400_sem, sd_larg_n400_sem, sd_xl_n400_sem],
+#     "act_p600_sem":  [m_gpt_p600_sem, m_small_p600_sem, m_med_p600_sem, m_larg_p600_sem, m_xl_p600_sem],
+#     "act_p600_sem_sd":  [sd_gpt_p600_sem, sd_small_p600_sem, sd_med_p600_sem, sd_larg_p600_sem, sd_xl_p600_sem],
+#     "act_spr_sem": [m_gpt_spr_sem, m_small_spr_sem, m_med_spr_sem, m_larg_spr_sem, m_xl_spr_sem],
+#     "act_spr_sem_sd":[sd_gpt_spr_sem, sd_small_spr_sem, sd_med_spr_sem, sd_larg_spr_sem, sd_xl_spr_sem],
+#     "all_fpass_sem":[m_gpt_fpass_all_sem, m_small_fpass_all_sem, m_med_fpass_all_sem, m_larg_fpass_all_sem, m_xl_fpass_all_sem],
+#     "all_fpass_sem_sd":[sd_gpt_fpass_all_sem, sd_small_fpass_all_sem, sd_med_fpass_all_sem, sd_larg_fpass_all_sem, sd_xl_fpass_all_sem],
+#     "all_n400_sem":[m_gpt_n400_all_sem, m_small_n400_all_sem, m_med_n400_all_sem, m_larg_n400_all_sem, m_xl_n400_all_sem],
+#     "all_n400_sem_sd":[sd_gpt_n400_all_sem, sd_small_n400_all_sem, sd_med_n400_all_sem, sd_larg_n400_all_sem, sd_xl_n400_all_sem],
+#     "all_p600_sem":[m_gpt_p600_all_sem, m_small_p600_all_sem, m_med_p600_all_sem, m_larg_p600_all_sem, m_xl_p600_all_sem],
+#     "all_p600_sem_sd":[sd_gpt_p600_all_sem, sd_small_p600_all_sem, sd_med_p600_all_sem, sd_larg_p600_all_sem, sd_xl_p600_all_sem],
+#     "all_spr_sem":[m_gpt_spr_all_sem, m_small_spr_all_sem, m_med_spr_all_sem, m_larg_spr_all_sem, m_xl_spr_all_sem],
+#     "all_spr_sem_sd":[sd_gpt_spr_all_sem, sd_small_spr_all_sem, sd_med_spr_all_sem, sd_larg_spr_all_sem, sd_xl_spr_all_sem]
+#     })
+# df_results_sem.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 #df_results_sem.to_csv("SEM/results_UCL_SEM.csv", index=True)
 
 
 ########################
 # significance_testing #
 ########################
-thebase_fpass = [x+"_sem" for x in ["UCL_fpass_gpt_base", "UCL_fpass_small_base", "UCL_fpass_med_base", "UCL_fpass_large_base", "UCL_fpass_xl_base"]]
-theemb_fpass  = [x+"_sem" for x in["UCL_fpass_gpt", "UCL_fpass_small", "UCL_fpass_med", "UCL_fpass_large", "UCL_fpass_xl"]]
-all_fpass     = [x+"_sem" for x in["UCL_fpass_gpt_all", "UCL_fpass_small_all", "UCL_fpass_med_all", "UCL_fpass_large_all", "UCL_fpass_xl_all"]]
+# thebase_fpass = [x+"_sem" for x in ["UCL_fpass_gpt_base", "UCL_fpass_small_base", "UCL_fpass_med_base", "UCL_fpass_large_base", "UCL_fpass_xl_base"]]
+# theemb_fpass  = [x+"_sem" for x in["UCL_fpass_gpt", "UCL_fpass_small", "UCL_fpass_med", "UCL_fpass_large", "UCL_fpass_xl"]]
+# all_fpass     = [x+"_sem" for x in["UCL_fpass_gpt_all", "UCL_fpass_small_all", "UCL_fpass_med_all", "UCL_fpass_large_all", "UCL_fpass_xl_all"]]
 
-thebase_n400 = [x+"_sem" for x in["UCL_n400_gpt_base", "UCL_n400_small_base", "UCL_n400_med_base", "UCL_n400_large_base", "UCL_n400_xl_base"]]
-theemb_n400  = [x+"_sem" for x in["UCL_n400_gpt", "UCL_n400_small", "UCL_n400_med", "UCL_n400_large", "UCL_n400_xl"]]
-all_n400     = [x+"_sem" for x in["UCL_n400_gpt_all", "UCL_n400_small_all", "UCL_n400_med_all", "UCL_n400_large_all", "UCL_n400_xl_all"]]
+# thebase_n400 = [x+"_sem" for x in["UCL_n400_gpt_base", "UCL_n400_small_base", "UCL_n400_med_base", "UCL_n400_large_base", "UCL_n400_xl_base"]]
+# theemb_n400  = [x+"_sem" for x in["UCL_n400_gpt", "UCL_n400_small", "UCL_n400_med", "UCL_n400_large", "UCL_n400_xl"]]
+# all_n400     = [x+"_sem" for x in["UCL_n400_gpt_all", "UCL_n400_small_all", "UCL_n400_med_all", "UCL_n400_large_all", "UCL_n400_xl_all"]]
 
-thebase_p600 = [x+"_sem" for x in["UCL_p600_gpt_base", "UCL_p600_small_base", "UCL_p600_med_base", "UCL_p600_large_base", "UCL_p600_xl_base"]]
-theemb_p600  = [x+"_sem" for x in["UCL_p600_gpt", "UCL_p600_small", "UCL_p600_med", "UCL_p600_large", "UCL_p600_xl"]]
-all_p600     = [x+"_sem" for x in["UCL_p600_gpt_all", "UCL_p600_small_all", "UCL_p600_med_all", "UCL_p600_large_all", "UCL_p600_xl_all"]]
+# thebase_p600 = [x+"_sem" for x in["UCL_p600_gpt_base", "UCL_p600_small_base", "UCL_p600_med_base", "UCL_p600_large_base", "UCL_p600_xl_base"]]
+# theemb_p600  = [x+"_sem" for x in["UCL_p600_gpt", "UCL_p600_small", "UCL_p600_med", "UCL_p600_large", "UCL_p600_xl"]]
+# all_p600     = [x+"_sem" for x in["UCL_p600_gpt_all", "UCL_p600_small_all", "UCL_p600_med_all", "UCL_p600_large_all", "UCL_p600_xl_all"]]
 
-thebase_spr = [x+"_sem" for x in["UCL_spr_gpt_base", "UCL_spr_small_base", "UCL_spr_med_base", "UCL_spr_large_base", "UCL_spr_xl_base"]]
-theemb_spr  = [x+"_sem" for x in["UCL_spr_gpt", "UCL_spr_small", "UCL_spr_med", "UCL_spr_large", "UCL_spr_xl"]]
-all_spr     = [x+"_sem" for x in["UCL_spr_gpt_all", "UCL_spr_small_all", "UCL_spr_med_all", "UCL_spr_large_all", "UCL_spr_xl_all"]]
+# thebase_spr = [x+"_sem" for x in["UCL_spr_gpt_base", "UCL_spr_small_base", "UCL_spr_med_base", "UCL_spr_large_base", "UCL_spr_xl_base"]]
+# theemb_spr  = [x+"_sem" for x in["UCL_spr_gpt", "UCL_spr_small", "UCL_spr_med", "UCL_spr_large", "UCL_spr_xl"]]
+# all_spr     = [x+"_sem" for x in["UCL_spr_gpt_all", "UCL_spr_small_all", "UCL_spr_med_all", "UCL_spr_large_all", "UCL_spr_xl_all"]]
 
-p_fpass = []
-for base, emb, all_ in zip(thebase_fpass, theemb_fpass, all_fpass):
-    p_base_emb = significance_testing(base, emb)
-    p_all_base = significance_testing(all_, base)
-    p_all_emb  = significance_testing(all_, emb)
-    p_fpass.append([p_base_emb, p_all_base, p_all_emb])
-p_fpass = pd.DataFrame(p_fpass, columns=["base_emb", "all_base", "all_emb"])
+# p_fpass = []
+# for base, emb, all_ in zip(thebase_fpass, theemb_fpass, all_fpass):
+#     p_base_emb = significance_testing(base, emb)
+#     p_all_base = significance_testing(all_, base)
+#     p_all_emb  = significance_testing(all_, emb)
+#     p_fpass.append([p_base_emb, p_all_base, p_all_emb])
+# p_fpass = pd.DataFrame(p_fpass, columns=["base_emb", "all_base", "all_emb"])
 
-p_spr = []
-for base, emb, all_ in zip(thebase_spr, theemb_spr, all_spr):
-    p_base_emb = significance_testing(base, emb)
-    p_all_base = significance_testing(all_, base)
-    p_all_emb  = significance_testing(all_, emb)
-    p_spr.append([p_base_emb, p_all_base, p_all_emb])
-p_spr = pd.DataFrame(p_spr, columns=["base_emb", "all_base", "all_emb"])
+# p_spr = []
+# for base, emb, all_ in zip(thebase_spr, theemb_spr, all_spr):
+#     p_base_emb = significance_testing(base, emb)
+#     p_all_base = significance_testing(all_, base)
+#     p_all_emb  = significance_testing(all_, emb)
+#     p_spr.append([p_base_emb, p_all_base, p_all_emb])
+# p_spr = pd.DataFrame(p_spr, columns=["base_emb", "all_base", "all_emb"])
 
-p_n400 = []
-for base, emb, all_ in zip(thebase_n400, theemb_n400, all_n400):
-    p_emb_base = significance_testing(emb, base)
-    p_all_base = significance_testing(all_, base)
-    p_all_emb  = significance_testing(all_, emb)
-    p_n400.append([p_base_emb, p_all_base, p_all_emb])
-p_n400 = pd.DataFrame(p_n400, columns=["base_emb", "all_base", "all_emb"])
+# p_n400 = []
+# for base, emb, all_ in zip(thebase_n400, theemb_n400, all_n400):
+#     p_emb_base = significance_testing(emb, base)
+#     p_all_base = significance_testing(all_, base)
+#     p_all_emb  = significance_testing(all_, emb)
+#     p_n400.append([p_base_emb, p_all_base, p_all_emb])
+# p_n400 = pd.DataFrame(p_n400, columns=["base_emb", "all_base", "all_emb"])
 
-p_p600 = []
-for base, emb, all_ in zip(thebase_p600, theemb_p600, all_p600):
-    p_emb_base = significance_testing(emb, base)
-    p_all_base = significance_testing(all_, base)
-    p_all_emb  = significance_testing(all_, emb)
-    p_p600.append([p_base_emb, p_all_base, p_all_emb])
-p_p600 = pd.DataFrame(p_p600, columns=["base_emb", "all_base", "all_emb"])
+# p_p600 = []
+# for base, emb, all_ in zip(thebase_p600, theemb_p600, all_p600):
+#     p_emb_base = significance_testing(emb, base)
+#     p_all_base = significance_testing(all_, base)
+#     p_all_emb  = significance_testing(all_, emb)
+#     p_p600.append([p_base_emb, p_all_base, p_all_emb])
+# p_p600 = pd.DataFrame(p_p600, columns=["base_emb", "all_base", "all_emb"])
 
-for df, dfname in zip([p_fpass, p_spr, p_n400, p_p600], ["fpass", "spr", "n400", "p600"]):
-    for df_column in df.columns:
-        df_results_sem["p_"+dfname+"_"+df_column+"_sem"] = list(df[df_column])
+# for df, dfname in zip([p_fpass, p_spr, p_n400, p_p600], ["fpass", "spr", "n400", "p600"]):
+#     for df_column in df.columns:
+#         df_results_sem["p_"+dfname+"_"+df_column+"_sem"] = list(df[df_column])
 
-merged = pd.concat([df_results, df_results_sem], axis=1)
-merged.columns
+# merged = pd.concat([df_results, df_results_sem], axis=1)
+# merged.columns
 # merged.to_csv("SEM/merged_UCL.csv")
 
-merged = pd.read_csv("SEM/merged_UCL.csv")
-merged.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
+# merged = pd.read_csv("SEM/merged_UCL.csv")
+# merged.index = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2$_{1.5B}$"]
 
 ############
 # plotting #
 ############
 
-plot_sem(merged, "act_n400", "base_n400", "all_n400", "act_n400_sem", "base_n400_sem", "all_n400_sem", title="N400", subtract=True)
+# plot_sem(merged, "act_n400", "base_n400", "all_n400", "act_n400_sem", "base_n400_sem", "all_n400_sem", title="N400", subtract=True)
 
-plot_sem(merged, "act_p600", "base_p600", "all_p600", "act_p600_sem", "base_p600_sem", "all_p600_sem", title="P600", subtract=True)
+# plot_sem(merged, "act_p600", "base_p600", "all_p600", "act_p600_sem", "base_p600_sem", "all_p600_sem", title="P600", subtract=True)
 
-plot_sem(merged, "act_fpass", "base_fpass", "all_fpass", "act_fpass_sem", "base_fpass_sem", "all_fpass_sem", title="fpass", subtract=True)
+# plot_sem(merged, "act_fpass", "base_fpass", "all_fpass", "act_fpass_sem", "base_fpass_sem", "all_fpass_sem", title="fpass", subtract=True)
 
-plot_sem(merged, "act_spr", "base_spr", "all_spr", "act_spr_sem", "base_spr_sem", "all_spr_sem", title="spr", subtract=True)
+# plot_sem(merged, "act_spr", "base_spr", "all_spr", "act_spr_sem", "base_spr_sem", "all_spr_sem", title="spr", subtract=True)
 
-plot_weights_sem("UCL_n400_small_base_sem", "UCL N400", "weights", ymin = -.1, ymax = .1)
+# plot_weights_sem("UCL_n400_small_base_sem", "UCL N400", "weights", ymin = -.1, ymax = .1)
 
 
 #######################
