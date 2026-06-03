@@ -73,3 +73,5 @@ probing_LMs/SentEval/
 #  all files here are <100 MB, within GitHub's per-file limit)
 !main_data/
 !main_data/**
+
+.claude/*
