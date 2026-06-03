@@ -124,7 +124,6 @@ filt = []
 rt = []
 length = []
 freq = []
-theact_gpt_cleaned = []
 for sent_n in tqdm(list(set(maze.sent_n))):
     temp = maze[maze.sent_n == sent_n]
     for n in range(maze_sent_len[sent_n]):
@@ -139,7 +138,6 @@ for sent_n in tqdm(list(set(maze.sent_n))):
                 filt.append(0)
                 length.append(get_l(therow.iloc[0, 3]))
                 freq.append(get_f(therow.iloc[0, 3]))
-                theact_gpt_cleaned.append(get_layer(act_gpt[sent_n][n], 12, 768))
 rt = np.array(rt)
 length = np.array(length)
 freq = np.array(freq)
