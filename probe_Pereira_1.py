@@ -1,3 +1,9 @@
+# =============================================================================
+# SUPERSEDED by probe_Pereira_passages.py (passage-grouped cross-validation +
+# dimensionality-matched SFL predictor). This script uses index/sequential KFold,
+# which lets sentences from the same passage fall in both train and test.
+# Kept for reference only; do NOT run it to (re)generate results/results.csv.
+# =============================================================================
 from os import chdir, path
 import sys
 import numpy as np
