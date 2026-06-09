@@ -32,6 +32,7 @@ adds spill-over (concatenating previous words' features), the EMB dimensionality
 to k*D; set n_components to that matched value too.
 """
 import sys
+import copy
 import itertools
 import pickle
 from os import chdir
@@ -66,6 +67,36 @@ ROW_INDEX = ["GPT", "GPT-2$_{124M}$", "GPT-2$_{355M}$", "GPT-2$_{774M}$", "GPT-2
 PREDS = ["base", "act", "all", "emb_sum", "sfl_rff", "all_matched"]
 PRED_SUFFIX = {"base": "_base", "act": "", "all": "_all",
                "emb_sum": "_embsum", "sfl_rff": "_sflrff", "all_matched": "_allmatched"}
+
+# --- permutation significance test (copied verbatim from utils.py to keep the
+#     method identical while avoiding utils' heavy import chain: pygam/fasttext) ---
+def swap_elements(a, b, indices):
+    a, b = copy.deepcopy(a), copy.deepcopy(b)
+    for i in indices:
+        a[i], b[i] = b[i], a[i]
+    return [a, b]
+
+def generate_swaps(a1, a2):
+    swap_indices = []
+    for r in range(1, len(a1) + 1):
+        swap_indices.extend(itertools.combinations(range(len(a1)), r))
+    result = []
+    for indices in swap_indices:
+        result.append(swap_elements(a1, a2, indices))
+    return result
+
+def permutation_statistic(a1, a2):
+    mean_diff = np.mean(a1) - np.mean(a2)
+    swaps = generate_swaps(a1, a2)
+    diffs = [(np.mean(xa1) - np.mean(xa2)) for xa1, xa2 in swaps]
+    return sum([(diff >= mean_diff) for diff in diffs]) / 2 ** len(a1)
+
+def significance_testing(name1, name2, thedir=""):
+    with open(thedir + 'results/' + name1 + '_predictions', 'rb') as handle:
+        a1 = pickle.load(handle)
+    with open(thedir + 'results/' + name2 + '_predictions', 'rb') as handle:
+        a2 = pickle.load(handle)
+    return permutation_statistic(a1, a2)
 
 # ----------------------------- feature builders -----------------------------
 def get_layer(vec, layer, dim):
@@ -183,8 +214,6 @@ def score_sfl_rff_and_matched(word_sfl, wsi, y, group_labels, emb_sum, n_compone
 # ----------------------------- main pipeline --------------------------------
 def main():
     chdir(str(PROJECT_ROOT / "pereira_1"))
-    sys.path.insert(0, str(PROJECT_ROOT))
-    from utils import significance_testing  # reads results/<name>_predictions (cwd=pereira_1)
     import neurox.data.loader as data_loader
 
     meta = pd.read_csv("pereira_averaged_with_passage.csv")
