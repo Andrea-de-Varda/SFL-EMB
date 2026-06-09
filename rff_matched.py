@@ -168,3 +168,43 @@ def score_sfl_rff_sentence(word_sfl, wsi, y, emb_sum, n_components, groups=None,
         xa_te = np.hstack([emb_sum[test], x_te])
         rs_all.append(pearsonr(y[test], fit_ridge(xa_tr, y[train]).predict(xa_te))[0])
     return save_predictions(rs_rff, name_rff), save_predictions(rs_all, name_all)
+
+# ============================================================================
+# WORD-LEVEL scoring (UCL-N400): one response per word; the RFF projects the
+# per-word SFL (3 dims) to D dims (NO pooling -- the unit IS the word, so this is
+# already dimensionality-matched to a D-dim per-word embedding). all_matched =
+# concat(emb, sfl_rff). RFF fit on TRAIN words only. Sequential KFold.
+# ============================================================================
+def _rff_word_features(word_sfl, train, gamma, n_components):
+    imp, sca, rff = fit_sfl_rff(word_sfl, np.arange(len(word_sfl)), train, gamma, n_components)
+    return rff.transform(sca.transform(imp.transform(word_sfl)))   # (n_words, n_components)
+
+def _select_gamma_word(word_sfl, y, train, n_components, inner_splits=5):
+    losses = {g: [] for g in SFL_RFF_GAMMAS}
+    for vpos in make_folds(len(train), None, inner_splits):
+        iv = train[vpos]
+        it = np.setdiff1d(train, iv, assume_unique=True)
+        ys = StandardScaler()
+        y_tr = ys.fit_transform(y[it, None]).ravel()
+        y_va = ys.transform(y[iv, None]).ravel()
+        for g in SFL_RFF_GAMMAS:
+            X = _rff_word_features(word_sfl, it, g, n_components)
+            losses[g].append(float(np.mean((fit_ridge(X[it], y_tr).predict(X[iv]) - y_va) ** 2)))
+    return float(min(losses, key=lambda g: (np.mean(losses[g]), g)))
+
+def score_word_rff(word_sfl, y, n_components, emb=None, name_rff=None, name_all=None, n_splits=10):
+    """sfl_rff (per-word SFL->RFF, D) and (if emb given) all_matched = concat(emb, sfl_rff)."""
+    n = len(y)
+    rs_rff, rs_all = [], []
+    for test in make_folds(n, None, n_splits):
+        train = np.setdiff1d(np.arange(n), test, assume_unique=True)
+        gamma = _select_gamma_word(word_sfl, y, train, n_components)
+        X = _rff_word_features(word_sfl, train, gamma, n_components)
+        rs_rff.append(pearsonr(y[test], fit_ridge(X[train], y[train]).predict(X[test]))[0])
+        if emb is not None:
+            Xa = np.hstack([emb, X])
+            rs_all.append(pearsonr(y[test], fit_ridge(Xa[train], y[train]).predict(Xa[test]))[0])
+    res = save_predictions(rs_rff, name_rff)
+    if emb is None:
+        return res
+    return res, save_predictions(rs_all, name_all)
