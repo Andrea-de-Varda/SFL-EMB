@@ -170,6 +170,39 @@ def score_sfl_rff_sentence(word_sfl, wsi, y, emb_sum, n_components, groups=None,
     return save_predictions(rs_rff, name_rff), save_predictions(rs_all, name_all)
 
 # ============================================================================
+# TR-LEVEL helpers (NatStor-fMRI / Wehbe2014-HP): per-word features are pooled to
+# 2-second TRs then concatenated with 4 lagged TRs (delay_mat), exactly as the
+# original embed_words/preproc_align. SUM pooling for the matched predictors
+# (mean for the original 'act'); wordless TRs -> NaN -> column-mean imputed.
+# ============================================================================
+def _delay_one(mat, d):
+    new = np.zeros_like(mat)
+    if d > 0:
+        new[d:] = mat[:-d]
+    elif d < 0:
+        new[:d] = mat[-d:]
+    else:
+        new = mat
+    return new
+
+def _imputate_na(a):
+    return np.where(np.isnan(a), np.ma.array(a, mask=np.isnan(a)).mean(axis=0), a)
+
+def aggregate_to_tr(word_features, words_id, n_tr, pooling, delays=(1, 2, 3, 4)):
+    """Pool per-word features to TRs (mean|sum), then delay_mat over `delays`,
+    then column-mean-impute. word_features: (n_words, k); words_id: (n_words,) in
+    [0, n_tr). Returns (n_tr, k*len(delays))."""
+    ids = words_id.astype(int)
+    k = word_features.shape[1]
+    tr = np.full((n_tr, k), np.nan, dtype=np.float64)
+    for i in range(n_tr):
+        sel = word_features[ids == i]
+        if len(sel):
+            tr[i] = sel.mean(axis=0) if pooling == "mean" else sel.sum(axis=0)
+    out = np.concatenate([_delay_one(tr, d) for d in delays], axis=-1)
+    return _imputate_na(out)
+
+# ============================================================================
 # WORD-LEVEL scoring (UCL-N400): one response per word; the RFF projects the
 # per-word SFL (3 dims) to D dims (NO pooling -- the unit IS the word, so this is
 # already dimensionality-matched to a D-dim per-word embedding). all_matched =
