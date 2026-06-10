@@ -63,6 +63,17 @@ def main():
     chdir(str(PROJECT_ROOT))   # UCL activations + UCL_reading_all.csv live at repo root
     import neurox.data.loader as data_loader
 
+    # The UCL embeddings are not shipped; extract them if missing (GPU, like probe_ET.py).
+    HF_MODEL = {"gpt": "openai-gpt", "small": "gpt2", "med": "gpt2-medium",
+                "large": "gpt2-large", "xl": "gpt2-xl"}
+    if any(not path.isfile(ACT_FILE[k]) for k, *_ in MODELS):
+        import neurox.data.extraction.transformers_extractor as tx
+        for key, *_ in MODELS:
+            if not path.isfile(ACT_FILE[key]):
+                print(f"extracting {HF_MODEL[key]} -> {ACT_FILE[key]}", flush=True)
+                tx.extract_representations(HF_MODEL[key], "corpora/sentences.txt",
+                                           ACT_FILE[key], aggregation="average")
+
     df_all = pd.read_csv("UCL_reading_all.csv")
     df_noinit = df_all.dropna(subset=["s_GPT2_small"])          # drop sentence-initial words
     filtr = np.array([("." not in w) and ("," not in w) for w in df_noinit["word"]])  # drop punctuated
