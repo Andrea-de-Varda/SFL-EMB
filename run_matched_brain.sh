@@ -20,8 +20,9 @@
 #   ... module/conda setup ...
 #   bash run_matched_brain.sh
 set -e
-source /home/andrea/miniforge3/etc/profile.d/conda.sh
-conda activate neurox
+# Activate the `neurox` env BEFORE calling this script (laptop: conda activate neurox;
+# Engaging: see slurm_run_matched.sh / ENGAGING.md). We don't hardcode a conda path.
+python -c "import neurox" 2>/dev/null || { echo "ERROR: activate the 'neurox' env first"; exit 1; }
 export TOKENIZERS_PARALLELISM=false
 cd "$(dirname "$0")"
 
