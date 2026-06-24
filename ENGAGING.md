@@ -27,7 +27,13 @@ UCL-N400 embeddings are **not** moved — they're extracted on the cluster (GPU)
 The laptop env: python 3.9, neurox 1.0.9, scikit-learn **0.24.2** (pin this — RidgeCV/
 RBFSampler behaviour), numpy 1.19.5, scipy 1.5.4, pandas 1.4.4.
 ```bash
-module load anaconda3/2022.05-x86_64           # per your usual Engaging setup
+# load conda on Engaging (anaconda is under deprecated-modules; conda must be sourced)
+source /etc/profile.d/modules.sh
+module purge
+module load deprecated-modules
+module load anaconda3/2022.05-x86_64
+source /home/software/anaconda3/2023.07/etc/profile.d/conda.sh
+
 conda create -y -n neurox python=3.9
 conda activate neurox
 pip install neurox==1.0.9 scikit-learn==0.24.2 numpy==1.19.5 scipy==1.5.4 pandas==1.4.4 pyarrow
