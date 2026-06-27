@@ -2,6 +2,7 @@
 # Run all four matched-brain analyses on Engaging. One GPU node: n400 uses the GPU
 # (embedding extraction), the other three are CPU-bound on the same node.
 #   cd /orcd/data/evelina9/001/USERS/devar_ag/SFL-EMB && sbatch slurm_run_matched.sh
+#   one dataset (e.g. re-run HP after `pip install openpyxl`): sbatch slurm_run_matched.sh HP
 #SBATCH -p pi_evelina9
 #SBATCH --gres=gpu:a100:1
 #SBATCH -c 4
@@ -25,4 +26,4 @@ export TOKENIZERS_PARALLELISM=false
 mkdir -p logs
 
 cd "$SLURM_SUBMIT_DIR"
-bash run_matched_brain.sh           # control, n400, natstorfmri, HP
+bash run_matched_brain.sh "$1"      # empty = all four; or pass one (control|n400|natstorfmri|HP)
