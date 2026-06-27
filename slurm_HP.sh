@@ -5,7 +5,7 @@
 #SBATCH -p pi_evelina9
 #SBATCH -c 4
 #SBATCH --mem=64G
-#SBATCH -t 8:00:00
+#SBATCH -t 20:00:00
 #SBATCH --job-name=sfl_HP
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --error=logs/%x_%j.err
