@@ -30,6 +30,9 @@ from sklearn.kernel_approximation import RBFSampler
 RIDGE_ALPHAS = (0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000)  # as utils
 SFL_RFF_GAMMAS = (0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0)
 RFF_SEED = 0
+# directory (relative to cwd, or absolute) where *_predictions are written/read.
+# Override from a script (e.g. R.RESULTS_DIR = "/abs/results_rffsym") to redirect.
+RESULTS_DIR = "results"
 
 # --- permutation significance test (verbatim from utils.py; avoids importing
 #     utils, whose pygam/fasttext chain isn't in every env) ---
@@ -50,10 +53,11 @@ def permutation_statistic(a1, a2):
     diffs = [(np.mean(xa1) - np.mean(xa2)) for xa1, xa2 in generate_swaps(a1, a2)]
     return sum([(d >= mean_diff) for d in diffs]) / 2 ** len(a1)
 
-def significance_testing(name1, name2, thedir=""):
-    with open(thedir + 'results/' + name1 + '_predictions', 'rb') as h:
+def significance_testing(name1, name2, thedir=None):
+    d = RESULTS_DIR if thedir is None else thedir + "results"
+    with open(f"{d}/{name1}_predictions", 'rb') as h:
         a1 = pickle.load(h)
-    with open(thedir + 'results/' + name2 + '_predictions', 'rb') as h:
+    with open(f"{d}/{name2}_predictions", 'rb') as h:
         a2 = pickle.load(h)
     return permutation_statistic(a1, a2)
 
@@ -119,7 +123,7 @@ def words_to_units(word_sfl, wsi, unit_ids, imputer, scaler, rff, pooling):
 
 def save_predictions(rs, saveto):
     if saveto is not None:
-        with open(f"results/{saveto}_predictions", "wb") as h:
+        with open(f"{RESULTS_DIR}/{saveto}_predictions", "wb") as h:
             pickle.dump(rs, h, protocol=pickle.HIGHEST_PROTOCOL)
     return float(np.mean(rs)), float(np.std(rs))
 
@@ -201,6 +205,35 @@ def aggregate_to_tr(word_features, words_id, n_tr, pooling, delays=(1, 2, 3, 4))
             tr[i] = sel.mean(axis=0) if pooling == "mean" else sel.sum(axis=0)
     out = np.concatenate([_delay_one(tr, d) for d in delays], axis=-1)
     return _imputate_na(out)
+
+# ============================================================================
+# SYMMETRIC RFF pair (sentence/word level): route BOTH EMB and SFL through the
+# identical pipeline  per-item -> standardize(train) -> RBFSampler(D, gamma) ->
+# pool-per-unit -> ridge,  with gamma nested-CV-tuned independently for each side.
+# Yields emb_rff, sfl_rff, and all_rff = concat(emb_rff, sfl_rff). Same outer folds
+# -> paired per-fold r. Word-level = special case: idx = arange(n_units), each unit
+# has one item, pooling is a no-op. EMB items are per-token (sentence) or per-word
+# (word-level) feature rows; SFL items are per-word [S,F,L].
+# ============================================================================
+def score_rff_pair(emb_feats, emb_idx, sfl_feats, sfl_idx, y, n_components, pooling,
+                   groups=None, name_emb=None, name_sfl=None, name_all=None, n_splits=10):
+    rs_e, rs_s, rs_a = [], [], []
+    for test in make_folds(len(y), groups, n_splits):
+        train = np.setdiff1d(np.arange(len(y)), test, assume_unique=True)
+        ge = _select_gamma_sentence(emb_feats, emb_idx, y, train, groups, n_components)
+        gs = _select_gamma_sentence(sfl_feats, sfl_idx, y, train, groups, n_components)
+        ie, se, re = fit_sfl_rff(emb_feats, emb_idx, train, ge, n_components)
+        isf, ssf, rsf = fit_sfl_rff(sfl_feats, sfl_idx, train, gs, n_components)
+        Xe_tr = words_to_units(emb_feats, emb_idx, train, ie, se, re, pooling)
+        Xe_te = words_to_units(emb_feats, emb_idx, test, ie, se, re, pooling)
+        Xs_tr = words_to_units(sfl_feats, sfl_idx, train, isf, ssf, rsf, pooling)
+        Xs_te = words_to_units(sfl_feats, sfl_idx, test, isf, ssf, rsf, pooling)
+        rs_e.append(pearsonr(y[test], fit_ridge(Xe_tr, y[train]).predict(Xe_te))[0])
+        rs_s.append(pearsonr(y[test], fit_ridge(Xs_tr, y[train]).predict(Xs_te))[0])
+        Xa_tr = np.hstack([Xe_tr, Xs_tr]); Xa_te = np.hstack([Xe_te, Xs_te])
+        rs_a.append(pearsonr(y[test], fit_ridge(Xa_tr, y[train]).predict(Xa_te))[0])
+    return (save_predictions(rs_e, name_emb), save_predictions(rs_s, name_sfl),
+            save_predictions(rs_a, name_all))
 
 # ============================================================================
 # WORD-LEVEL scoring (UCL-N400): one response per word; the RFF projects the
