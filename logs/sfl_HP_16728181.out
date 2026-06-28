@@ -1,0 +1,5 @@
+=== 09:09:33 running probe_HP_matched.py ===
+
+=== gpt (D=768, 4*D=3072) ===
+Loading json activations from HP_emb/activations_gpt.json...
+41 13.0
