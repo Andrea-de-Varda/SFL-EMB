@@ -111,38 +111,47 @@ def load_dataset(name, R):
 
 def main():
     name = sys.argv[1] if len(sys.argv) > 1 else "pereira"
+    mode = sys.argv[2] if len(sys.argv) > 2 else "rff"   # rff (RFF-up) | pca (PCA-down)
     sys.path.insert(0, str(PROJECT_ROOT))
     import rff_matched as R
-    makedirs(OUTDIR, exist_ok=True)
-    R.RESULTS_DIR = OUTDIR
+    outdir = str(PROJECT_ROOT / ("results_rffsym" if mode == "rff" else "results_embpca"))
+    makedirs(outdir, exist_ok=True); R.RESULTS_DIR = outdir
+    preds = PREDS if mode == "rff" else ["base", "act", "emb_pca", "all_pca"]
+    SUF = {"base": "_base", "act": "_act", "sfl_rff": "_sflrff", "emb_rff": "_embrff",
+           "all_rff": "_allrff", "emb_pca": "_embpca", "all_pca": "_allpca"}
+    tag = "rffsym" if mode == "rff" else "embpca"
     prefix = {"pereira": "pereira", "control": "control", "n400": "UCLn400"}[name]
     data = load_dataset(name, R)
 
-    cols = {c: [] for c in PREDS}; cols.update({c + "_sd": [] for c in PREDS})
+    cols = {c: [] for c in preds}; cols.update({c + "_sd": [] for c in preds})
     keys = ["gpt", "small", "med", "large", "xl"]
     for key in keys:
         D = data[key]; dim = D["dim"]
-        print(f"\n=== {name} {key} (D={dim}) ===", flush=True)
+        print(f"\n=== {name} {key} (D={dim}) [{mode}] ===", flush=True)
         m = {"base": R.score_matrix(D["base"], D["y"], f"{prefix}_{key}_base", groups=D["groups"]),
              "act": R.score_matrix(D["act"], D["y"], f"{prefix}_{key}_act", groups=D["groups"])}
-        e, s, a = R.score_rff_pair(D["emb_feats"], D["emb_idx"], D["sfl_feats"], D["sfl_idx"],
-                                   D["y"], dim, D["pooling"], groups=D["groups"],
-                                   name_emb=f"{prefix}_{key}_embrff", name_sfl=f"{prefix}_{key}_sflrff",
-                                   name_all=f"{prefix}_{key}_allrff")
-        m["emb_rff"], m["sfl_rff"], m["all_rff"] = e, s, a
-        for c in PREDS:
+        if mode == "rff":
+            e, s, a = R.score_rff_pair(D["emb_feats"], D["emb_idx"], D["sfl_feats"], D["sfl_idx"],
+                                       D["y"], dim, D["pooling"], groups=D["groups"],
+                                       name_emb=f"{prefix}_{key}_embrff", name_sfl=f"{prefix}_{key}_sflrff",
+                                       name_all=f"{prefix}_{key}_allrff")
+            m["emb_rff"], m["sfl_rff"], m["all_rff"] = e, s, a
+        else:
+            ep, ap = R.score_pca_pair(D["act"], D["base"], D["y"], k=D["base"].shape[1],
+                                      groups=D["groups"], name_emb=f"{prefix}_{key}_embpca",
+                                      name_all=f"{prefix}_{key}_allpca")
+            m["emb_pca"], m["all_pca"] = ep, ap
+        for c in preds:
             cols[c].append(m[c][0]); cols[c + "_sd"].append(m[c][1])
-        print({c: round(m[c][0], 4) for c in PREDS}, flush=True)
+        print({c: round(m[c][0], 4) for c in preds}, flush=True)
 
-    df = pd.DataFrame({c: cols[c] for c in
-                       ["base", "base_sd", "act", "act_sd", "sfl_rff", "sfl_rff_sd",
-                        "emb_rff", "emb_rff_sd", "all_rff", "all_rff_sd"]}, index=ROW_INDEX)
-    SUF = {"base": "_base", "act": "_act", "sfl_rff": "_sflrff", "emb_rff": "_embrff", "all_rff": "_allrff"}
-    for a, b in itertools.combinations(PREDS, 2):
+    order = [x for c in preds for x in (c, c + "_sd")]
+    df = pd.DataFrame({c: cols[c] for c in order}, index=ROW_INDEX)
+    for a, b in itertools.combinations(preds, 2):
         df[f"p__{a}__{b}"] = [R.significance_testing(f"{prefix}_{k}{SUF[a]}", f"{prefix}_{k}{SUF[b]}") for k in keys]
-    df.to_csv(f"{OUTDIR}/{prefix}_rffsym.csv", index=False)
-    print(f"\nWROTE {OUTDIR}/{prefix}_rffsym.csv")
-    print(df[PREDS].round(4))
+    df.to_csv(f"{outdir}/{prefix}_{tag}.csv", index=False)
+    print(f"\nWROTE {outdir}/{prefix}_{tag}.csv")
+    print(df[preds].round(4))
 
 if __name__ == "__main__":
     main()
