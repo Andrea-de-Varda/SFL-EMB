@@ -57,21 +57,10 @@ def run_natstor(R):
     def story_rff(feats_by, imp, sca, rff, j):
         wr = rff.transform(sca.transform(imp.transform(feats_by[j])))
         return R.aggregate_to_tr(wr, WID[j], n_tr[j], "sum")
-    def fit_on(stories_words):
-        tw = np.concatenate(stories_words)
-        return tw
-    def select_gamma(feats_by, train, D):
-        loss = {g: [] for g in R.SFL_RFF_GAMMAS}
-        for v in train:
-            inner = [j for j in train if j != v]
-            tw = np.concatenate([feats_by[j] for j in inner])
-            for g in R.SFL_RFF_GAMMAS:
-                imp, sca, rff = R.fit_sfl_rff(tw, np.arange(len(tw)), np.arange(len(tw)), g, D)
-                Xtr = np.concatenate([story_rff(feats_by, imp, sca, rff, j) for j in inner])
-                Xv = story_rff(feats_by, imp, sca, rff, v)
-                ytr = np.concatenate([y_by[j] for j in inner])
-                loss[g].append(float(np.mean((R.fit_ridge(Xtr, ytr).predict(Xv) - y_by[v]) ** 2)))
-        return float(min(loss, key=lambda g: (np.mean(loss[g]), g)))
+    def fit_rff(words_by, train, D):
+        tw = np.concatenate([words_by[j] for j in train])
+        g = R.median_heuristic_gamma(tw, np.arange(len(tw)), np.arange(len(tw)))  # dimension-aware
+        return R.fit_sfl_rff(tw, np.arange(len(tw)), np.arange(len(tw)), g, D)
     def loso_fixed(feat_by, saveto):
         rs = []
         for i in folds:
@@ -93,10 +82,8 @@ def run_natstor(R):
         rs_e, rs_s, rs_a = [], [], []
         for i in folds:
             train = [j for j in folds if j != i]
-            ge = select_gamma(word_emb, train, D); gs = select_gamma(word_sfl, train, D)
-            twe = fit_on([word_emb[j] for j in train]); tws = fit_on([word_sfl[j] for j in train])
-            ie, se, re = R.fit_sfl_rff(twe, np.arange(len(twe)), np.arange(len(twe)), ge, D)
-            isf, ssf, rsf = R.fit_sfl_rff(tws, np.arange(len(tws)), np.arange(len(tws)), gs, D)
+            ie, se, re = fit_rff(word_emb, train, D)
+            isf, ssf, rsf = fit_rff(word_sfl, train, D)
             Xe = [story_rff(word_emb, ie, se, re, j) for j in folds]
             Xs = [story_rff(word_sfl, isf, ssf, rsf, j) for j in folds]
             ytr = np.concatenate([y_by[j] for j in train])
@@ -158,18 +145,10 @@ def run_hp(R):
     freq = np.array([getf(w) for s in sent for w in s]); length = np.array([len(w) for s in sent for w in s])
     folds = list(R.make_folds(n_rows, None, 10))
 
-    def feat_rows(feats, train_words, gamma, D):
-        imp, sca, rff = R.fit_sfl_rff(feats, np.arange(n_words), train_words, gamma, D)
+    def feat_rows(feats, train_words, D):
+        g = R.median_heuristic_gamma(feats, np.arange(n_words), train_words)  # dimension-aware
+        imp, sca, rff = R.fit_sfl_rff(feats, np.arange(n_words), train_words, g, D)
         return embed(rff.transform(sca.transform(imp.transform(feats))), "sum")
-    def select_gamma(feats, train_rows, D):
-        loss = {g: [] for g in R.SFL_RFF_GAMMAS}
-        for vpos in R.make_folds(len(train_rows), None, 5):
-            iv = train_rows[vpos]; it = np.setdiff1d(train_rows, iv, assume_unique=True)
-            tw = np.where(np.isin(word_row, it))[0]
-            for g in R.SFL_RFF_GAMMAS:
-                X = feat_rows(feats, tw, g, D)
-                loss[g].append(float(np.mean((R.fit_ridge(X[it], y[it]).predict(X[iv]) - y[iv]) ** 2)))
-        return float(min(loss, key=lambda g: (np.mean(loss[g]), g)))
     def kfold_fixed(X, saveto):
         rs = []
         for test in folds:
@@ -192,8 +171,7 @@ def run_hp(R):
         for test in folds:
             train = np.setdiff1d(np.arange(n_rows), test, assume_unique=True)
             tw = np.where(np.isin(word_row, train))[0]
-            ge = select_gamma(word_emb, train, D); gs = select_gamma(sfl, train, D)
-            Xe = feat_rows(word_emb, tw, ge, D); Xs = feat_rows(sfl, tw, gs, D)
+            Xe = feat_rows(word_emb, tw, D); Xs = feat_rows(sfl, tw, D)
             rs_e.append(pearsonr(y[test], R.fit_ridge(Xe[train], y[train]).predict(Xe[test]))[0])
             rs_s.append(pearsonr(y[test], R.fit_ridge(Xs[train], y[train]).predict(Xs[test]))[0])
             Xa = np.hstack([Xe, Xs])

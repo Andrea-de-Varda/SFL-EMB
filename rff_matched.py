@@ -92,6 +92,19 @@ def make_folds(n, groups=None, n_splits=10):
         for _, test in gkf.split(idx, groups=groups):
             yield test
 
+# --- median-heuristic RBF bandwidth: gamma = 1/(2 * median pairwise sq-dist),
+#     computed on the STANDARDIZED training items (unsupervised, dimension-aware).
+#     Essential when the input dim differs across predictors (3-dim SFL vs D-dim EMB):
+#     a fixed gamma that suits 3 dims makes the RBF kernel degenerate in D dims. ---
+def median_heuristic_gamma(features, idx, train_units, sample=2000, seed=0):
+    from scipy.spatial.distance import pdist
+    X = features[np.isin(idx, train_units)]
+    X = StandardScaler().fit_transform(SimpleImputer(strategy="mean").fit_transform(X))
+    if len(X) > sample:
+        X = X[np.random.RandomState(seed).choice(len(X), sample, replace=False)]
+    med = np.median(pdist(X, "sqeuclidean"))
+    return float(1.0 / (2.0 * med)) if med > 0 else 1.0
+
 # --- leakage-free SFL random-Fourier-features (fit on TRAIN words only) ---
 def fit_sfl_rff(word_sfl, wsi, train_units, gamma, n_components):
     mask = np.isin(wsi, train_units)
@@ -220,8 +233,10 @@ def score_rff_pair(emb_feats, emb_idx, sfl_feats, sfl_idx, y, n_components, pool
     rs_e, rs_s, rs_a = [], [], []
     for test in make_folds(len(y), groups, n_splits):
         train = np.setdiff1d(np.arange(len(y)), test, assume_unique=True)
-        ge = _select_gamma_sentence(emb_feats, emb_idx, y, train, groups, n_components)
-        gs = _select_gamma_sentence(sfl_feats, sfl_idx, y, train, groups, n_components)
+        # gamma by the median heuristic on TRAIN items -- dimension-aware, unsupervised,
+        # identical rule for both sides (a fixed grid would degenerate for D-dim EMB).
+        ge = median_heuristic_gamma(emb_feats, emb_idx, train)
+        gs = median_heuristic_gamma(sfl_feats, sfl_idx, train)
         ie, se, re = fit_sfl_rff(emb_feats, emb_idx, train, ge, n_components)
         isf, ssf, rsf = fit_sfl_rff(sfl_feats, sfl_idx, train, gs, n_components)
         Xe_tr = words_to_units(emb_feats, emb_idx, train, ie, se, re, pooling)
