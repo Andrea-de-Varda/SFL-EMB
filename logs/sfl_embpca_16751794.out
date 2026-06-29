@@ -1,0 +1,70 @@
+== control ==
+Loading json activations from activations_gpt.json...
+2000 13.0
+Loading json activations from activations_gpt2_small.json...
+2000 13.0
+Loading json activations from activations_gpt2_medium.json...
+2000 25.0
+Loading json activations from activations_gpt2_large.json...
+2000 37.0
+Loading json activations from activations_gpt2_xl.json...
+2000 49.0
+
+=== control gpt (D=768) [pca] ===
+{'base': 0.3232, 'act': 0.3935, 'emb_pca': 0.2955, 'all_pca': 0.3605}
+
+=== control small (D=768) [pca] ===
+{'base': 0.2935, 'act': 0.3818, 'emb_pca': 0.1898, 'all_pca': 0.3092}
+
+=== control med (D=1024) [pca] ===
+{'base': 0.2914, 'act': 0.4035, 'emb_pca': 0.1894, 'all_pca': 0.3011}
+
+=== control large (D=1280) [pca] ===
+{'base': 0.2931, 'act': 0.4362, 'emb_pca': 0.2546, 'all_pca': 0.3419}
+
+=== control xl (D=1600) [pca] ===
+{'base': 0.2906, 'act': 0.4294, 'emb_pca': 0.2676, 'all_pca': 0.3417}
+
+WROTE /orcd/data/evelina9/001/USERS/devar_ag/SFL-EMB/results_embpca/control_embpca.csv
+                  base     act  emb_pca  all_pca
+GPT             0.3232  0.3935   0.2955   0.3605
+GPT-2$_{124M}$  0.2935  0.3818   0.1898   0.3092
+GPT-2$_{355M}$  0.2914  0.4035   0.1894   0.3011
+GPT-2$_{774M}$  0.2931  0.4362   0.2546   0.3419
+GPT-2$_{1.5B}$  0.2906  0.4294   0.2676   0.3417
+== n400 ==
+Loading json activations from activations_gpt.json...
+361 13.0
+Loading json activations from activations_gpt2_small.json...
+361 13.0
+Loading json activations from activations_gpt2_medium.json...
+361 25.0
+Loading json activations from activations_gpt2_large.json...
+361 37.0
+Loading json activations from activations_gpt2_xl.json...
+361 49.0
+
+=== n400 gpt (D=768) [pca] ===
+{'base': 0.2046, 'act': 0.3273, 'emb_pca': 0.1349, 'all_pca': 0.2439}
+
+=== n400 small (D=768) [pca] ===
+{'base': 0.227, 'act': 0.3178, 'emb_pca': 0.2202, 'all_pca': 0.2773}
+
+=== n400 med (D=1024) [pca] ===
+{'base': 0.2265, 'act': 0.3405, 'emb_pca': 0.234, 'all_pca': 0.2541}
+
+=== n400 large (D=1280) [pca] ===
+{'base': 0.2351, 'act': 0.3079, 'emb_pca': 0.1571, 'all_pca': 0.2739}
+
+=== n400 xl (D=1600) [pca] ===
+{'base': 0.2344, 'act': 0.311, 'emb_pca': 0.1713, 'all_pca': 0.2833}
+
+WROTE /orcd/data/evelina9/001/USERS/devar_ag/SFL-EMB/results_embpca/UCLn400_embpca.csv
+                  base     act  emb_pca  all_pca
+GPT             0.2046  0.3273   0.1349   0.2439
+GPT-2$_{124M}$  0.2270  0.3178   0.2202   0.2773
+GPT-2$_{355M}$  0.2265  0.3405   0.2340   0.2541
+GPT-2$_{774M}$  0.2351  0.3079   0.1571   0.2739
+GPT-2$_{1.5B}$  0.2344  0.3110   0.1713   0.2833
+== pereira ==
+Loading json activations from activations_gpt.json...
