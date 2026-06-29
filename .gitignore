@@ -75,3 +75,5 @@ probing_LMs/SentEval/
 !main_data/**
 
 .claude/*
+
+AUDIT*
