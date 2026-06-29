@@ -1,0 +1,112 @@
+# Predicted-response extremes — pereira (GPT-2 xl, D=1600)
+n items = 627; level = sentence; response unit = EffectSize
+
+## Predicted vs. actual response (Pearson r)
+- act: r = 0.379
+- emb_sum: r = 0.429
+- sfl_rff: r = 0.476
+
+## Do the predictors agree? (correlation of predicted values across items)
+Spearman (lower triangle) / Pearson (upper):
+```
+                  act   emb_sum   sfl_rff
+       act         -     0.893     0.407
+   emb_sum     0.898         -     0.610
+   sfl_rff     0.370     0.561         -
+```
+
+## What does each predicted vector track? (Pearson r with item covariates)
+```
+             surprisal     length    logfreq
+       act      0.067      0.072      0.073
+   emb_sum     -0.054     -0.037      0.147
+   sfl_rff      0.226      0.012      0.111
+```
+
+## TOP-10 set overlap (count shared items)
+```
+                  act   emb_sum   sfl_rff
+       act        10         5         2
+   emb_sum         5        10         4
+   sfl_rff         2         4        10
+```
+
+## BOTTOM-10 set overlap (count shared items)
+```
+                  act   emb_sum   sfl_rff
+       act        10         8         2
+   emb_sum         8        10         2
+   sfl_rff         2         2        10
+```
+
+### act — HIGHEST 10 predicted
+ 1. pred=+1.089  y=+1.305  "Every night while we sleep, our minds are as active as when we are aw…"
+ 2. pred=+1.049  y=+0.742  "They signed their work, decided on its subject and imagery, and estab…"
+ 3. pred=+1.032  y=+1.334  "Killing in self-defense, accidentally or in war is not considered mur…"
+ 4. pred=+1.003  y=+0.729  "The care that the pyramid builders took in their craft is evident."
+ 5. pred=+0.963  y=+0.843  "When hunting, they will wait by a seal's breathing hole, or stalk sea…"
+ 6. pred=+0.958  y=+0.984  "They may spend 8 to 10 hours in the pool for every hour they will spe…"
+ 7. pred=+0.949  y=+0.658  "Law school faculty often have minimal experience in actually practici…"
+ 8. pred=+0.949  y=+0.643  "The fovea is the center of the human eye and the most sensitive part …"
+ 9. pred=+0.945  y=+1.037  "I found nature provides useful information, but more than is needed f…"
+10. pred=+0.944  y=+0.256  "Astronauts train a long time for their spacewalks."
+
+### act — LOWEST 10 predicted
+ 1. pred=-0.014  y=+0.065  "A raven is a large black bird that thrives in many climates."
+ 2. pred=+0.009  y=+0.331  "A butterfly is a flying insect with four large wings."
+ 3. pred=+0.135  y=+0.405  "A peach is an orange-yellow fruit with a characteristic smell."
+ 4. pred=+0.176  y=+0.017  "The eagle owl is an impressive bird."
+ 5. pred=+0.198  y=+0.451  "A banana is a long fruit that grows in bunchs, with a soft edible ins…"
+ 6. pred=+0.206  y=+0.236  "A parrot is a bird that lives in warm and tropical regions."
+ 7. pred=+0.232  y=+0.165  "Shoes are usually made of leather, canvas, rubber or plastic."
+ 8. pred=+0.236  y=-0.054  "Broccoli is a plant in the cabbage family."
+ 9. pred=+0.247  y=+0.283  "It has a flat surface and can be made of wood, plastic or metal."
+10. pred=+0.249  y=+0.358  "Other types of doors can slide or consist of a revolving chamber."
+
+### emb_sum — HIGHEST 10 predicted
+ 1. pred=+1.325  y=+0.742  "They signed their work, decided on its subject and imagery, and estab…"
+ 2. pred=+1.295  y=+0.984  "They may spend 8 to 10 hours in the pool for every hour they will spe…"
+ 3. pred=+1.176  y=+0.809  "As a passive form of agriculture, it does not require that native veg…"
+ 4. pred=+1.126  y=+0.843  "When hunting, they will wait by a seal's breathing hole, or stalk sea…"
+ 5. pred=+1.119  y=+1.305  "Every night while we sleep, our minds are as active as when we are aw…"
+ 6. pred=+1.101  y=+1.502  "I know it's cliche, but I love the impact that I have on lives of my …"
+ 7. pred=+1.093  y=+0.454  "We poured the cream mixture into a frozen tub, then started turning t…"
+ 8. pred=+1.077  y=+0.720  "Good data on the social and economic effects of legalized gambling ar…"
+ 9. pred=+1.076  y=+0.623  "Gambling was something I had to do, and I had already spent close to …"
+10. pred=+1.068  y=+1.037  "I found nature provides useful information, but more than is needed f…"
+
+### emb_sum — LOWEST 10 predicted
+ 1. pred=-0.031  y=+0.065  "A raven is a large black bird that thrives in many climates."
+ 2. pred=+0.038  y=+0.331  "A butterfly is a flying insect with four large wings."
+ 3. pred=+0.116  y=+0.451  "A banana is a long fruit that grows in bunchs, with a soft edible ins…"
+ 4. pred=+0.142  y=+0.405  "A peach is an orange-yellow fruit with a characteristic smell."
+ 5. pred=+0.186  y=+0.283  "It has a flat surface and can be made of wood, plastic or metal."
+ 6. pred=+0.200  y=-0.054  "Broccoli is a plant in the cabbage family."
+ 7. pred=+0.201  y=+0.657  "Rain is water that falls from clouds in the sky, which are condensed …"
+ 8. pred=+0.202  y=+0.017  "The eagle owl is an impressive bird."
+ 9. pred=+0.203  y=+0.236  "A parrot is a bird that lives in warm and tropical regions."
+10. pred=+0.240  y=+0.413  "A hammer is a tool used to deliver an impact to an object."
+
+### sfl_rff — HIGHEST 10 predicted
+ 1. pred=+1.126  y=+0.742  "They signed their work, decided on its subject and imagery, and estab…"
+ 2. pred=+1.027  y=+0.651  "During times of attack, peasants, livestock, and property could be br…"
+ 3. pred=+1.001  y=+0.454  "We poured the cream mixture into a frozen tub, then started turning t…"
+ 4. pred=+0.987  y=+0.843  "When hunting, they will wait by a seal's breathing hole, or stalk sea…"
+ 5. pred=+0.986  y=+0.885  "We ran in, grabbed some food, slammed the door, and surrendered the k…"
+ 6. pred=+0.942  y=+0.761  "After climbing fifty feet up the side of the pyramid, the man gesture…"
+ 7. pred=+0.937  y=+0.623  "Gambling was something I had to do, and I had already spent close to …"
+ 8. pred=+0.936  y=+0.821  "Images, feelings, stories, and strange combinations of characters and…"
+ 9. pred=+0.935  y=+0.999  "One astronaut loosened the bolts on the pipe, while the other fitted …"
+10. pred=+0.921  y=+0.595  "The stones covering the pyramid were precisely fitted together and po…"
+
+### sfl_rff — LOWEST 10 predicted
+ 1. pred=+0.254  y=+0.457  "Many were afraid of heights."
+ 2. pred=+0.277  y=-0.054  "Broccoli is a plant in the cabbage family."
+ 3. pred=+0.280  y=+0.017  "The eagle owl is an impressive bird."
+ 4. pred=+0.290  y=+0.405  "Broccoli can be boiled, stir-fried or eaten raw."
+ 5. pred=+0.295  y=-0.047  "There are a few different types of bone fracture."
+ 6. pred=+0.309  y=+0.400  "Much of their training is conducted underwater."
+ 7. pred=+0.311  y=+0.613  "A man is a male human adult."
+ 8. pred=+0.319  y=+0.493  "Apples can be eaten raw, roasted or baked in pies."
+ 9. pred=+0.323  y=+0.134  "A woman is a female human adult."
+10. pred=+0.326  y=+0.209  "Freshly squeezed orange juice often contains pulp as well."

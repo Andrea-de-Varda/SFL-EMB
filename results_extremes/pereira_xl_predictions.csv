@@ -1,0 +1,628 @@
+text,y,pred_act,pred_emb_sum,pred_sfl_rff
+"A banana is a long fruit that grows in bunchs, with a soft edible inside.",0.45079163,0.19829687845247834,0.11589749110779032,0.697031304401272
+A bed is a piece of furniture used as a place to sleep or have sex in.,1.092356,0.5290745661611047,0.641560846275839,0.6815652418838015
+"A bed is made of a mattress and a box spring, plus sheets, pillows and covers.",0.7126885,0.42485174682294147,0.6245237470508676,0.6072068271784221
+"A bee is a flying insect, with a black and yellow body and six legs.",0.08949184,0.29686194515990827,0.2657145359948884,0.5584078160534232
+A bicycle is a vehicle with two wheels and pedals on a frame.,1.0369029,0.3885482405257911,0.44442629278245477,0.47908958656133926
+A blacksmith creates objects by forging iron or steel.,0.033079397,0.40815683991073615,0.43499398917065996,0.4323002185456934
+A blender is a kitchen appliance used to mix ingredients or puree food.,0.24945003,0.3481791486098643,0.3117844633381839,0.4309906847778121
+A boy becomes a man after passing through puberty.,0.44045419,0.5030170218991796,0.4809697241071042,0.40861943235487863
+A boy is a young male child who has not undergone puberty.,0.51020426,0.7285642104097645,0.7525976289598052,0.4831069782347568
+A butterfly is a flying insect with four large wings.,0.33128917,0.008782829773736456,0.038113905329268755,0.3858737651485282
+A car can be powered by a gasoline or electric engine.,0.34693107,0.2970889508539122,0.25064237179912685,0.3782680308881554
+A carpenter is an artist or manual laborer who works with wood.,0.38879588,0.49218952947193984,0.4636866793171602,0.5263333840879079
+A castle could easily control lands within a day's walk.,0.6191315,0.8290350368848971,0.6350671638637344,0.5631544194895235
+A chair is a piece of furniture designed for people to sit on.,0.32610655,0.3575780205940683,0.41249368982693313,0.4589289799685924
+A clarinet is a woodwind musical instrument.,0.21683091,0.3330581935208205,0.31981948944146216,0.3690458231932977
+A cod is a fish that lives in the colder areas of the Atlantic.,-0.04214917,0.41639285141580246,0.4064318704956627,0.5383546094034908
+A convicted murderer is often given a life sentence or the death penalty.,1.1046633,0.7020615253735234,0.7151591485974993,0.508969461208008
+A cooperative is a farm where many farmers share the land and equipment.,0.77874255,0.5902003328845226,0.531126053405754,0.5834890344225108
+A cubicle consists of a desk surrounded by partitions on three sides.,0.7646549,0.591585538467706,0.5556329219147892,0.5476838878624147
+A cyclone can move inland and seriously damage property.,0.63363373,0.4191488979539618,0.33680442912994557,0.5133601868982693
+A desert is a natural environment where almost no rain falls.,0.42339113,0.6057882418600826,0.4715611083925394,0.4388930359485706
+"A desk is a piece of furniture used for working at, sometimes with a computer.",0.7281135,0.3715105943761,0.3641790452331468,0.7530838413147073
+A door is a movable barrier to entrance or exit from an enclosed area.,0.52664316,0.47243363818942674,0.5205702142704205,0.5259384849945596
+A dress is a piece of clothing that women sometimes wear.,0.393344,0.7200410511792681,0.608635779354618,0.4644984504448796
+"A dress is like a shirt attached to a long, matching skirt.",0.8502873,0.6340025169858272,0.586756230053778,0.6047046929240267
+"A dress is usually worn at formal occasions, such as a wedding or a dance.",0.50945926,0.7351105513921323,0.8464393532830904,0.5230340867696576
+A drought is a persistent shortage of the water supply caused by lack of rain.,0.46006945,0.6488879583653866,0.7381701613614436,0.5879341211461002
+A farm is land used to grow plants or raise animals for food.,0.68675035,0.5512746304348192,0.5870167512716613,0.5070333221496107
+A fire investigation determines if a fire was caused by accident or arson.,0.7558304,0.8145688285815348,0.8297924946002445,0.5754965251324827
+A flood is an overflow of an expanse of water that submerges inhabited land.,0.60860986,0.6056714226157536,0.5851563066360119,0.700413577901965
+"A floor is a horizontal surface inside a building, used for walking on.",0.41191456,0.44641438906156594,0.4670333224943064,0.6363320716332325
+A foot is a body part on the end of a leg. ,0.32173836,0.6382383185381879,0.5532036001289031,0.46289825893081094
+"A forest ecosystem has various types of trees and animals, as well as ground plants.",0.5918275,0.6287267591361387,0.7582079169868877,0.6596199374338326
+A forest is an area with a high density of trees and canopy cover.,0.38003272,0.6909011840880024,0.7204034139434798,0.5012554815854305
+"A fork is a tool for eating solid foods, with a handle and several tines.",0.35369578,0.4308661786556143,0.4650931474125214,0.6567407606376807
+A freight train transports containers of goods or fuel over long distances.,0.22856869,0.586802474988646,0.6161609841916865,0.6616922793281736
+A frying pan is a small pan with sloping sides and a handle.,0.39307287,0.3943909003866192,0.355698325519734,0.47249988466293075
+A girl is a female human who has not yet reached maturity.,0.9002211,0.5188200389434441,0.593729350790419,0.4647788510609523
+A glove is a piece of clothing that covers the hand and fingers.,0.19626842,0.43627425502951117,0.41733503179191267,0.4839556672929196
+A hammer is a tool used to deliver an impact to an object.,0.41328233,0.26894121223769696,0.23983130084660553,0.4641818354619428
+A hand grenade is an explosive used as a weapon against people.,0.56354076,0.4748798175503618,0.42100318882990806,0.4943217039683697
+"A horse has a tail and a mane on its neck, and is usually gray or brown.",0.4854094,0.5287488705787436,0.6696198806186417,0.7261962181893471
+"A horse is a large hoofed mammal with four long, muscular legs.",0.14547151,0.3361205051079701,0.3272842411264462,0.5090540341724423
+"A house can have rooms for purposes like sleeping, cooking or washing.",0.56527984,0.6416449266528836,0.6391131106790131,0.7325515424346551
+A house is a permanent building or structure for people or families to live in.,0.397782,0.8277677815645593,0.9928695158153731,0.7358134297804905
+"A human can ride a horse while it walks, trots or gallops.",0.8151346,0.6461914768909448,0.6111828142539243,0.5708146155862818
+"A knife can be used to attack by slashing, stabbing or throwing. ",0.36289063,0.5676242736804389,0.6410087896036952,0.5272811793357797
+A knife is a tool with a sharp edge that is used to cut things.,0.0486301,0.43379453562325004,0.5202037263381232,0.46154878132838084
+A lawn mower is a machine with revolving blades that cut grass to an even height.,0.58814716,0.48152376316147893,0.518115811986865,0.661766284376977
+"A library is a place where a collection of books, documents and media is kept.",0.5717599,0.5162120384974823,0.5450885450902041,0.6259455083616017
+A local hospital has initiated new measures to reduce infections.,0.3219885,0.47430486921453385,0.44329076582599475,0.5305542988217806
+A log cabin is a small house built from round logs.,0.3762194,0.6351498838965812,0.5620484631267144,0.4444778767880552
+A luthier is a carpenter that makes and repairs musical instruments.,0.7871804,0.37896151617050755,0.3034108591204365,0.464283918331326
+A major strength of professional skiers is how they use ski poles.,0.41970083,0.8047313016810999,0.7883206267134786,0.5044532847084213
+A man is a male human adult.,0.613067,0.35892041032783106,0.3318408038020645,0.31125803004202507
+A mitten is a kind of glove where the four fingers are covered together.,0.41009867,0.4427805318765726,0.4598328148980543,0.6291404171677674
+A mountain is a landform that rises steeply above surrounding land.,0.21930856,0.4293598027996154,0.3751184981581348,0.527105085676069
+A mug is a sturdy cup with a handle for drinking hot liquids.,0.35568652,0.27596827029739923,0.2704584192409413,0.491531437612837
+A mug is thick and has a ring base for thermal insulation.,0.75637394,0.5362689825278193,0.5416670163386519,0.6322196845204251
+A painter must keep many elements in mind while completing a painting.,0.37590203,0.7724849054594459,0.6429002339026009,0.5874824363231471
+A parrot is a bird that lives in warm and tropical regions.,0.2362505,0.20569285571929652,0.2033363985567943,0.42811269447440325
+A peach is an orange-yellow fruit with a characteristic smell.,0.40451354,0.13479542819131107,0.14165058461224983,0.5098332020085166
+A range of mountains forms due to tectonic plate collision.,0.6810843,0.5248830230455411,0.5267060914296365,0.4910784184491709
+A raven is a large black bird that thrives in many climates.,0.065136276,-0.01442988214473695,-0.030665639108771486,0.4403593965382504
+A refrigerator is a cooling device used to contain and preserve food.,0.14501487,0.4284731712584925,0.41889202762969735,0.4536548553121406
+A rifle is a firearm that rests on the shoulder and has a barrel with twisting grooves.,0.53958577,0.7885841355999929,0.9899900286867163,0.686523416093326
+A saw is a tool that uses a hard blade or abrasive wire to cut hard materials.,0.36465225,0.43391712491327583,0.5348412702683811,0.6932150551673669
+A scientist creates hypotheses and does experiments to test them.,0.23670337,0.7308016491725116,0.587902710074903,0.5475744625285355
+A scientist studies and produces new knowledge about the physical world.,0.4823043,0.63333515830553,0.6012462897619755,0.5238287107053857
+A screwdriver is a tool for inserting and tightening screws into something.,0.4224385,0.41379261515521903,0.37138108897068234,0.6106919658256926
+A shark is a large fish with a cartilage skeleton.,0.35662255,0.3556932801430631,0.278817634128802,0.3876594176430121
+"A ship can be powered in the ocean by sails, steam, or diesel engines.",0.4399554,0.40317203681493036,0.43616090788553175,0.5889534423393973
+A ship is a large vehicle that floats and travels on water.,0.3359279,0.27553514205294094,0.2971334898834137,0.460029956395563
+"A shoe is clothing for the foot, with a sole, an outsole and a heel.",0.57305646,0.6223432888672923,0.6516596427419425,0.6654223214525106
+A single raspberry consists of many small fruits joined together.,0.58627313,0.5229888716745015,0.5006798667934962,0.5468415022496539
+A sneaker is a shoe for sports and athletic activity.,0.41543147,0.5606454606018361,0.5110488855432638,0.4549299352972146
+A soldier fights using weapons such as rifles and grenades.,0.5251229,0.605771099455465,0.5932348272128556,0.4434565723135294
+"A soldier in the militia must wear a uniform, usually camouflage.",0.79374903,0.6348126778378784,0.5961517124963132,0.5665680133957518
+A soldier is a member of the national armed forces who fights on land.,0.85264826,0.5116932916285091,0.6022806882072856,0.5669234295896197
+"A swamp is covered with shallow water, mud and vegetation.",0.14905544,0.2764024842754874,0.3544710717627808,0.5012987907336043
+A sweater is a heavy garment worn on the torso for warmth.,0.32233882,0.5910470246459562,0.5362534186876505,0.4216853959043011
+A sweater that opens down the front is called a cardigan.,0.27094418,0.4684609032738236,0.49663027184791647,0.5475882309215245
+A table is a piece of furniture with a flat surface and legs.,0.13553411,0.46713423444468394,0.39373840104705615,0.49794722912760125
+A television is an appliance with a screen that displays moving images.,0.44696537,0.4848514278911493,0.40218786735088197,0.5417839788074137
+A toaster is a kitchen appliance for toasting bread using heating elements.,0.46231377,0.2969294970506333,0.31496016650813,0.4982462055213949
+A train is a connected series of cars that moves between stations on a track.,0.29140154,0.5521114975625476,0.6139698411445619,0.6220645916559602
+A train station is a place where passengers get on or off a train.,0.44405922,0.61915274928279,0.6966301933389101,0.5069634186939697
+A tropical cyclone is a storm formed over warm tropical sea.,0.3539296,0.4416415631183519,0.3989801368631234,0.4021066859356059
+A tuxedo jacket is a tailless dinner jacket with black silk lapels.,0.46272588,0.4531348198824756,0.4405798323578585,0.5976854944316286
+A typical window is made of sheets of glass held in place by frames.,0.14188564,0.4902367195235552,0.5123847407946781,0.5521241080969403
+A violinist holds the instrument between the chin and the collarbone.,0.49758127,0.7390545697665457,0.6642307827074789,0.6282534846017557
+A wall is a solid structure that defines and sometimes protects an area.,1.0775874,0.413781115307553,0.38449038800403634,0.5493084198579472
+A whale is a very large mammal that lives in the ocean.,0.012364626,0.3618869562971525,0.34458403749546235,0.42624369205275164
+A window is a transparent opening in a wall to let light through.,0.112276554,0.5080668075256636,0.4377880932214509,0.6332600160195269
+A woman can become pregnant and bear children.,0.26779905,0.5896328782708122,0.45595142873118233,0.4279003073035881
+A woman has different reproductive organs than a man.,0.715898,0.5813274590367723,0.5384004580545168,0.4407236531586388
+A woman is a female human adult.,0.13435143,0.5676147493812433,0.47864892863868863,0.3226241519358379
+A woman is stereotypically seen as a caregiver.,0.30878517,0.6297280839794299,0.5089791832327746,0.3953952186640223
+Academic libraries support scholarly research and have specialized books.,0.47650263,0.574827173704886,0.5327085679182495,0.5174621048723845
+Accordions produce sound with bellows that blow air through reeds.,0.73424405,0.6624701413593962,0.5732451718680331,0.6441660459025336
+"Acting, stage presence, and musical interpretation are all critical.",0.8723028,0.7297529971871132,0.6132454040816246,0.5137091659011911
+"After climbing fifty feet up the side of the pyramid, the man gestured me into a small black entranceway.",0.7607457,0.6791467735912411,0.7858079059132388,0.9418514250947632
+"Air pockets in snow insulate the space, and body heat warms it.",0.9182591,0.7776437599739746,0.7789870237428992,0.6941270617452339
+All of the boys on the trip were new to rock climbing.,0.8325369,0.5937302238111077,0.5715297600479495,0.5126222542050172
+"American ice cream is exported around the world, but different countries have different preferences.",0.61660546,0.7779598282313709,0.8992384514476391,0.7319735161593944
+An accordion is a portable musical instrument with two keyboards.,0.3848778,0.38497204366334087,0.3778564853277201,0.48395642387120485
+An accordionist plays both keyboards while opening and closing the bellows.,0.9755979,0.5608265506043495,0.5336698695281338,0.7012043706944773
+An adult male behaving immaturely is often referred to as a boy.,0.89977264,0.47721607351358364,0.5888309864387751,0.47570330790717497
+An apartment is a self-contained home that is part of a building.,0.87731934,0.631964802275466,0.5273203753961243,0.5174741849250846
+"An apple is a fruit that can be green, red or yellow.",-0.12833677,0.4276588891343522,0.42444788718023585,0.405587756729345
+An artist's eye is not a camera lens that has to record everything within its field of vision.,1.3412415,0.6650789862675188,0.7221571334661019,0.7753241042316656
+"An automobile, or car, is a wheeled vehicle for transporting passengers.",0.66491354,0.4177005745207145,0.34724987842385613,0.5336150920233949
+An earthquake at sea can displace the seabed and cause a tsunami.,0.51906466,0.5559011553626142,0.5080077106094051,0.5649610838356502
+"An elephant has a long nose called a trunk, which can grab things or food.",0.68115896,0.4655062810694357,0.46657193451245016,0.7778662003507294
+An igloo is a type of shelter made from blocks of snow by Inuit.,0.74970424,0.41200626674354607,0.31339888338031646,0.5481725418528348
+"And for society, hip fractures involve substantial expense and time in the hospital.",0.7969832,0.9083481484018414,0.8974307632951544,0.79850080584166
+"Another type of bed is the hammock, a fabric sling suspended above the ground.",0.5770141,0.44898598060381434,0.4405054693638782,0.6128003651206563
+"Apples can be eaten raw, roasted or baked in pies.",0.49288526,0.4303767563856147,0.45846548989731617,0.31933032645262704
+"Apples have thin skin, a crisp, sweet pulp and seeds inside.",0.48364556,0.5720215128889976,0.5650751888226443,0.5712583164396742
+Architects are still working to solve the mysteries of how pyramids were constructed.,0.31765556,0.5508235370343164,0.6243326725398569,0.5644910629324512
+Arson can be done to cause damage to others or collect insurance.,0.815151,0.48589454799439535,0.5279989595149888,0.6389221787022715
+Arson is the criminal act of burning a building or wildland.,0.52528185,0.6814932201717036,0.6405680509406004,0.4663301368793974
+"Artisanal beekeepers go to extremes for their craft, but their product is worth the effort.",0.89660555,0.6442191670474298,0.7550824317157353,0.7983982847406251
+Artisanal honey-making emphasizes quality and character over quantity and consistency.,0.9602041,0.630746730000426,0.5584987478999959,0.6009120098456697
+"As a painter, I learned to focus less on the actual scene and more on the painting itself.",0.7930649,0.8216833809264023,0.8507117110435403,0.6923585887076359
+"As a passive form of agriculture, it does not require that native vegetation be cleared to make way for crops.",0.80856085,0.782075513052517,1.1764042346853183,0.8980184467024597
+"As part of the film crew for a polar bear documentary, I spent months capturing these shots.",1.1361848,0.7603003376168191,0.8993129818013276,0.760135396811815
+"As the beekeeper opens the hive, the deep hum of 40,000 bees fills the air.",0.6921223,0.784857045436957,0.8169489376660918,0.5999689015016837
+"As the field of computer graphics broadens, we must ask if graphics actually help students.",1.1158699,0.8182077364846629,0.7858478511456571,0.8170658038516031
+Assault rifles can fire in bursts and are the standard infantry weapon.,0.94478416,0.839958555521205,0.8983635930963437,0.5248510712570281
+Astronauts practice to be able to perform construction and repair work on the outside of the space station.,0.6225837,0.7469257140152197,0.8108014821204171,0.8123556417147566
+Astronauts train a long time for their spacewalks.,0.2563156,0.9444662978317648,0.5955539026187927,0.46559737334348705
+At puberty the body of a girl develops into that of a woman.,0.6107694,0.6922232632004273,0.6984038181633079,0.529211004930075
+"At the doctor's office afterward, the x-ray clearly showed the fracture.",0.8861587,0.6770469469567085,0.56204091842141,0.5668546107856745
+"Automobiles vary in size, number of doors and the type of trunk.",0.6467124,0.6007454232950302,0.5952004556679049,0.523426935248498
+Axes are used by woodcutters and firemen entering buildings.,0.7886631,0.5320265485396941,0.46561205759061597,0.5253132078805136
+Band-aids can increase the risk of infection by holding in heat and moisture.,0.7105704,0.6186479509336583,0.5939453357958975,0.6073156678159776
+"Beekeepers also discourage the use of pesticides on crops, because they could kill the honeybees.",0.42336428,0.7365881644768489,0.7750973961225858,0.7868032006926268
+Beekeeping encourages the conservation of local habitats.,0.43585232,0.8032453315958601,0.5230576364038018,0.41726031942501646
+Bees are social insects and live together in a colony located in a hive.,0.6365919,0.4678162795817377,0.5687742080425173,0.532571499136236
+"Bees crawl across his bare arms and hands, but they don't sting, because they're gentle.",1.1685133,0.6410731399983818,0.7417288337491786,0.7674946883936306
+Bees spread pollen between flowers as they collect nectar to make honey.,0.3102055,0.748663478908305,0.7535330691896125,0.5340811835626756
+Black tie trousers should be a perfect match to the tuxedo jacket.,0.738322,0.5234393769037682,0.5686239589581402,0.5590750159380213
+Blacksmiths wears a thick apron and handle the metal with tongs.,0.64456105,0.5326978557722832,0.5207700368504466,0.6276941150429016
+Blenders are used to make milk shakes and fruit smoothies.,0.28599894,0.38019837215937297,0.40413834869052834,0.4922004789162179
+Brand new conferences have sprung up that are devoted to bridging the two cultures.,0.681408,0.4843011046527125,0.5938743343809956,0.7679509775650891
+"Broccoli can be boiled, stir-fried or eaten raw.",0.40515918,0.547986521734611,0.38932428751083303,0.2904894777113559
+Broccoli is a plant in the cabbage family.,-0.053937275,0.235805834870637,0.19979132156227233,0.27679842128039606
+"Broccoli is high in vitamins, fiber and other nutrients.",0.30350572,0.3255300153438446,0.34550303872358273,0.354939563405539
+But faster and tighter turns increase the twisting force on the legs.,0.7584896,0.6796731414657691,0.6884299874531998,0.6905890116789216
+"But her pure, strong voice is certainly the star of the show.",0.71501154,0.6084325220545503,0.5896046504075583,0.6016425300908628
+"By establishing the parameters of legal blindness, resources can be focused on the legally blind.",1.004969,0.7119858038583591,0.8053649853170067,0.8655287516185556
+"Carpenters build and repair houses, furniture, boats and other objects.",0.11922106,0.4045301818853855,0.38833966555332367,0.5166333314548865
+Cats are small furry animals with four legs and a tail.,-0.16771625,0.34894616229848363,0.34587164509629426,0.40702039657835964
+Cats like to groom themselves by licking their fur.,-0.10368237,0.529196896641901,0.44265750067587634,0.39318157240747786
+"Chairs can also have back and arm rests, as well as a cushion.",0.33660385,0.45233787104538625,0.4613670844668242,0.5445499342520507
+"Chairs consist of a seat raised above floor level, supported by legs.",0.29553002,0.47347067961216077,0.49574696743623503,0.5886059047864977
+"Clearly he had it tailored, as it fit the man perfectly.",0.7757735,0.7642726823494235,0.6261723536515664,0.6054375008207569
+Climbers who are learning the sport can try scrambling on large boulders.,0.48688957,0.5757907613919808,0.5863551011272151,0.671791217753032
+"Cod flesh is white and mild-tasting, and flakes easily when cooked.",0.71548367,0.5356205716547465,0.48555326509831576,0.6016768163340808
+"Cod has been caught, salted and traded since the time of the Vikings.",0.96470577,0.711839972113926,0.7047332415935389,0.7474450844050207
+Coffee contains a mild drug called caffeine that keeps people awake.,0.5696231,0.81244586645273,0.6827087630678237,0.5446127335112407
+"Coffee is made from coffee beans, the seeds of the coffee plant.",0.41084668,0.6273562041495379,0.5740882881388216,0.49214964730163896
+Coffee is the world's seventh-largest legal agricultural export.,0.40980637,0.633252686723207,0.44454393375020756,0.4902628744326557
+Commuter trains transport people between suburbs and stations inside a city.,0.47908762,0.7019579419357181,0.6973415606325054,0.6392275792377057
+Computers have been used in art for a long time by experimental artists.,0.60783297,0.619593520154978,0.6740078209161932,0.5829858194285623
+Cruise ships are floating hotels that take people between cities.,0.57926285,0.5907194092581611,0.5258187555402588,0.4504666776471641
+Cyclones can produce very powerful winds and torrential rain.,0.29702997,0.5036572681736621,0.4437535830171582,0.3697987841732607
+Dairy products such as cheese and butter are made from milk.,0.26265657,0.6900629678994038,0.675530960537111,0.3670026318763324
+Deforestation is the cutting down of forests disregarding regeneration.,1.3022534,0.6317610803723085,0.575291593413819,0.5264899147310353
+"Depending on the size and format, they can cut paper, hair or fabric.",0.59088403,0.6097613472317647,0.580875284828207,0.6342296737569131
+Different notes are made by fingering the neck with one hand while bowing.,0.91329736,0.556422305186399,0.6301561679811569,0.6577117085808238
+Disposable rubber or latex gloves are used to shield hands from germs or chemicals.,0.36797288,0.4797196853709047,0.45551350853553696,0.6144330307230388
+Doctors consult with pharmacists because they know a lot about drug interactions and side effects.,0.9729953,0.8600767318397066,0.9579842611440564,0.7322573588663837
+Drought will cause crops and plants to stop growing and die.,0.29603094,0.4262061631056266,0.4038878261160421,0.5539007113084231
+Drunk drivers are caught by field sobriety and breathing tests.,0.5593862,0.6517235066472882,0.5513922999027338,0.5436463611820285
+Drunk driving is the act of driving under the effects of alcohol.,0.5441483,0.6788383487179754,0.660360916287819,0.48702979531153556
+Drunk driving of any vehicle is a crime in most of the world.,0.90392494,0.6550506655443313,0.7264932169551211,0.5968566853636753
+During a flood people evacuate and the contaminated water causes diseases.,0.6977023,0.6704557973712745,0.5513215310105064,0.6884351796885527
+"During times of attack, peasants, livestock, and property could be brought inside the castle's walls for protection.",0.6514537,0.8279763881528095,1.0118561678438491,1.0274220765840685
+"Each morning, participants in the study had to write down their dream experience from the previous night.",1.0101571,0.7603203537524297,0.7614943657717765,0.8289050469765862
+Each person has his or her own response to potentially stressful situations.,0.29833832,0.574209681431314,0.6051509784334939,0.4985840332404924
+Eagles are large birds of prey that hunt during the day and have very good eyesight.,0.83866405,0.4322961927267129,0.594949939291641,0.7239738083896858
+Eagles live in eyries and some species eat fish and others small mammals.,0.952981,0.6592212967488824,0.7262496723728171,0.7970790353984847
+"Early crews were all young men, but astronauts now are much more diverse.",0.6986595,0.8473083548877554,0.9581022193573703,0.7819244472674208
+Early findings suggest that logging may have facilitated the barred owl's invasion.,0.84287786,0.5389234277341962,0.4674024534845773,0.6502072131264705
+Early founders of opera chose tales from antiquity for their subject matter.,0.5869346,0.49876399762262497,0.4378299349429383,0.6552848555542878
+Earthquakes shake the ground and can knock down buildings and other structures.,0.34745762,0.33414515111939846,0.32546970948659115,0.6297790973091504
+Electric lawn mowers use as much electricity as an ordinary toaster.,0.7572709,0.55904948621474,0.45255778430645344,0.48819079673154064
+Electric lawnmowers are better for the environment because they do not create emissions.,0.6180577,0.6373249498556927,0.6257620783266636,0.5843849858466601
+"Elephants are the largest kind of land mammal, weighing several tons.",0.47411332,0.44690140110530474,0.4320607960150462,0.42075129270863426
+Even beginner rock climbing takes courage and strength.,0.5932502,0.878395597247043,0.6811373742662129,0.44419575440434095
+Eventually it froze enough that I couldn't turn the hand crank any more.,0.3211787,0.6480764020418828,0.6185841358140729,0.5929172030991181
+"Every night while we sleep, our minds are as active as when we are awake.",1.3050632,1.0886406988365018,1.1185542867922709,0.523050160168868
+Every step felt like running on spikes.,0.5916869,0.8595835492807262,0.5457718809506954,0.33699045731492305
+Extreme drought will eventually turn areas into desert and cause famine.,0.62604725,0.42056310230349314,0.4708163385055994,0.5635551262781113
+Families have to adjust to the patient's loss of independence.,0.34620604,0.47305588948729604,0.42849961985549667,0.5380185290968422
+Farmers are the people who run the farm and decide what to produce.,0.74732596,0.7030687380788723,0.6513102290771682,0.5546195977153214
+Farmers often drain swamps to produce fertile arable land. ,0.70130885,0.6288960748981638,0.47348559576773364,0.39752309901876914
+"Farms usually have a house for farmers, a silo and a barn.",0.59980476,0.607432229551115,0.47684157240712904,0.633182075360234
+Female mosquitoes bite people and animals and suck their blood for protein.,0.6216093,0.6641619766811397,0.729253333967434,0.6130106628691939
+"Fingers are used for grasping, writing, grooming and other activities.",0.8517265,0.33727247208766614,0.3535235302088466,0.5593504902533349
+"Floors may be made of bare concrete, tile, linoleum or wooden floorboards.",0.2585625,0.48509450738295806,0.45809518662326076,0.6365052709522715
+For some operations or treatments patients have to stay for several weeks.,1.0048133,0.6772821867115304,0.6393987510602872,0.6791132456396438
+"Forks are used in Western cultures, and there are special kinds for various foods.",0.8394736,0.3798327969960619,0.41050744956107965,0.8525781165665623
+"Forks are usually  made of metal, or plastic, if disposable.",0.58891255,0.3410350793989956,0.3188549934706868,0.5595741844391466
+"Fortunately, most skin infections can easily be treated once they are diagnosed.",0.7102564,0.38232127374758007,0.3004494366867527,0.4997128122822112
+Free-climbing is one particular style of rock climbing.,0.28951344,0.3357630086034377,0.3815145492196021,0.42593082745755406
+"Fresh cod is used for fish and chips, salted cod for elaborate dishes.",1.2631474,0.7434487028561336,0.8044729482808033,0.5658820840908644
+Freshly squeezed orange juice often contains pulp as well.,0.20931037,0.7600564956125961,0.6333581133479,0.3258246251426091
+Frying pans are made of iron or teflon-clad steel.,-0.00026283332,0.36455145811297907,0.3543554830420669,0.48138368880510296
+Gambling has become a very big but controversial business.,0.5884734,0.5498713196287474,0.43322915327084605,0.5115617598235792
+Gambling may also be associated with personal bankruptcies and marriage problems.,0.6676906,0.6597280331406792,0.6455458589939999,0.6341266800424316
+"Gambling was something I had to do, and I had already spent close to $10,000 doing it.",0.62297887,0.9010525132687771,1.0755982915733908,0.9374686581674093
+Girls often like playing with dolls and social games.,0.65204716,0.5643834485294281,0.4831650089553601,0.4787818696091999
+Girls sometimes grow long hair and wear dresses and skirts.,0.66342455,0.6067356183376319,0.5677983629420791,0.43529601811675994
+Gloves to protect against cold are made of wool or lined waterproof material.,0.65545464,0.3251601926016684,0.3954704006742324,0.7153511030696676
+Good data on the social and economic effects of legalized gambling are hard to come by.,0.7201061,0.8271025215482527,1.0765279010276276,0.6029636814848967
+Grenades can also be fired from rifles or shoulder launchers.,0.6719547,0.44049489686903626,0.3708951848961727,0.4842881008752028
+Grooms are also jazzing up their tuxedos with colorful shirts and satin ties.,0.750357,0.47901980006489364,0.4906689555737609,0.6927581022713071
+"Halfway through the race, I heard a sound like someone snapping their fingers.",0.90148544,0.6098488135798469,0.5224503167869283,0.5849511859768056
+Hammers vary in the shape of the head and handle length.,0.5009116,0.5556091573000528,0.5424807386208148,0.5690297399992058
+Hand grenades are thrown and timed to explode a bit after that.,1.0940652,0.6473807083811809,0.6290441799405657,0.5555252110921324
+Having someone else check their knots and harnesses helped them calm down.,0.83344644,0.7334980202845442,0.7128159231661823,0.7403301470029041
+He hammers and bends hot iron on an anvil to change its shape.,0.5704014,0.6513441536560555,0.6638078812785057,0.6337528334438337
+He recalled one evening at law school when he and the program director had pulled an all-nighter.,0.8410197,0.9397453180049862,1.066018492988471,0.8652605962604294
+He wanted to change things for the better.,0.15227628,0.5992829328407872,0.4595900095124639,0.3775716016477702
+Her blindness was caused by a genetic condition that slowly damaged the eyes.,0.38697097,0.4144568946748679,0.4157777514694035,0.5819089665694953
+Her job is not just about singing.,0.46488056,0.5817443421704754,0.41985544519743806,0.370248696611988
+High-priced premium ice cream is loaded with butterfat and natural flavorings.,0.4080232,0.45406430544028653,0.45408017498531983,0.6390877398811016
+Hip fractures are a real problem for aging individuals.,0.0070791044,0.44520058059011697,0.47426674516785533,0.5053532042243056
+"Historically, axe heads were made of stone and then metal.",0.86370826,0.3565337860434728,0.2969750085359407,0.3767054262211052
+"Horses have been used for draft work, travel and entertainment.",0.7224516,0.6307311825012885,0.5597125880788378,0.6198194071989855
+"Hospitals are staffed by professional physicians, surgeons, and nurses.",0.5522094,0.5721369385062844,0.45009066708417145,0.46967765091665836
+Hot deserts are usually filled with sand dunes or rocks.,0.37737668,0.40207779591242315,0.3964064807091933,0.42780507331336204
+"However, prominent painters had the social status of scholars and members of the royal court.",0.7727063,0.8863687039060004,0.9698615126118425,0.8020576639388871
+Hurricanes can also bring a storm surge: a wall of ocean water that lurches onto land.,0.7878895,0.6889837717388098,0.7797784844348854,0.7225558570761531
+Hurricanes can tear limbs off of trees and suck houses off their foundations.,0.43206072,0.7564861291181878,0.8069029017451543,0.5793355546932444
+"I can't even taste sweetness well, so when I make cookies I add extra sugar.",1.0728408,0.6934997972820419,0.678493359828107,0.6909012029679823
+I felt a crunch and I knew instantly that my foot was broken.,0.643336,0.6465804994850021,0.5601897112795389,0.5482141418088174
+I finally came to a stop at a flat part of the slope.,0.2444377,0.6284784876484129,0.6114526560978477,0.5374583047955502
+"I followed him down the steep, dark, narrow passage.",0.1745078,0.4611963967799403,0.3216545254625255,0.459427295263335
+"I found nature provides useful information, but more than is needed for a good painting.",1.0368264,0.945194753910729,1.0676747053960818,0.9073136437705913
+"I have a recurring dream about exams, even though I'm no longer in college.",0.64605516,0.7341284923979469,0.7100886306531565,0.5706848018609069
+I hesitantly skied down the steep trail that my buddies convinced me to try.,0.8946472,0.7557826790567829,0.7419419945166295,0.7435767430399286
+"I know it's cliche, but I love the impact that I have on lives of my patients.",1.5023614,0.866886830132995,1.1013898162392495,0.7892871501079396
+I know many other people who have the same nightmare.,0.5814429,0.6340482497258481,0.5290322902503442,0.47332280064339005
+"I like lots of hot sauce, and I drink my coffee with no cream, so it's very bitter.",1.2328947,0.5250828638099498,0.6043348934875656,0.7861357887437116
+I made a bad turn and I found myself tumbling down.,0.27765337,0.6207029311625001,0.5817447289130973,0.571591601541019
+I remember making ice cream at home as a child.,0.45139393,0.6428412007351996,0.5223855100631178,0.4243740736462972
+I think the pharmacy profession chose me as much as I chose to be a pharmacist.,1.0065299,0.8000771241044381,0.8370195772259232,0.7477841246374783
+I use the two levers in front of me to control the machine.,0.1631338,0.5436024426811508,0.5531276921091483,0.5905171276008969
+I was afraid our house would be ripped from its foundation.,0.4564642,0.667710386640715,0.6189568819686493,0.5015650272417252
+I was fascinated by the neatly arranged bottles in pharmacies as a child.,0.4579058,0.5658485628106289,0.5601877045546506,0.6856665214849614
+I've never even done any of the reading assignments.,0.7293332,0.4514221508678618,0.33925373588966473,0.4818488286438679
+"Ice cream is a mixture of milk or cream, sugar, flavorings, and up to half whipped-in air.",1.0602015,0.5333945470175465,0.5285911471615085,0.6883856815167412
+"If not dealt with effectively, though, stress can take a real toll on health.",0.67256093,0.5810772323724861,0.6779135668034246,0.6835793507262277
+"If the redness and swelling don't go away, contact your health care provider.",0.6320484,0.7699038866158954,0.6895326073330651,0.5087959798107963
+"If you see these symptoms, clean the area and apply some ointment.",0.24688607,0.603790087124861,0.4542373846314848,0.5999122207152943
+"Igloos are often built in the shape of a dome, with an entrance tunnel.",0.41777685,0.5086793823011675,0.5583903034009076,0.5924485672273242
+"Images, feelings, stories, and strange combinations of characters and places can fill our dreams.",0.82060844,0.8120087551299348,0.8535167726191127,0.9364124423732776
+In a flood a river will flow out of its channel or break dams and levees.,0.59372306,0.5731429561465464,0.6238018159513568,0.714694872283554
+"In a volunteer army, a soldier is paid for his or her work.",1.0112641,0.6750509447677671,0.6204750562362595,0.5508099731888284
+In buildings the floor often has pipes and electrical wiring under it.,0.6401843,0.5444120650006141,0.5360305724918698,0.6437018722305451
+"In closed or simple fractures, the bone is broken but the skin is intact.",0.48566577,0.8193261466918841,0.8436702192445215,0.7268795636707822
+"In developed countries, blindness is more likely to be caused by genetic problems.",0.28025708,0.4598594660604243,0.5052952336479168,0.5829348175946776
+"In developing countries, blindness in children is usually caused by infectious disease and nutritional deficiencies.",0.71070224,0.4328570626192706,0.4640893906768275,0.7052829930002691
+In folklore ravens are birds of ill-omen and also tricksters. ,0.93572795,0.6218661397742081,0.5181779543021576,0.5853098009115453
+"In my dream, it's the day of my final exam and I suddenly realize I've never gone to class.",0.8334419,0.8358492631633456,1.033099117542395,0.7797543106219252
+"In open or compound fractures, the broken bone has punctured the skin and produced an open wound.",0.589227,0.8087463943906626,0.9405760514611362,0.8694771748757896
+"In some tropical places, vanilla ice cream is topped with bananas and fresh mangos.",0.64266443,0.7412618399405513,0.8257197045041721,0.6936936641516103
+"In the past, they were home to battles, plots and intrigue.",0.48637316,0.698323430343762,0.6129917448141979,0.6050773198215512
+"In waterbeds the mattress is filled with water, and in airbeds it is filled with air.",0.6804218,0.5952812184091671,0.7281695028580196,0.6750794946517019
+Industrial espionage is theft of ideas and intellectual property.,0.5035651,0.7642129522339716,0.6661514853185526,0.3793973753137212
+Insects have compound eyes made up of eye units facing in many directions.,0.65141433,0.4510997657028862,0.49364717091210625,0.744831332322028
+It began as an effort to rediscover and imitate Greek tragic performance.,0.8086756,0.5367136871810094,0.5410029083012424,0.7015003079527096
+"It can be caused by heavy rain or rapid snow melt, as well as earthquakes at sea.",0.32029334,0.4739898529025073,0.6044384283908522,0.7273262176872461
+"It can be eaten cold and raw, in salads and other dishes, or cooked.",0.72996557,0.7238688871101471,0.689057349602008,0.5737672898939282
+"It can be eaten raw in sushi or cooked by grilling, poaching or in other ways.",0.5805276,0.7604097598105641,0.8566889523411271,0.6240937314507018
+It can be hard to climb stairs or ride a bike in a dress.,0.2737853,0.44160412859849363,0.44533799593193935,0.5015368277898942
+It can have shelves and small compartments for different types of food.,0.28272492,0.3698723740472518,0.3777678336258051,0.6671444263791376
+"It has a flat surface and can be made of wood, plastic or metal.",0.28297782,0.246861605380715,0.18560468670690247,0.5209947979560403
+It has a glass or plastic container with a rotating blade in the bottom.,0.11786464,0.34398431968260057,0.2833669431111894,0.6033278935953802
+"It has a green flower head and a thick, tough stalk.",0.32029215,0.30044847839843514,0.27447994139973925,0.5204007461177401
+"It has a pair of ivory tusks, for moving objects or digging into trees.",0.7228858,0.6148650232614903,0.6825136932280166,0.7306792610739571
+"It has a roof and walls to keep out cold and rain, and windows to let light in.",0.7121976,0.7033277488268505,0.910837854212347,0.7138182803053021
+"It has a sweet, acid taste and contains a lot of vitamin C.",0.22737758,0.6381332615208448,0.5646532229254262,0.46700041904344763
+It has ear tufts that stick up like horns.,0.11541674,0.5823651123658536,0.45077660015888,0.4336386897422401
+"It incorporates many of the elements of spoken theatre, such as acting, scenery, and costumes.",0.41399014,0.591470246909982,0.7036765289193901,0.7616287064564843
+It is a long black tube with a flare at the bottom.,0.41757476,0.5176191527617809,0.47041820724768446,0.5108516812701427
+"It is a popular drink in many countries, and usually served hot.",0.5591888,0.6763551432758963,0.6768102840612317,0.5051565962671067
+It is a serious crime because it deprives the victim of their existence.,0.9717988,0.7490801688146833,0.7703287509500667,0.5783921308126114
+It is a symbol of American frontier life and humble origins.,0.5738955,0.6878400288181108,0.7140115675322076,0.5171753520058991
+It is generally white and people often put magnets on its surface.,0.6783963,0.6608046713153796,0.6887745832501992,0.6412674835133311
+It is in every beekeeper's interest to conserve local plants that produce pollen.,0.5951672,0.6224179795718028,0.591324660769526,0.7019386898884382
+It is most often used to drive nails into wood.,0.7527177,0.47307774629526045,0.4666588659347816,0.4239574441400247
+"It is normally ceramic, but can also be made of metal or glass.",0.29220474,0.42948523887248713,0.38295621488660425,0.5025657581094422
+It is often drunk at breakfast from a glass.,0.33423588,0.588432762427618,0.5170364643313579,0.4394311937957758
+It is propelled by the pedalling of a cyclist on the saddle.,0.6796012,0.4962902937153525,0.47849417040985504,0.5894181731878139
+It is the smallest and highest pitched instrument in its family.,0.6249557,0.538981173321484,0.5156164994012445,0.5442180956882522
+"It is used to fry, sear and brown food.",0.26479688,0.626313802900454,0.5128276150840778,0.38375080643738957
+It looked like something a professional stylist would have picked out for a formal event.,0.83766145,0.7305184327178327,0.7302863615934232,0.7206425811941547
+It may have drawers to store supplies and papers.,0.25926808,0.4870913700719595,0.388603685978716,0.5211131739727518
+"It may have one or more rooms, as well as a kitchen and a bathroom.",0.47174633,0.6066484840318491,0.6755585276323475,0.5890812462313374
+It minimizes the need for upper body movements to regain lost balance while skiing.,0.53395116,0.7088982202739827,0.7678155138820397,0.7627196634960278
+It plays a role in almost half of all vehicle-related deaths.,0.6424352,0.6046860832319179,0.5700671122509827,0.4837626845451075
+It softens and changes color from green to red as it gets more ripe.,0.6024927,0.5428689725847913,0.566431345101396,0.6001607508277188
+It was made with rich fabric cut in the latest style.,0.22277094,0.5473652895430752,0.5088737660016889,0.609561985823414
+It was once believed that each taste bud responded to one of the four basic tastes.,0.87885135,0.614991638224822,0.6924828028598129,0.6719403638416609
+It's even worse when you are submerged in the frigid waters directly beneath the huge animal.,0.93079776,0.5527722010605136,0.5895966785233722,0.7915729646582467
+It's unnerving to watch a polar bear stalk across floating sea ice.,0.682529,0.6927580030785567,0.5815539949509323,0.5350879536336394
+"Its large orange eyes are downright creepy, and look like they could pierce right through you.",0.6984369,0.9134652408410568,1.0191149463314093,0.7670924325930522
+Its purpose was to dominate its surroundings.,0.4265194,0.48668008326565093,0.36248613432804977,0.35424885081267893
+"Killing in self-defense, accidentally or in war is not considered murder.",1.3338937,1.0318650125484021,0.9410083721178247,0.6628637745696769
+Knives have also been used as weapons and instruments in rituals.,0.4190451,0.5542511211952799,0.6134851285772325,0.4820855152474348
+Large numbers of people have to migrate away from dust bowls.,0.8374836,0.49344380477457345,0.5355902436339252,0.5519118834715475
+Later operas branched out into different sources of stories and musical traditions.,0.46475825,0.5380160386937849,0.5534137955675691,0.7193447508103519
+"Later that night, with the wind shaking the house, we fell asleep huddled on the sofa.",1.0539957,0.8165493369935609,0.867587719212384,0.7658958271334357
+Law school faculty often have minimal experience in actually practicing law.,0.6580208,0.9489910955389963,0.8449595819936402,0.5386421679050851
+"Law schools often emphasize the theoretical, with classes on topics like property law in feudal England.",1.1334282,0.8123951006271471,0.9413323507636967,0.8697436452884598
+Leaves of the raspberry are used fresh or dried in herbal teas.,0.83294874,0.649078105737546,0.6855324079112685,0.49031772316362476
+Lentils are commonly used in Indian and Mediterranean cuisines.,0.20878366,0.6051072696608762,0.4938045316812292,0.4064306292812597
+Lentils are the seeds of a plant of the legume family.,0.42184076,0.4892457663274966,0.4155149880139876,0.4586492963091281
+Lettuce is a biennial plant often grown in temperate climates as a leaf vegetable.,0.81410027,0.25013580433116456,0.27117508064721074,0.5512463413196138
+Lettuce is considered fairly easy to grow and a suitable crop for beginners.,0.54301864,0.3804386940736204,0.3688043005872069,0.5601803419125095
+Librarians work at libraries and are experts at finding and organizing information.,0.56397545,0.6444185060938757,0.5983891112156996,0.575375591341567
+Liquid produced from soybeans and coconuts is sometimes called milk.,0.4006142,0.5928139054563701,0.5770987931640531,0.5825366419237697
+Log cabins were used as first shelters by european settlers.,0.55329186,0.5907965443291325,0.49267652240102766,0.5798811630254342
+"Long ago, painters were employed more as skilled artisans than as creative artists.",0.61864775,0.9085143934149048,0.8939417985197416,0.6125872171665988
+Manhood is associated with masculinity and virility.,0.8950638,0.6567035120455014,0.5102245113373707,0.36527770197040393
+Many bees have stingers and can attack if they feel threatened.,0.7686437,0.766945184514958,0.7211635951244074,0.49489005574735023
+Many cultures have rules for behavior related to feet.,0.8715097,0.8671454242924863,0.7128898805691872,0.49487611637413476
+Many people enjoy their ice cream flavored with local delicacies.,0.61830086,0.6143254406621494,0.5029090520669829,0.5154838144578379
+Many vultures have a bald head without feathers for losing heat.,0.6651286,0.5153511198894045,0.5150353391000309,0.6680778916185353
+Many were afraid of heights.,0.45711663,0.49518760235803144,0.3533349081042222,0.25365505171601643
+"Men differ from women in height, weight, and body structure.",0.8520296,0.6406733935386643,0.6077161191790776,0.40020175379430195
+Metamorphosis is the transformation of a caterpillar into a butterfly.,0.26229802,0.36822358597026095,0.2809414722074183,0.3521749716006316
+Milk is a white liquid produced by female mammals to feed their young.,0.48951107,0.44074241105387135,0.4717254668824545,0.4568780598984713
+Modern digital animation is a powerful tool for education.,0.65931284,0.32674562864377016,0.30318714791598833,0.3971176211190096
+"Modern knives consist of a handle and a blade, usually made of metal.",0.26593578,0.3938282473774076,0.3893858824351861,0.46682399508506256
+Modern opera started at the end of the sixteenth century.,0.44449055,0.34589993980390976,0.2418835285189999,0.3991270226450194
+"More than just the tomb of the king, pyramids represented the pride of the nation.",0.9654018,0.7360024144278067,0.8665027512055478,0.7951710398151233
+"Mosquito bites can spread yellow fever, malaria and other parasite diseases.",0.51503175,0.36474542026329454,0.40708679861399,0.4563101626859985
+Mosquitoes have mouthparts for piercing the skin of plants and animals.,0.3106271,0.6354837154930912,0.6460636345104426,0.5536877813680606
+"Mosquitos are thin, small flying insects that emit a high-pitched sound.",0.32088116,0.4377045085534094,0.48481610957167975,0.546979589873002
+"Most animals have complex eyes which can detect color, motion and texture.",0.49388197,0.5509699740042234,0.5288921054864771,0.509832983452709
+Most doors are opened by pushing or pulling a handle after they are unlocked.,0.52925706,0.4026086284968865,0.4584589500003868,0.621265141249266
+Most doors have locks to control who gets to pass through them.,0.29118803,0.5682233826381529,0.5786119937590979,0.5878751082651198
+Most earthquakes are caused by the release of energy in the Earth's crust.,0.33790743,0.47132374784881814,0.4007899736445184,0.4452120860078677
+"Most importantly, the content of the painting should reveal a glimpse of the painter's soul.",0.57581264,0.8819444857233503,0.938978045410186,0.7710594359752753
+"Most lettuce leaves taste bitter, but some are bred to remove the bitterness.",0.75443923,0.5945131035880828,0.5807962845760136,0.5853705437210013
+Most people leave the house to work and come back at night to eat and sleep.,0.9254229,0.8410624863070305,0.9697403173839919,0.6834529325577278
+"Most sharks predate on fish and mammals, with powerful jaws.",1.0058045,0.8035924862713465,0.6181888731997272,0.5184383726047954
+"Most states have instituted lotteries, and many have casinos as well.",0.9583018,0.7363427762023983,0.6162398990632345,0.5435996267861819
+Mountaineers are people who climb or hike up mountains.,0.5593052,0.5076464480055475,0.4088908928886012,0.4070407913640379
+Mountains rise higher than hills and sometimes have snow at the top.,0.26112133,0.5694287784402705,0.5618222476547599,0.6407648951497639
+Mowing the lawn is a long task and it has taught me patience.,0.8571596,0.7239662252389105,0.7792293215461933,0.6388247323447298
+Much of their training is conducted underwater.,0.40003154,0.601685372481896,0.45917274174678885,0.30936689264135886
+Mugs can be plain or have drawings imprinted or carved on them.,0.4657398,0.5633579794119041,0.5487511801695198,0.6681070869099318
+Murder is the unlawful killing of another human being with intent.,1.0069362,0.7974954259613114,0.8211472244367093,0.42349097369134253
+My friends were sick of watching me gamble my savings away.,0.6497022,0.7402160183314972,0.7428880781077163,0.5341347978339163
+"My heart would race for no reason, and I even felt dizzy at times.",0.27667877,0.8758712066565194,0.9643776906966965,0.5973149902251815
+"My sense of taste isn't very good, so I tend to eat foods with very strong flavors.",0.99804837,0.6122393258506641,0.6210658094479762,0.5809315428982066
+My skis were nowhere to be found and my poles were lodged in a snow drift up the hill.,0.597851,0.72762590318094,0.927587165711343,0.7566731484991592
+New ear piercings can become infected if they're not carefully cleaned.,0.39601493,0.5522911665228358,0.5237665532851993,0.49097067558736396
+New ski designs and stiffer boots let skiers turn more quickly.,0.80680466,0.6633349893597976,0.5949699000533646,0.6227756545011579
+Newborn animals must be fed milk before they can eat solid food.,0.31338504,0.6971594458137265,0.5570029878051597,0.42995842757324454
+No one really knows exactly how a taste gets from your mouth to your brain.,0.5418795,0.7000718010501413,0.7270904480525971,0.6785305084101023
+"Now that computers are more affordable and widespread, computer graphics have entered the mainstream art world.",0.7238498,0.8873245624897401,1.0562223550669896,0.8281760518600066
+"Once they're comfortable with that, they can begin using ropes to safely climb vertical rock faces.",0.6277404,0.5077185913985034,0.5351638706786964,0.7412610634578631
+"One astronaut loosened the bolts on the pipe, while the other fitted the replacement part into place.",0.9992134,0.7265253342942528,0.7830144593221358,0.9351309261785716
+"One keyboard is used for individual notes, the other for chords.",0.5902523,0.7465412471394276,0.6665260579719022,0.5076687505852113
+"One person may be devastated by unemployment, while another may find working fulltime stressful.",1.0942036,0.7477781522909552,0.7823684222555625,0.8199644383890766
+Opera is an art form in which singers and musicians perform a play that combines words and music.,0.54351765,0.7543803238213029,0.9782225839491561,0.8748405382023683
+Orange juice is a drink made from the liquid in orange pulp.,0.56790763,0.6337288814736572,0.6181990647746161,0.49044434123220426
+"Other astronauts are trained as doctors, engineers, and scientists, who can run experiments in space.",0.9280181,0.5721267805466281,0.7481915537609485,0.7581710990095769
+Other types of doors can slide or consist of a revolving chamber.,0.35815552,0.24869345756797545,0.27271870979500773,0.5841245087517439
+Others speculate that ramps zigzagged up the exterior walls of the pyramid.,0.17477925,0.7599991901790527,0.7180475981934703,0.7304005297246969
+Our tower rooms had an incredible but slightly scary view.,0.87277526,0.6612098954649843,0.5454831487348438,0.5587256118748695
+"Over the past four decades, the cost of legal education has gone up relentlessly.",0.5677762,0.7374670431236642,0.7628757559806223,0.544854070902335
+"Over the past generation, there has been a dramatic expansion of legalized gambling.",0.81130165,0.5818557649078753,0.5782406620701919,0.544574238707127
+"Overhead, giant paws set down on the ice as the polar bear pursued its prey.",1.2092375,0.7532950303823451,0.7919022251363877,0.7090421241241815
+"Parrots have brightly-colored feathers and a sharp, curved beak.",0.15708354,0.40055485409786695,0.35238634210142034,0.38575127748948745
+"Participants then assigned each dream to a category, such as a flying dream, a bad dream, or a nightmare.",1.1896714,0.6452301800140015,0.5577214936215877,0.7610297098799106
+Passengers or cargo enter trains from a platform next to the line.,0.71222126,0.4869739071200737,0.429049635573035,0.6071872314134855
+Patients are faced with the pain of the break and the difficult process of healing.,0.5238676,0.7109986717843679,0.7238688388149617,0.7859504657926049
+"Peaches are sweet and delicate, and must be harvested after ripening.",0.7959833,0.7625872911099801,0.6880650769475629,0.5974732706775265
+"Peaches have a large, red-brown stone inside which contains the seed.",0.30211297,0.3923170170456611,0.370636764438969,0.6603052240287871
+"People also use their feet to kick, in both fighting and sports.",0.57286245,0.6184050512251918,0.5693519879685207,0.6038773060467569
+People can go to public libraries and borrow books to take home for several weeks.,0.455166,0.6168650678611365,0.636383873107524,0.6487972963912583
+People go to hospitals to be healed when they are sick or injured.,0.5946277,0.5343635942786844,0.5633779589897607,0.5232897734220805
+"People often put carpets on a floor, for comfort and to dampen noise.",0.486683,0.6478905855360171,0.6405317304152945,0.6748496218093989
+"People set cutlery, plates and food on a table to eat a meal together.",0.866425,0.5200560282771487,0.5394169439449514,0.6835185515784891
+"People use bicycles for transportation, recreation and racing.",0.40554467,0.47905881735613914,0.4399171551914532,0.40310428291704464
+"People use their feet when walking, running or standing straight.",0.4515519,0.4348711112335883,0.4242686261483905,0.5166019664891489
+Performances are typically given in an opera house and accompanied by an orchestra.,0.28175756,0.7959840170082546,0.8428174898511861,0.6608669796102588
+Pharmacists are increasingly involved in preventive care.,0.015403169,0.7140120371182084,0.5474920245898414,0.37499766223179065
+Pharmacists are often a good source of information about public health.,0.5926173,0.6333713424400238,0.5942496395901574,0.4992927887067077
+Pharmacists dispense prescription drugs to patients and offer advice about the safe use of medications.,1.1238275,0.6379450601793897,0.7825354613085875,0.6707867442460812
+Pharmacists must have professional degrees and pass two exams in order to be licensed.,0.73190373,0.5730239863048245,0.6433657565516531,0.6297097282262896
+"Physics, chemistry and biology are classic examples of sciences.",0.63770604,0.7066295413655926,0.6110032564365292,0.3474893266099726
+"Piranhas are small, ferocious fish that live in South American rivers.",0.5495052,0.3512073261450647,0.41186760597462363,0.48917046991383495
+Piranhas have very sharp teeth and are opportunistic carnivores.,0.94622284,0.5479408171794717,0.5113066193890012,0.49932512307203825
+"Plants, animals and people must drink water in order to live.",0.5761888,0.6364729906974418,0.5656509742847459,0.47242147448647287
+Polar bears are one of the few animals that will attack people for reasons other than fear or confusion.,0.7497744,0.710928703004717,0.969767653573405,0.8586897605963036
+Pop-up toasters toast the bread placed in a slot and eject it once done.,1.1815602,0.6395051902386828,0.6001701818362996,0.782090361061755
+Pressing a piano key causes a felt-tipped hammer to hit a vibrating steel string.,0.6053308,0.5444001795367801,0.5713004580179398,0.6974837608639519
+Primates usually have four fingers and a thumb on each hand.,0.68904376,0.46793488325466115,0.47275305372435283,0.42321703210601913
+Private law school tuition has increased by a factor of four since the 1970s.,0.51131135,0.7538044864251874,0.8414950760584816,0.5027446529123673
+Professors focus on writing law review articles for prestigious journals.,0.73339367,0.6662891557324933,0.6533966723511218,0.46515606769144735
+Proper use of ski poles improves their balance and adds flair to their skiing.,0.8470834,0.8105834909906144,0.9812750063160343,0.6692234910989742
+"Rain is water that falls from clouds in the sky, which are condensed vapor.",0.6573518,0.31114893002707156,0.20144462253662038,0.6349446060346627
+Raspberries are eaten by themselves or cooked with sugar into jam.,0.9013898,0.5021407714536683,0.5008218028540766,0.5394683505014338
+"Ravens feed on carrion, insects, berries or small animals. ",0.2676739,0.5402339095581735,0.5242937852348284,0.46448994370557295
+Remember that it's your reaction to stress that determines if it will be harmful or beneficial.,1.1833948,0.7592704235173067,0.8805004479997937,0.6560381669989973
+Research does suggest that vivid and engaging digital imagery can be effective in the classroom.,0.627985,0.8450121948368159,0.8899731812036961,0.6735654955421956
+"Retaining walls provide a barrier to movement of earth, stone or water.",1.109326,0.47626784276083883,0.4837011339175388,0.5962128364391275
+"Rifles are used in hunting and shooting sports, sometimes with scopes.",0.7901417,0.7853823545762626,0.8295710836222199,0.6723275763162934
+Rope and bolts are the only equipment used.,0.38714346,0.47133259980597414,0.39154091604028973,0.487014217133908
+Salmon flesh is orange or red and has high protein content and a nice taste.,0.8844759,0.6468610394135452,0.8356145814772314,0.7016770608794727
+Salmon is a fish that migrates from fresh water to the ocean and back to spawn.,0.66868806,0.5215365800180417,0.5123802994639926,0.6918158920778609
+"Salmon is the most common farmed fish, though it can also be caught in the wild.",0.3953174,0.6760540621110784,0.7581103221802187,0.6432763763397781
+"Saws are used extensively in forestry, construction, carpentry and medicine.",0.37756667,0.5204225539156584,0.5384765222701446,0.6209743568761498
+"Saws can be worked by hand, or powered by an electric motor or gas engine.",0.26625174,0.618138537238897,0.7731058385337342,0.5863414033282895
+Scientists now think that a single taste bud can be sensitive to all of the basic tastes.,0.43900773,0.6654837727308909,0.7756013100803206,0.757100527914618
+Scientists publish their research in journals and conferences.,0.38226283,0.6605121466394616,0.47305058110106624,0.34635518732270243
+Scientists think the process begins when a molecule of food touches a taste bud cell.,0.6320966,0.44239896047945937,0.4036849588695667,0.6888517797134941
+Scientists use several methods to look for evidence of ancient hurricanes.,0.6743776,0.41685442792225313,0.4199000774535633,0.4835353747571144
+Scissors are a two-bladed instrument used for cutting.,0.1348725,0.25230534725774456,0.2667822214241395,0.4116216975500329
+Screwdrivers can also be used to remove screws after they are inserted.,0.37865102,0.45912729603956515,0.3904286136049032,0.4767016870771222
+"Scrubbing a wound with soap or alcohol delays healing, which increases the risk of infection.",0.88283867,0.6704631385233824,0.7513726238397147,0.6502628336364241
+Seats are fixed chairs located in vehicles or in places like cinemas.,0.8265296,0.5980117355477116,0.643133489204593,0.7126583900056741
+Seeing the internal structures in an animation on a screen is much clearer than squinting at X-rays.,1.3256211,0.6735045137461236,0.7673730559916347,0.9021065272121144
+"Sharks have streamlined bodies, with a large dorsal fin.",0.67314214,0.7049383964344161,0.5524518330301653,0.37845655839473147
+Sharks have very keen senses and can detect electrical fields.,0.7646744,0.7417957979974443,0.6134247923244549,0.45261731085863066
+"She had no visual distractions, so she could concentrate more fully on her music.",0.6921579,0.8438263587719371,0.8691994821849656,0.6151487588076456
+She has to execute the brush strokes with skill.,0.21836054,0.5324962043783054,0.4720570157563152,0.4863719581432836
+"She has to use solid elements of design, like strong composition and lighting.",0.39729714,0.6124428009358857,0.6396320211010169,0.7923346701073934
+She might have been a statue but for the glow of her eyes.,1.0154337,0.7160176056184199,0.6743542458827823,0.5747362192207314
+"She pressed her wings to her sides and settled down, half-closing an eye.",0.8313825,0.5666419979521855,0.5192435063946199,0.7145538751283849
+She told interviewers that being blind was an advantage to a pianist.,0.70053273,0.6801378983162751,0.7175667367062875,0.6836100565119503
+She uses digital animation to help doctors understand structures within a patient's body.,0.7196005,0.6548893617524773,0.7342918831415911,0.7337087331487976
+Shears are large scissors used for cutting shrubs or pieces of metal.,0.74163014,0.420649116868385,0.4712231460898185,0.6064289062082937
+Ships are used to fish in the ocean and to transport cargo containers.,0.48860517,0.41132020120185864,0.45196217242912473,0.7345926735560403
+"Shoes are usually made of leather, canvas, rubber or plastic.",0.16480763,0.23235585600204456,0.2969859141728404,0.4059271583162018
+Shorter jackets are on the cutting edge of wedding fashion for men.,0.63734996,0.5059451915080251,0.5962653489809391,0.6652359186734649
+"Signs of infection include tenderness, swelling, or redness around the earlobe.",0.17932479,0.644327957727948,0.629869704831012,0.5354377121882793
+Some animals and plants have adapted to live in deserts.,0.24717218,0.5405500794784766,0.48942845265735496,0.41392869216938877
+"Some apartments are for single people, others for families.",0.71409285,0.8359625215205392,0.6391760847927217,0.44250634473269757
+Some computer science conferences have art exhibitions that showcase the latest graphics technology.,0.5686789,0.6431218374865675,0.6864869027513235,0.712471504780061
+Some native people still use the spear for hunting and fishing.,0.57163066,0.6031107083555822,0.626067800649976,0.49002168578058103
+"Some patients go there for specialist diagnosis or therapy, leaving the same day.",1.1377928,0.4840101678457486,0.49177555781276017,0.8244589563841622
+Some people can adapt to different levels of stress.,0.19115579,0.35929235892281197,0.36438347689647044,0.3843999011939909
+Some people collect butterflies because of their colorful wings.,0.2355863,0.5125230654432456,0.4235667786353957,0.44411133939636416
+Some refrigerators can have a small compartment at freezing temperature.,0.5600498,0.26816437661296966,0.25570691234142395,0.6295343128358059
+Some studies indicate that having a casino nearby makes gambling problems more likely.,0.7478452,0.9187215823440202,0.9442371182622581,0.6140745560369983
+Some think ramps were built inside the pyramid's walls to raise stone blocks.,0.3309244,0.7720797043681453,0.8771773390667682,0.7833812988958829
+Some very tart apples are used to make cider.,0.5961917,0.5072139334621628,0.48252760108443615,0.34030435661838215
+Some windows have multiple panes to increase insulation inside.,-0.059631653,0.6376163712329805,0.5330841819405163,0.6132729826092421
+Spears are weapons that consist of a pole and sharpened head at one end.,0.32785648,0.44674442371342693,0.4458399090196089,0.7541870989302107
+Spears were used for stabbing or throwing when fighting in war.,0.6672323,0.7547077197158434,0.75536947250891,0.6677026768618838
+Spectacular castles in dramatic locations provide a record of the stormy history of many regions.,1.0134834,0.7982766306980141,0.8353808859576652,0.8425709480056885
+Speech sounds are controlled by tongue placement in the mouth.,0.4264819,0.5709574150536122,0.5342556947032064,0.6191625177202422
+Spiders are insects with eight legs that make silk.,0.10322589,0.39308503656700056,0.3956577886784197,0.44451377479575366
+Spiders build webs with silk and use them to catch insects.,0.4295662,0.39078889632189673,0.38996248360968,0.42131143904633234
+Spiders can be as small as a coin or as big as a bird.,0.74077845,0.3576198361568279,0.3236661902627464,0.44304517160890755
+"Swamps are low, spongy land subject to frequent inundation.",0.45170122,0.448954676174541,0.40286890325720653,0.5860592806157322
+Swamps are nesting and breeding grounds for birds and reptiles.,0.24946605,0.43507595888291717,0.521644446718676,0.5460610248329768
+Sweaters are often knitted from wool but cotton is also common.,0.34968033,0.5045210940934908,0.4864037252985292,0.45579024912856353
+"Sweaters differ in cut, collar and sleeve shape, as well as decoration.",0.55186677,0.5562376597652989,0.528099888710755,0.5824206700155194
+Tables are also used as surfaces to work or write on.,0.59787375,0.44230645874230173,0.42508600722269035,0.6080920306044679
+Tear gas grenades are thrown into the middle of a mob to disperse it.,1.2070073,0.7234024706547767,0.7648606254298214,0.5576235349754256
+Television content can be broadcast or received via cable or internet.,0.5615494,0.4444290714495187,0.41694215279118124,0.4971987190673486
+Televisions are mostly used for watching programs or films.,0.34529242,0.6732949284666349,0.5673194793443492,0.39990909605354535
+"That is, a taste bud on the tip of the tongue would respond only if you were eating something sweet.",0.5696387,0.7853728365361994,1.0463315978836918,0.9066659638092359
+The adults set up climbing routes appropriate for beginners.,0.651639,0.6975939397618511,0.6162451589190396,0.5878336802993277
+The axe is a tool used to split and cut wood.,0.38783738,0.3950992270116058,0.4001514783218556,0.34064249043563255
+The axe usually consists of a head attached to a handle.,0.58873314,0.4464863177339726,0.4219889168365729,0.3918876917992596
+The bald eagle has a bright white head and is the national bird of the United States.,0.608916,0.38183156525051154,0.44401282613074367,0.564894155111972
+The barred owl has spread well beyond its previous habitat.,0.36662892,0.5155402113763623,0.4262554959455447,0.40597764292118893
+"The beekeeper checks honey stores, pollen supplies, and the bee nursery.",0.5771909,0.7357914149467452,0.6012180423082495,0.6785195891312356
+The biggest hot desert is the Sahara in northern Africa.,0.49985442,0.5804347862149805,0.4966299495067571,0.4752777238084437
+"The blades are usually metallic, with plastic or metal handles.",0.49491394,0.47269454232713903,0.46090289293092945,0.5174658639906479
+The blades may be powered by muscle or the machine may have a motor.,1.0613571,0.5463761326593538,0.5478653091729064,0.6304091264749961
+The blubber in a whale serves as an energy reservoir and as insulation.,0.48271984,0.7287135441643585,0.7004025718285263,0.5601376623840586
+"The building can have a garage, a laundry facility or extra storage space.",0.6650698,0.5885412146226913,0.6182349521665627,0.6382686297998986
+The butterfat in milk and cream is what makes it smooth and silky.,0.6610518,0.6080461412782401,0.47440529305514606,0.49418647763126944
+The care that the pyramid builders took in their craft is evident.,0.7290246,1.0031152333454594,0.9525726626360264,0.6297555808882777
+The cell carries a taste message to taste nerves beneath the cell.,0.9343457,0.5671439748683149,0.5163001289730709,0.7083819230191032
+The clarinet is used both in jazz and classical music.,0.17867035,0.7099469097499308,0.685355614645929,0.43807943619679685
+The claw on the head can be used to remove nails.,0.38961956,0.48469699453355936,0.46046222967242834,0.5101286286735075
+The claws of cats are retractable so that they keep sharp.,0.33315468,0.7382473761480808,0.6740698834843284,0.610189584680161
+The climber relies solely on her skill and physical strength to ascend a rock face.,0.6842275,0.5098335519483851,0.5640521826817819,0.5663899673386309
+"The commanders of shuttle flights are always pilots, and many have backgrounds as military test pilots.",1.0351039,0.7604687447413555,1.0144870685371827,0.8836350342273777
+The computer graphics specialist works with doctors to visualize medical conditions and surgical procedures.,0.678925,0.5874801407342269,0.6661066126518387,0.8560825930045942
+The concert pianist went blind in adulthood.,0.22108622,0.5862186881976614,0.44788331303964957,0.45186194292533766
+"The driver steers the car on roads, other passengers just sit.",0.6911025,0.5755524405003741,0.5458206498037295,0.6674630983749755
+The eagle owl is an impressive bird.,0.017381677,0.17614802401801855,0.2019555990828906,0.2798507881027252
+The elephant flaps its large ears to cool the blood in them and its body.,1.0849495,0.659646300273656,0.6657641640252738,0.7693579963313965
+The eye is an organ for sensing light and coding it for the visual cortex.,0.6367273,0.7387816705961584,0.7485160616583153,0.6072628878520434
+"The fingertips are sensitive to temperature, pressure and vibration.",0.7060512,0.4811485901090845,0.47099854544257136,0.48164415135386485
+The food is cooked on oil covering the bottom of the pan.,0.18203181,0.7084467798303665,0.5907766822106997,0.5164790165325309
+The fovea is the center of the human eye and the most sensitive part of it.,0.6426912,0.9486289139795155,1.0607706190389576,0.5774612646133487
+The government defines blindness as vision insufficient for the ordinary activities of life.,0.8908989,0.7225114071608378,0.6792947293194253,0.7499285267904033
+"The greatest producers are tropical countries, such as India or Ecuador.",0.86713326,0.7468362681604915,0.7120217508472064,0.614349618902989
+The grooves make the bullets spin around the rifle axis as they fly through the air.,0.88131005,0.7222189461289565,0.8973118942150617,0.729752032030164
+The hardest part was the horror of leaving a casino after losing money I did not have.,1.3724061,0.7949367379109433,0.9109305399179006,0.8767332372580758
+The hospital has seen infection rates drop since the new measures began.,0.4768543,0.6361751661776203,0.6357369538943136,0.5850660452738183
+The man wore a jet black tuxedo with satin stripes.,0.3829341,0.8265252537634025,0.6700309148627852,0.45811950950811353
+The market for admission to law school and for new lawyers could eventually crash.,1.1242169,0.8320376356354303,0.8981970152650967,0.835462135476589
+The medieval castle was not a structure built primarily for defense.,0.57977754,0.6196596953423175,0.5615246189225026,0.5392906332500494
+The most common power source for lawn mowers is a small gas engine.,0.49211362,0.3848445632821911,0.4438537918532464,0.49407889341016764
+The mouth has teeth to chew food and mix it with saliva.,0.7812097,0.42054389952081483,0.4148952365124281,0.4986020075533513
+The mouth is also used for kissing and talking.,0.61849415,0.6593387739713645,0.5499596663859725,0.47386866744237843
+The mouth is the face cavity we put food in when we eat.,1.1548018,0.7566725310314059,0.7166368133117009,0.6411988881215582
+The nail protects the tip of the finger and can be grown or decorated.,0.7725548,0.5336808394619565,0.5136944604845505,0.7326612745680016
+The opera singer has worked hard to win the role in the new production.,0.60536397,0.5978973143455932,0.7009682717845378,0.635911596581757
+The owl landed on a thick branch and gripped it with her talons.,0.6588146,0.4427693138727543,0.3764266063363463,0.43932515063778693
+"The piano has an enormous note range, and pedals to change the sound quality.",0.84400773,0.5768842364013782,0.6526529707866158,0.7443122511799088
+The piano is a popular musical instrument played by means of a keyboard.,0.48701558,0.31014444215647985,0.31752876864003526,0.5145381694459051
+The piano repertoire is large and famous pianists can give solo concerts.,1.411375,0.30809817890814184,0.34380697634368496,0.7404929288082251
+The player chooses notes by pressing keys and holes.,0.30228555,0.5676649115350351,0.49582190595217845,0.5571122065680573
+The polar bear will crawl quietly forward and freeze in place when the seal looks around.,0.5057396,0.7307032773830464,0.7871077585154711,0.8934390088668274
+The raspberry is a fruit that grows in forest clearings or fields.,0.43768933,0.4769556712384322,0.48911860198739965,0.5878223343642347
+The reason he came to law school in the first place was cliche.,0.54933614,0.65242367859046,0.6309147759696627,0.6269328676112016
+The screwdriver tip applies the torque from rotating the handle.,0.81624836,0.6213873382934456,0.48425278458950705,0.5784980579819927
+The seal is an important part of the polar bear's diet.,0.21465991,0.5832446711362147,0.48338211756825855,0.3851890421431934
+The severity of the crime depends on whether people were harmed.,0.7140451,0.7035812334889495,0.626881196515052,0.5049082040520195
+The shaking can also trigger landslides and volcanic activity.,0.1791816,0.39042249421451614,0.348772815421142,0.4703572816256347
+The sharp blades underneath the lawn mower precisely sever each blade of grass.,0.5073361,0.7760455428425449,0.7447817656326315,0.6973045067964586
+The shirt should always be plain white and the tie should be black and match the jacket lapels.,1.0680536,0.49025340442663246,0.6304496705939119,0.8570964688488325
+"The skin of a peach is thin and covered in small, fine hairs.",0.36508188,0.34258256644400154,0.3722149763097936,0.572653222824285
+The small sharp points along the cutting side of the saw are called the teeth.,0.69849074,0.5964499828173264,0.641374905541783,0.7420017022805591
+The smell inside the pyramid was chalky and the air was thick.,0.55505484,0.7540387205131196,0.6750772931713724,0.6041997863003111
+The stones covering the pyramid were precisely fitted together and polished until the structure gleamed.,0.5950824,0.833331405607305,1.0106181673449381,0.9213428806514921
+The strongest storms deposited layers of windblown beach sand at the bottoms of coastal lakes.,0.7051509,0.48997348649403394,0.5734596257121636,0.7684056381820014
+The team of astronauts floated out together to the exterior of the space shuttle.,0.59048396,0.8017255010258932,0.7527344052253213,0.7563475669137281
+The term is used to indicate sex distinctions relative to girls.,1.0698354,0.6879676533476626,0.6591740845481224,0.5676182402302443
+The thick outside walls sheltered an inner courtyard hundreds of feet above the river.,0.9251893,0.5757948743207176,0.5877861670737797,0.6887120983137266
+"The tomato is a shiny and smooth red fruit, with a savory taste.",0.27804047,0.4285424614717873,0.4291234695119116,0.5847673788631197
+"The train is pulled by a locomotive, powered by diesel or electricity.",0.021765748,0.5641218413113613,0.5613618380211904,0.49946523590345804
+The two major types of screwdrivers are Phillips and flathead.,0.52087617,0.44627295785500604,0.410946308363786,0.39666392379428517
+The type of forest depends on temperature and rainfall in its location.,0.39286655,0.643059573415397,0.6278837282786895,0.548297800947972
+The violin is an instrument with four strings that is played with a bow.,0.28453824,0.5426484065448507,0.6585666842918099,0.5552359011420184
+The wheels have rubber tires with an inner tube full of air.,0.5551232,0.5433927537736755,0.5688361660418692,0.5345379877582279
+"The wind from the hurricane shook the house, shattering a window in the kitchen.",0.2660338,0.681730524815372,0.6720820797597303,0.6854700480570177
+The wings of butterflies can be very colorful and patterned.,0.14592709,0.419409585007983,0.3923386181673218,0.5128099808800929
+Theft is a crime and can be punishable with jail or fines.,0.1473972,0.8385055417543587,0.8364912957894814,0.5126045188416951
+Theft is the taking of person's property without their consent.,0.5977022,0.9055857834059424,0.744615094656031,0.5515359864699286
+Their appearance and abilities makes them popular pets.,0.5994004,0.6927723904544489,0.5344051974949915,0.42027672587389714
+Then I put the container of half-frozen ice cream into the freezer to harden.,0.54516596,0.718682984488029,0.6727757264158899,0.6255721513538951
+"Then, I started taking yoga to try to manage my stress level.",0.5010416,0.5350375817639392,0.42284130428895206,0.5049235305149435
+There are a few different types of bone fracture.,-0.046908606,0.5057259599333931,0.4751200353260592,0.2949050458262096
+"There are also traumatic stresses, such as divorce or loss of a child.",0.44873512,0.7112635865086271,0.7312976311517754,0.5015014060035191
+"There are everyday stresses, like being stuck in traffic.",0.58914036,0.5862492660804739,0.44499380307605474,0.4517106088815438
+"There are many varieties of tomato, with different sizes and tastes.",0.2664462,0.48192022488617237,0.5061897336218139,0.48673491072668706
+There are usually chairs around a table for people to sit.,0.5973321,0.589484947226793,0.5252842709965644,0.5349262596553805
+There are waiting rooms and places to eat in a station.,0.54221463,0.789262621726261,0.6682876334572254,0.5335134296302296
+These causes can often be prevented by medicine and vitamin supplements.,0.35571966,0.45773687642286986,0.47013867228956374,0.498717950951428
+They allow bread to be cooked with toppings like garlic or cheese.,0.8662961,0.5440671125412931,0.5192558372660316,0.5721608841218931
+They also conduct health and wellness screenings and provide vaccines.,0.4440435,0.5803146431220636,0.5157701206849805,0.4580503985295711
+They also need less maintenance and are less expensive to run.,0.32173204,0.5469383965933223,0.453060498762582,0.47237002175750725
+They are also used to make cold alcoholic drinks with crushed ice.,0.26188344,0.42251978400251966,0.46322772836729337,0.6120557643356782
+They are becoming front-line health advisers because people go to pharmacies often.,0.51484495,0.7289295736239277,0.7581628236931223,0.8133154534927326
+They are built in places where snow covers the land most of the time.,0.60122776,0.6208538255612096,0.5976751614420094,0.6140439292380806
+They are cooked by boiling and are a great source of protein.,0.49587643,0.5373354829285621,0.4930042845050646,0.48137167050061447
+They are meant only to stop the climber if she falls.,0.521055,0.7578339850760845,0.7231099216356313,0.60531214931506
+They are used to lift food to the mouth or to hold food in place while cutting.,0.52733314,0.7613706477347332,0.9002876260188335,0.7334456322230487
+They are used to play videogames when connected to a game console.,0.60574484,0.5158078482536341,0.5097341880892927,0.5950122152567474
+They can also cause high waves and coastal flooding.,0.5887594,0.48138054753052495,0.38483375505634965,0.4185605996239197
+"They can be red, green, brown, black or yellow.",0.39411435,0.3549130671514452,0.33759728413617585,0.35070999632746547
+"They can hunt mice or birds, but are often fed by their owners.",0.3616074,0.6867520202834678,0.6973873147930034,0.5411175645835808
+They can imitate the human voice if they hear it repeatedly.,0.58382976,0.6415612048269049,0.5924367609949881,0.5794988451037254
+They carried tools needed to repair the broken part on the huge telescope.,0.5527605,0.38470022713854435,0.37166961987640457,0.7125174648178287
+They dump heavy rains that can trigger floods and mudslides.,0.20526905,0.6834653332575744,0.5841722213090034,0.45691164306927484
+"They eat fish, insects, lizards, mammals and carrion.",0.68995404,0.4061690966269318,0.3757547727401515,0.36614367313202967
+They finally finished drafting a petition for several evicted families at sunrise.,0.90442675,0.5834782430022663,0.5625633089696622,0.7483053557897827
+"They have hooked beaks for tearing flesh, strong legs and sharp talons.",0.64520097,0.6918947051325788,0.7723647899117285,0.6251494055357069
+They have improved hand washing habits and ensured that infected patients are isolated from other patients.,0.58851033,0.6694100153632468,0.8466921389592829,0.8476117868781313
+They have large brains and are capable of problem solving.,0.63287425,0.5965455530925388,0.579579603545351,0.4331295354998705
+They live and attack in schools and are most active during the day.,0.84461045,0.5720246371641322,0.5696352313047823,0.6567147928069546
+"They make objects like weapons, horse shoes or iron furniture.",0.44266623,0.4475630486980926,0.4350530626160205,0.6645017279932225
+They may attack out of hunger because they live in a food-scarce environment.,0.67001134,0.7208382884155872,0.7180744905274328,0.6662569089665146
+They may spend 8 to 10 hours in the pool for every hour they will spend floating in space.,0.98359114,0.9579362763583597,1.2947435850951663,0.8722336515962827
+"They recorded if they recalled any dreams, and described each dream and its emotional intensity.",0.9962787,0.8127983765121994,0.7713488453288706,0.8733967898947577
+"They scout the fields, know when nectar flows, and select the best ways to extract honey.",1.2003855,0.8339612649915299,0.921915700596497,0.820397246748919
+"They signed their work, decided on its subject and imagery, and established a personal relationship with their patrons.",0.74209356,1.0485293439304497,1.3246324610205504,1.1261157448950851
+They use their large wings to soar for miles without flapping.,0.39100286,0.4891057230655026,0.45383293216362874,0.47657818413006264
+"They use tools such as hammers, saws, pliers and planes.",0.29028463,0.4303357131038167,0.4099629661581233,0.4186173346331594
+They use venomous fangs to paralyse their stuck prey.,0.7014549,0.5972870761615338,0.5088068742866131,0.4768984717246075
+They were built using logs with notch joints at the ends.,0.21330766,0.6232063888775496,0.5934138548098145,0.5527351558579571
+They were the most common personal weapon before the advent of firearms.,0.44643587,0.6274977774880781,0.641897708590993,0.5687266948184869
+"They will sneak up on people slowly, careful to conserve their energy.",0.8297731,0.6107521826552029,0.6681786195147034,0.6313769627690445
+Thieves steal to own something or to sell it to receivers.,0.6780134,0.8151315605750855,0.7693332919653657,0.6669228098724452
+"This has led to more injuries, particularly to ligaments in the skier's knee.",0.7307059,0.39765084448216187,0.4298715050030406,0.6598149806385009
+This led into the chamber at the pyramid's center.,0.40845165,0.5548552517147117,0.40025083805339995,0.5218349036541007
+This may overlook those who have vision problems but who do not meet the standard.,0.6375717,0.7055178528826511,0.7621664083299732,0.802681586661352
+"This owl hunts at night, flying swiftly and silently through the darkness.",0.045871377,0.5298559302931372,0.4599520274809571,0.5523966929736567
+"To produce the finest honey, beekeepers become micromanagers of their honeybees.",0.93702036,0.5886160126634651,0.5114274985435424,0.704445616636114
+"Toaster ovens have a door on the side, a tray within and temperature control.",0.8834684,0.46594447595024235,0.5189402417104199,0.7226292296330217
+"Today, they stand atop rocky cliffs overlooking beautiful landscapes and quaint villages.",0.42800555,0.6025769363747441,0.5364861620054314,0.6159126254721791
+"Tomatoes can be used to make salads, soup or ketchup, as well as sauce.",0.67931396,0.7438392517982513,0.8635133063766323,0.5604762789346992
+Traditionally boys like to play rough games and fight with each other.,0.43159384,0.7536674848422211,0.8229622852438387,0.6027955174529968
+Train stations have counters or machines for purchasing tickets.,0.38351795,0.5499394165616165,0.4904277614850129,0.4873384436616802
+Trees drenched by passing hurricanes preserve a record of each storm in their growth rings.,0.81803536,0.6477152711916594,0.7129771543578209,0.8639518983014435
+Unripe bananas and plantains are staple foods and often cooked like potatoes.,0.85849035,0.49508100451667236,0.5243077038373453,0.6874586657472666
+Upon leaving the train station we saw our hotel looming above:  a magnificent castle built on a cliff.,0.8866289,0.6648012058976303,0.8732973343423849,0.8606934850409159
+"Vultures are scavenging birds, feeding mostly on the carcasses of dead animals.",0.25298503,0.5949562241138207,0.5575793060571042,0.5255674986197942
+"Vultures seldom attack healthy animals, but may kill the wounded or sick.",0.889172,0.8875742318367258,0.825840128224564,0.6222889122611328
+"Walls are usually made of stone, brick, or cement, as well as drywall.",0.7717335,0.36059809891731426,0.3560054949014738,0.4705971152105237
+"Walls delineate a building, support the roof, and divide the space into rooms.",1.0583327,0.3774737694053465,0.32894664056107176,0.6524657253675974
+Water freezes at a low temperature and becomes solid ice.,0.2068395,0.67670101056984,0.553839825396599,0.37604395462247286
+"Water is the most common liquid on Earth, covering 70% of its area.",0.6070078,0.46493209412090286,0.46811485794916075,0.4250289798567848
+"We dream throughout the night, in cycles of about ninety minutes each.",0.96148425,0.788649549106183,0.7244963333204496,0.6953845024775237
+"We poured the cream mixture into a frozen tub, then started turning the crank to expose it to the cold.",0.4535787,0.8624038213398746,1.0933078358845034,1.0010637394298536
+"We ran in, grabbed some food, slammed the door, and surrendered the kitchen to the hurricane.",0.8848923,0.8787874833223663,0.9785584676895673,0.9857985314013297
+Whales breathe through blowholes on their heads when surfacing.,0.45229313,0.6518311094136384,0.5906333125142285,0.5080110845790646
+"Whales have been hunted for meat, whale oil and ambergris.",0.89423233,0.7936188283434807,0.7203365594235434,0.4987979344553656
+"When I decided to start playing cards, things went from bad to worse.",0.74052405,0.5829334625897395,0.5500434078604393,0.5601511408505724
+"When I use the riding lawn mower, the uncomfortable chair makes my back hurt.",0.3939213,0.7695572198414884,0.7277535423602763,0.7394896388327103
+"When hunting, they will wait by a seal's breathing hole, or stalk seals that are basking on the ice.",0.8432422,0.9628421399455445,1.1255573245902246,0.9874235568604047
+"When my company was downsizing, I felt incredibly stressed and worried.",0.7396881,0.5750525549058215,0.5255479577124322,0.6063371669232683
+"When open, a window will also let air and sound through.",0.35150635,0.7095418239781697,0.5662607217953923,0.6166827534317975
+"When ripe it can be yellow, purple or red and have small brown spots.",0.43404087,0.4877872753927869,0.5250486949593097,0.600250561561046
+"While some owl species have become endangered, others are thriving.",0.5418389,0.6320823974097979,0.524626298114946,0.39974969684093314
+"While the tuxedo is still preferred, today's grooms are making personal statements in wedding attire.",1.0681671,0.57699605098705,0.5796142319031203,0.8421295363269341
+Women's shoes often have high heels and come in many styles and colors.,0.64111906,0.34364168208751356,0.4783351286184303,0.42811005908020494
