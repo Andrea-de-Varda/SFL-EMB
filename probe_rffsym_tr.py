@@ -33,7 +33,7 @@ def get_layer(vec, layer, dim):
     return list(vec[layer * dim:(layer + 1) * dim])
 
 # ---------------------------------------------------------------- NatStor (LOSO)
-def run_natstor(R, mode="rff"):
+def run_natstor(R):
     chdir(str(PROJECT_ROOT / "natstor_fmri"))
     STORIES = ["1", "2", "3", "4", "5", "6", "7", "9", "10"]
     NAME = {"1": "boar", "2": "aqua", "3": "matchstickseller", "4": "kingofbirds", "5": "elvis",
@@ -69,11 +69,9 @@ def run_natstor(R, mode="rff"):
             rs.append(pearsonr(y_by[i], R.fit_ridge(Xtr, ytr).predict(feat_by[i]))[0])
         return R.save_predictions(rs, saveto)
 
-    from sklearn.decomposition import PCA
-    preds = PREDS if mode == "rff" else ["base", "act", "emb_pca", "all_pca"]
-    cols = {c: [] for c in preds}; cols.update({c + "_sd": [] for c in preds})
+    cols = {c: [] for c in PREDS}; cols.update({c + "_sd": [] for c in PREDS})
     for key, prefix, D in MODELS:
-        print(f"\n=== natstorfmri {key} (D={D}) [{mode}] ===", flush=True)
+        print(f"\n=== natstorfmri {key} (D={D}) ===", flush=True)
         nlayer = max(load(f"{prefix}_{STORIES[0]}").keys())
         word_emb = [load(f"{prefix}_{s}")[nlayer][1:] for s in STORIES]
         word_sfl = [np.asarray(load(f"sfl_{prefix}_{s}"), float) for s in STORIES]
@@ -81,43 +79,28 @@ def run_natstor(R, mode="rff"):
         base = [R.aggregate_to_tr(word_sfl[j], WID[j], n_tr[j], "mean") for j in folds]
         m = {"base": loso_fixed(base, f"natstorfmri_{key}_base"),
              "act": loso_fixed(emb_mean, f"natstorfmri_{key}_act")}
-        if mode == "rff":
-            rs_e, rs_s, rs_a = [], [], []
-            for i in folds:
-                train = [j for j in folds if j != i]
-                ie, se, re = fit_rff(word_emb, train, D)
-                isf, ssf, rsf = fit_rff(word_sfl, train, D)
-                Xe = [story_rff(word_emb, ie, se, re, j) for j in folds]
-                Xs = [story_rff(word_sfl, isf, ssf, rsf, j) for j in folds]
-                ytr = np.concatenate([y_by[j] for j in train])
-                rs_e.append(pearsonr(y_by[i], R.fit_ridge(np.concatenate([Xe[j] for j in train]), ytr).predict(Xe[i]))[0])
-                rs_s.append(pearsonr(y_by[i], R.fit_ridge(np.concatenate([Xs[j] for j in train]), ytr).predict(Xs[i]))[0])
-                Xa = [np.hstack([Xe[j], Xs[j]]) for j in folds]
-                rs_a.append(pearsonr(y_by[i], R.fit_ridge(np.concatenate([Xa[j] for j in train]), ytr).predict(Xa[i]))[0])
-            m["emb_rff"] = R.save_predictions(rs_e, f"natstorfmri_{key}_embrff")
-            m["sfl_rff"] = R.save_predictions(rs_s, f"natstorfmri_{key}_sflrff")
-            m["all_rff"] = R.save_predictions(rs_a, f"natstorfmri_{key}_allrff")
-        else:  # pca: reduce EMB (4*D) down to base dim (12) via PCA, fit per fold
-            k = base[0].shape[1]
-            rs_e, rs_a = [], []
-            for i in folds:
-                train = [j for j in folds if j != i]
-                Etr = np.concatenate([emb_mean[j] for j in train]); ytr = np.concatenate([y_by[j] for j in train])
-                pca = PCA(n_components=k, random_state=R.RFF_SEED).fit(Etr)
-                Xe_tr = pca.transform(Etr); Xe_te = pca.transform(emb_mean[i])
-                rs_e.append(pearsonr(y_by[i], R.fit_ridge(Xe_tr, ytr).predict(Xe_te))[0])
-                Btr = np.concatenate([base[j] for j in train])
-                Xa_tr = np.hstack([Btr, Xe_tr]); Xa_te = np.hstack([base[i], Xe_te])
-                rs_a.append(pearsonr(y_by[i], R.fit_ridge(Xa_tr, ytr).predict(Xa_te))[0])
-            m["emb_pca"] = R.save_predictions(rs_e, f"natstorfmri_{key}_embpca")
-            m["all_pca"] = R.save_predictions(rs_a, f"natstorfmri_{key}_allpca")
-        for c in preds:
+        rs_e, rs_s, rs_a = [], [], []
+        for i in folds:
+            train = [j for j in folds if j != i]
+            ie, se, re = fit_rff(word_emb, train, D)
+            isf, ssf, rsf = fit_rff(word_sfl, train, D)
+            Xe = [story_rff(word_emb, ie, se, re, j) for j in folds]
+            Xs = [story_rff(word_sfl, isf, ssf, rsf, j) for j in folds]
+            ytr = np.concatenate([y_by[j] for j in train])
+            rs_e.append(pearsonr(y_by[i], R.fit_ridge(np.concatenate([Xe[j] for j in train]), ytr).predict(Xe[i]))[0])
+            rs_s.append(pearsonr(y_by[i], R.fit_ridge(np.concatenate([Xs[j] for j in train]), ytr).predict(Xs[i]))[0])
+            Xa = [np.hstack([Xe[j], Xs[j]]) for j in folds]
+            rs_a.append(pearsonr(y_by[i], R.fit_ridge(np.concatenate([Xa[j] for j in train]), ytr).predict(Xa[i]))[0])
+        m["emb_rff"] = R.save_predictions(rs_e, f"natstorfmri_{key}_embrff")
+        m["sfl_rff"] = R.save_predictions(rs_s, f"natstorfmri_{key}_sflrff")
+        m["all_rff"] = R.save_predictions(rs_a, f"natstorfmri_{key}_allrff")
+        for c in PREDS:
             cols[c].append(m[c][0]); cols[c + "_sd"].append(m[c][1])
-        print({c: round(m[c][0], 4) for c in preds}, flush=True)
+        print({c: round(m[c][0], 4) for c in PREDS}, flush=True)
     return "natstorfmri", cols
 
 # --------------------------------------------------------------------- HP (KFold)
-def run_hp(R, mode="rff"):
+def run_hp(R):
     chdir(str(PROJECT_ROOT / "fMRI"))
     import neurox.data.loader as dl
     SKIP, END = 20, 5176
@@ -173,59 +156,48 @@ def run_hp(R, mode="rff"):
             rs.append(pearsonr(y[test], R.fit_ridge(X[tr], y[tr]).predict(X[test]))[0])
         return R.save_predictions(rs, saveto)
 
-    preds = PREDS if mode == "rff" else ["base", "act", "emb_pca", "all_pca"]
-    cols = {c: [] for c in preds}; cols.update({c + "_sd": [] for c in preds})
+    cols = {c: [] for c in PREDS}; cols.update({c + "_sd": [] for c in PREDS})
     for key, sflkey, layer, D in MODELS:
-        print(f"\n=== HP {key} (D={D}) [{mode}] ===", flush=True)
+        print(f"\n=== HP {key} (D={D}) ===", flush=True)
         act = dl.load_activations(ACT[key], D, is_brnn=False)[0]
         word_emb = np.array([get_layer(v, layer, D) for s_ in act for v in s_]); del act
         assert len(word_emb) == n_words
         with open(SFLP[key], "rb") as h:
             s = pickle.load(h)
         sfl = np.stack([np.asarray(s, float), freq, length], axis=1)
-        act_X = embed(word_emb, "mean"); base_X = embed(sfl, "mean")
-        m = {"base": kfold_fixed(base_X, f"HP_{key}_base"),
-             "act": kfold_fixed(act_X, f"HP_{key}_act")}
-        if mode == "rff":
-            rs_e, rs_s, rs_a = [], [], []
-            for test in folds:
-                train = np.setdiff1d(np.arange(n_rows), test, assume_unique=True)
-                tw = np.where(np.isin(word_row, train))[0]
-                Xe = feat_rows(word_emb, tw, D); Xs = feat_rows(sfl, tw, D)
-                rs_e.append(pearsonr(y[test], R.fit_ridge(Xe[train], y[train]).predict(Xe[test]))[0])
-                rs_s.append(pearsonr(y[test], R.fit_ridge(Xs[train], y[train]).predict(Xs[test]))[0])
-                Xa = np.hstack([Xe, Xs])
-                rs_a.append(pearsonr(y[test], R.fit_ridge(Xa[train], y[train]).predict(Xa[test]))[0])
-            m["emb_rff"] = R.save_predictions(rs_e, f"HP_{key}_embrff")
-            m["sfl_rff"] = R.save_predictions(rs_s, f"HP_{key}_sflrff")
-            m["all_rff"] = R.save_predictions(rs_a, f"HP_{key}_allrff")
-        else:  # pca: reduce EMB (4*D) down to base dim via PCA (KFold over rows)
-            ep, ap = R.score_pca_pair(act_X, base_X, y, k=base_X.shape[1], groups=None,
-                                      name_emb=f"HP_{key}_embpca", name_all=f"HP_{key}_allpca")
-            m["emb_pca"], m["all_pca"] = ep, ap
-        for c in preds:
+        m = {"base": kfold_fixed(embed(sfl, "mean"), f"HP_{key}_base"),
+             "act": kfold_fixed(embed(word_emb, "mean"), f"HP_{key}_act")}
+        rs_e, rs_s, rs_a = [], [], []
+        for test in folds:
+            train = np.setdiff1d(np.arange(n_rows), test, assume_unique=True)
+            tw = np.where(np.isin(word_row, train))[0]
+            Xe = feat_rows(word_emb, tw, D); Xs = feat_rows(sfl, tw, D)
+            rs_e.append(pearsonr(y[test], R.fit_ridge(Xe[train], y[train]).predict(Xe[test]))[0])
+            rs_s.append(pearsonr(y[test], R.fit_ridge(Xs[train], y[train]).predict(Xs[test]))[0])
+            Xa = np.hstack([Xe, Xs])
+            rs_a.append(pearsonr(y[test], R.fit_ridge(Xa[train], y[train]).predict(Xa[test]))[0])
+        m["emb_rff"] = R.save_predictions(rs_e, f"HP_{key}_embrff")
+        m["sfl_rff"] = R.save_predictions(rs_s, f"HP_{key}_sflrff")
+        m["all_rff"] = R.save_predictions(rs_a, f"HP_{key}_allrff")
+        for c in PREDS:
             cols[c].append(m[c][0]); cols[c + "_sd"].append(m[c][1])
-        print({c: round(m[c][0], 4) for c in preds}, flush=True)
+        print({c: round(m[c][0], 4) for c in PREDS}, flush=True)
     return "HP", cols
 
 def main():
     name = sys.argv[1] if len(sys.argv) > 1 else "natstorfmri"
-    mode = sys.argv[2] if len(sys.argv) > 2 else "rff"   # rff | pca
     sys.path.insert(0, str(PROJECT_ROOT))
     import rff_matched as R
-    outdir = str(PROJECT_ROOT / ("results_rffsym" if mode == "rff" else "results_embpca"))
-    makedirs(outdir, exist_ok=True); R.RESULTS_DIR = outdir
-    prefix, cols = run_natstor(R, mode) if name == "natstorfmri" else run_hp(R, mode)
-    preds = PREDS if mode == "rff" else ["base", "act", "emb_pca", "all_pca"]
-    suf = dict(SUF); suf.update({"emb_pca": "_embpca", "all_pca": "_allpca"})
-    tag = "rffsym" if mode == "rff" else "embpca"
-    order = [x for c in preds for x in (c, c + "_sd")]
-    df = pd.DataFrame({c: cols[c] for c in order}, index=ROW_INDEX)
-    for a, b in itertools.combinations(preds, 2):
-        df[f"p__{a}__{b}"] = [R.significance_testing(f"{prefix}_{k}{suf[a]}", f"{prefix}_{k}{suf[b]}") for k in KEYS]
-    df.to_csv(f"{outdir}/{prefix}_{tag}.csv", index=False)
-    print(f"\nWROTE {outdir}/{prefix}_{tag}.csv")
-    print(df[preds].round(4))
+    makedirs(OUTDIR, exist_ok=True); R.RESULTS_DIR = OUTDIR
+    prefix, cols = run_natstor(R) if name == "natstorfmri" else run_hp(R)
+    df = pd.DataFrame({c: cols[c] for c in
+                       ["base", "base_sd", "act", "act_sd", "sfl_rff", "sfl_rff_sd",
+                        "emb_rff", "emb_rff_sd", "all_rff", "all_rff_sd"]}, index=ROW_INDEX)
+    for a, b in itertools.combinations(PREDS, 2):
+        df[f"p__{a}__{b}"] = [R.significance_testing(f"{prefix}_{k}{SUF[a]}", f"{prefix}_{k}{SUF[b]}") for k in KEYS]
+    df.to_csv(f"{OUTDIR}/{prefix}_rffsym.csv", index=False)
+    print(f"\nWROTE {OUTDIR}/{prefix}_rffsym.csv")
+    print(df[PREDS].round(4))
 
 if __name__ == "__main__":
     main()

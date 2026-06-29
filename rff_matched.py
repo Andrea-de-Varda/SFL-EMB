@@ -251,25 +251,6 @@ def score_rff_pair(emb_feats, emb_idx, sfl_feats, sfl_idx, y, n_components, pool
             save_predictions(rs_a, name_all))
 
 # ============================================================================
-# DIMENSIONALITY-REDUCTION match (complement of RFF): reduce EMB DOWN to the SFL
-# dimensionality k via PCA (unsupervised, fit on TRAIN only), then linear ridge.
-# emb_pca = PCA_k(EMB); all_pca = concat(base_sfl, emb_pca). Compare emb_pca vs the
-# k-dim SFL `base` -- a dimensionality match from the low side. emb_full is the
-# already-pooled EMB feature matrix (sentence: D; TR: 4*D); base is the SFL matrix.
-# ============================================================================
-def score_pca_pair(emb_full, base, y, k, groups=None, name_emb=None, name_all=None, n_splits=10):
-    from sklearn.decomposition import PCA
-    rs_e, rs_a = [], []
-    for test in make_folds(len(y), groups, n_splits):
-        train = np.setdiff1d(np.arange(len(y)), test, assume_unique=True)
-        pca = PCA(n_components=k, random_state=RFF_SEED).fit(emb_full[train])
-        Xe_tr, Xe_te = pca.transform(emb_full[train]), pca.transform(emb_full[test])
-        rs_e.append(pearsonr(y[test], fit_ridge(Xe_tr, y[train]).predict(Xe_te))[0])
-        Xa_tr = np.hstack([base[train], Xe_tr]); Xa_te = np.hstack([base[test], Xe_te])
-        rs_a.append(pearsonr(y[test], fit_ridge(Xa_tr, y[train]).predict(Xa_te))[0])
-    return save_predictions(rs_e, name_emb), save_predictions(rs_a, name_all)
-
-# ============================================================================
 # WORD-LEVEL scoring (UCL-N400): one response per word; the RFF projects the
 # per-word SFL (3 dims) to D dims (NO pooling -- the unit IS the word, so this is
 # already dimensionality-matched to a D-dim per-word embedding). all_matched =
