@@ -1,0 +1,110 @@
+
+=== gpt (D=768) ===
+Loading json activations from activations_gpt.json...
+2000 13.0
+  semantic rating_imageability_mean     base=0.366 act=0.779 sfl_rff=0.538
+  semantic rating_others_thoughts_mean  base=0.332 act=0.788 sfl_rff=0.360
+  semantic rating_physical_mean         base=0.199 act=0.823 sfl_rff=0.462
+  semantic rating_places_mean           base=0.156 act=0.813 sfl_rff=0.313
+  semantic rating_valence_mean          base=0.172 act=0.684 sfl_rff=0.198
+  semantic rating_arousal_mean          base=0.297 act=0.647 sfl_rff=0.320
+  semantic rating_sense_mean            base=0.482 act=0.462 sfl_rff=0.479
+  form     log-prob-pcfg_mean           base=0.420 act=0.720 sfl_rff=0.501
+  form     rating_gram_mean             base=0.417 act=0.482 sfl_rff=0.422
+  form     rating_frequency_mean        base=0.589 act=0.617 sfl_rff=0.591
+  form     rating_conversational_mean   base=0.553 act=0.723 sfl_rff=0.587
+  form     dep_length_mean              base=0.088 act=0.442 sfl_rff=0.152
+  form     avg_word_freq_zipf           base=0.797 act=0.820 sfl_rff=0.878
+  form     avg_word_length              base=0.915 act=0.731 sfl_rff=0.916
+
+=== small (D=768) ===
+Loading json activations from activations_gpt2_small.json...
+2000 13.0
+  semantic rating_imageability_mean     base=0.078 act=0.758 sfl_rff=0.416
+  semantic rating_others_thoughts_mean  base=0.305 act=0.769 sfl_rff=0.299
+  semantic rating_physical_mean         base=0.169 act=0.811 sfl_rff=0.417
+  semantic rating_places_mean           base=0.075 act=0.770 sfl_rff=0.214
+  semantic rating_valence_mean          base=0.149 act=0.648 sfl_rff=0.125
+  semantic rating_arousal_mean          base=0.231 act=0.615 sfl_rff=0.249
+  semantic rating_sense_mean            base=0.549 act=0.442 sfl_rff=0.554
+  form     log-prob-pcfg_mean           base=0.555 act=0.798 sfl_rff=0.583
+  form     rating_gram_mean             base=0.502 act=0.535 sfl_rff=0.516
+  form     rating_frequency_mean        base=0.712 act=0.624 sfl_rff=0.721
+  form     rating_conversational_mean   base=0.645 act=0.698 sfl_rff=0.671
+  form     dep_length_mean              base=0.089 act=0.474 sfl_rff=0.142
+  form     avg_word_freq_zipf           base=0.829 act=0.813 sfl_rff=0.895
+  form     avg_word_length              base=0.915 act=0.731 sfl_rff=0.920
+
+=== med (D=1024) ===
+Loading json activations from activations_gpt2_medium.json...
+2000 25.0
+  semantic rating_imageability_mean     base=0.089 act=0.769 sfl_rff=0.429
+  semantic rating_others_thoughts_mean  base=0.309 act=0.790 sfl_rff=0.306
+  semantic rating_physical_mean         base=0.152 act=0.820 sfl_rff=0.419
+  semantic rating_places_mean           base=0.032 act=0.779 sfl_rff=0.195
+  semantic rating_valence_mean          base=0.153 act=0.675 sfl_rff=0.133
+  semantic rating_arousal_mean          base=0.235 act=0.621 sfl_rff=0.254
+  semantic rating_sense_mean            base=0.559 act=0.503 sfl_rff=0.573
+  form     log-prob-pcfg_mean           base=0.532 act=0.774 sfl_rff=0.580
+  form     rating_gram_mean             base=0.515 act=0.606 sfl_rff=0.539
+  form     rating_frequency_mean        base=0.710 act=0.643 sfl_rff=0.716
+  form     rating_conversational_mean   base=0.640 act=0.715 sfl_rff=0.669
+  form     dep_length_mean              base=0.070 act=0.440 sfl_rff=0.104
+  form     avg_word_freq_zipf           base=0.821 act=0.809 sfl_rff=0.890
+  form     avg_word_length              base=0.915 act=0.726 sfl_rff=0.921
+
+=== large (D=1280) ===
+Loading json activations from activations_gpt2_large.json...
+2000 37.0
+  semantic rating_imageability_mean     base=0.095 act=0.766 sfl_rff=0.431
+  semantic rating_others_thoughts_mean  base=0.305 act=0.787 sfl_rff=0.296
+  semantic rating_physical_mean         base=0.157 act=0.814 sfl_rff=0.420
+  semantic rating_places_mean           base=0.037 act=0.794 sfl_rff=0.209
+  semantic rating_valence_mean          base=0.155 act=0.684 sfl_rff=0.147
+  semantic rating_arousal_mean          base=0.231 act=0.619 sfl_rff=0.260
+  semantic rating_sense_mean            base=0.564 act=0.490 sfl_rff=0.579
+  form     log-prob-pcfg_mean           base=0.521 act=0.764 sfl_rff=0.562
+  form     rating_gram_mean             base=0.510 act=0.580 sfl_rff=0.534
+  form     rating_frequency_mean        base=0.717 act=0.625 sfl_rff=0.733
+  form     rating_conversational_mean   base=0.634 act=0.712 sfl_rff=0.669
+  form     dep_length_mean              base=0.075 act=0.426 sfl_rff=0.099
+  form     avg_word_freq_zipf           base=0.818 act=0.828 sfl_rff=0.890
+  form     avg_word_length              base=0.914 act=0.750 sfl_rff=0.920
+
+=== xl (D=1600) ===
+Loading json activations from activations_gpt2_xl.json...
+2000 49.0
+  semantic rating_imageability_mean     base=0.099 act=0.758 sfl_rff=0.424
+  semantic rating_others_thoughts_mean  base=0.307 act=0.789 sfl_rff=0.291
+  semantic rating_physical_mean         base=0.148 act=0.817 sfl_rff=0.411
+  semantic rating_places_mean           base=0.034 act=0.782 sfl_rff=0.193
+  semantic rating_valence_mean          base=0.155 act=0.689 sfl_rff=0.149
+  semantic rating_arousal_mean          base=0.237 act=0.612 sfl_rff=0.266
+  semantic rating_sense_mean            base=0.574 act=0.501 sfl_rff=0.589
+  form     log-prob-pcfg_mean           base=0.513 act=0.749 sfl_rff=0.561
+  form     rating_gram_mean             base=0.513 act=0.593 sfl_rff=0.530
+  form     rating_frequency_mean        base=0.717 act=0.621 sfl_rff=0.740
+  form     rating_conversational_mean   base=0.634 act=0.712 sfl_rff=0.672
+  form     dep_length_mean              base=0.075 act=0.428 sfl_rff=0.086
+  form     avg_word_freq_zipf           base=0.818 act=0.818 sfl_rff=0.888
+  form     avg_word_length              base=0.914 act=0.724 sfl_rff=0.917
+
+WROTE /orcd/data/evelina9/001/USERS/devar_ag/SFL-EMB/check-features/results_features.csv
+
+Mean r over 5 LMs:
+                                       r_base  r_act  r_sflrff
+group    feature                                             
+form     avg_word_freq_zipf            0.816  0.818     0.888
+         avg_word_length               0.914  0.732     0.919
+         dep_length_mean               0.079  0.442     0.117
+         log-prob-pcfg_mean            0.508  0.761     0.557
+         rating_conversational_mean    0.621  0.712     0.654
+         rating_frequency_mean         0.689  0.626     0.700
+         rating_gram_mean              0.491  0.559     0.508
+semantic rating_arousal_mean           0.246  0.623     0.270
+         rating_imageability_mean      0.146  0.766     0.448
+         rating_others_thoughts_mean   0.311  0.785     0.310
+         rating_physical_mean          0.165  0.817     0.426
+         rating_places_mean            0.067  0.788     0.225
+         rating_sense_mean             0.545  0.480     0.555
+         rating_valence_mean           0.157  0.676     0.150
