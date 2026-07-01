@@ -30,22 +30,23 @@ Mean *r* over 5 LMs (`results_features.csv`):
 
 ## 2 · Brain-encoding summary, all datasets × predictors → `brain_summary.svg`, `brain_summary_*.csv`
 
-`EMB` here = **sum**-pooled (`emb_sum`), as requested. Per-model rows exist for **Pereira**
-and **UCL-N400**; **Tuckute / NatStor-fMRI / Wehbe-HP** are shown at the dataset-mean level
-(hatched bars, `*`) because their per-model matched CSVs were produced on the cluster but
-**not committed** — to complete them: on Engaging `git add results/results_{control,natstorfmri,HP}_matched.csv`,
-push, rerun `compile_brain_summary.py`.
+`EMB` here = **sum**-pooled (`emb_sum`), as requested. Complete **per-model** (5 LMs) for all
+five datasets, compiled from each matched script's actual output
+(`pereira_1/results/results.csv`, `control_fmri/results/control_results.csv`,
+`natstor_fmri/results/all_results.csv`, `fMRI/results/all_results.csv`,
+`results/results_UCL_N400_matched.csv`). `brain_summary_permodel.csv` = 25 rows;
+`brain_summary_bydataset.csv` = the 5-LM means below.
 
-| dataset | SFL | SFL+RFF | EMB(sum) | source |
-|---|---|---|---|---|
-| Pereira | 0.18 | 0.48 | 0.46 | per-model |
-| Tuckute | 0.30 | 0.37 | 0.41 | dataset-mean * |
-| NatStor-fMRI | 0.29 | 0.26 | 0.31 | dataset-mean * |
-| Wehbe-HP | 0.13 | 0.11 | 0.20 | dataset-mean * |
-| UCL-N400 | 0.23 | 0.33 | 0.33 | per-model |
+| dataset | SFL | SFL+RFF | EMB(sum) |
+|---|---|---|---|
+| Pereira | 0.18 | 0.48 | 0.46 |
+| Tuckute | 0.30 | 0.37 | 0.41 |
+| NatStor-fMRI | 0.29 | 0.26 | 0.31 |
+| Wehbe-HP | 0.13 | 0.11 | 0.20 |
+| UCL-N400 | 0.23 | 0.33 | 0.33 |
 
 (NatStor/HP are TR-level; their `SFL+RFF`/`EMB_sum` are depressed by sum-per-TR pooling —
-see `RESULTS_dimensionality_matched.md`. Predictivity of EMB and SFL+RFF is otherwise close.)
+see `RESULTS_dimensionality_matched.md`.)
 
 ## 3 · Error / difference patterns → `ERROR_PATTERNS.md`
 

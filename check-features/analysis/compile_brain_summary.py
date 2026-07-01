@@ -26,20 +26,16 @@ from figure_style import apply_style, style_spines, save_fig  # noqa: E402
 apply_style()
 
 MODELS = ["GPT", "GPT-2 124M", "GPT-2 355M", "GPT-2 774M", "GPT-2 1.5B"]
-# dataset -> per-model matched CSV (rows 0..4 aligned to MODELS)
+# dataset -> per-model matched CSV (rows 0..4 aligned to MODELS). These are the ACTUAL
+# output paths of the matched scripts (each writes <dataset_dir>/results/*.csv).
 MATCHED = {
     "Pereira":      ROOT / "pereira_1/results/results.csv",
-    "Tuckute":      ROOT / "results/results_control_matched.csv",
-    "NatStor-fMRI": ROOT / "results/results_natstorfmri_matched.csv",
-    "Wehbe-HP":     ROOT / "results/results_HP_matched.csv",
+    "Tuckute":      ROOT / "control_fmri/results/control_results.csv",
+    "NatStor-fMRI": ROOT / "natstor_fmri/results/all_results.csv",
+    "Wehbe-HP":     ROOT / "fMRI/results/all_results.csv",
     "UCL-N400":     ROOT / "results/results_UCL_N400_matched.csv",
 }
-# dataset-mean fallback (mean over 5 LMs) from RESULTS_dimensionality_matched.md, EMB = emb_sum
-DOC_MEANS = {
-    "Tuckute":      dict(SFL=0.30, SFL_RFF=0.37, EMB_sum=0.41),
-    "NatStor-fMRI": dict(SFL=0.29, SFL_RFF=0.26, EMB_sum=0.31),
-    "Wehbe-HP":     dict(SFL=0.13, SFL_RFF=0.11, EMB_sum=0.20),
-}
+DOC_MEANS = {}                                  # all datasets have per-model CSVs; no fallback needed
 TR_CONFOUNDED = {"NatStor-fMRI", "Wehbe-HP"}   # sum-per-TR pooling confound (see RESULTS doc)
 
 
