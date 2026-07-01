@@ -75,31 +75,57 @@ def main():
     print("\n--- brain_summary_permodel.csv (head) ---")
     print(lp.to_string(index=False))
 
-    # overview barplot: datasets x {SFL, SFL+RFF, EMB(sum)}
     order = ["Pereira", "Tuckute", "NatStor-fMRI", "Wehbe-HP", "UCL-N400"]
-    bd = bd.set_index("dataset").reindex(order).reset_index()
-    x = np.arange(len(order)); w = 0.27
     C = {"SFL": "#999999", "SFL_RFF": "#DD8452", "EMB_sum": "#4C72B0"}
-    fig, ax = plt.subplots(figsize=(6.4, 3.2), dpi=300)
-    mean_only = bd["source"].str.startswith("dataset-mean").fillna(False).to_numpy()
+    LEG = [("SFL (3-dim)", C["SFL"]), ("SFL + RFF", C["SFL_RFF"]), ("EMB (sum)", C["EMB_sum"])]
+    PLOTS = str(HERE / "plots")
+
+    # ---- Fig A: mean +- SEM across the 5 LMs, with individual model dots overlaid ----
+    m = lp.groupby("dataset")[["SFL", "SFL_RFF", "EMB_sum"]].mean().reindex(order)
+    sem = (lp.groupby("dataset")[["SFL", "SFL_RFF", "EMB_sum"]]
+           .agg(lambda v: np.std(v, ddof=1) / np.sqrt(len(v))).reindex(order))
+    x = np.arange(len(order)); w = 0.27
+    fig, ax = plt.subplots(figsize=(6.6, 3.3), dpi=300)
     for k, off in [("SFL", -w), ("SFL_RFF", 0), ("EMB_sum", w)]:
-        # solid where per-model, hatched where dataset-mean-only
-        ax.bar(x[~mean_only] + off, bd[k][~mean_only], w, color=C[k], edgecolor="black", linewidth=0.4)
-        ax.bar(x[mean_only] + off, bd[k][mean_only], w, color=C[k], edgecolor="black",
-               linewidth=0.4, hatch="////", alpha=0.85)
-    labels = [f"{o} *" if mean_only[i] else o for i, o in enumerate(order)]
-    ax.set_xticks(x); ax.set_xticklabels(labels, rotation=20, ha="right", fontsize=9)
+        ax.bar(x + off, m[k], w, yerr=sem[k], color=C[k], edgecolor="black", linewidth=0.4,
+               error_kw=dict(lw=1.0, ecolor="black", capsize=2.5), zorder=2)
+        for i, ds in enumerate(order):                       # per-model dots
+            pts = lp[lp.dataset == ds][k].to_numpy()
+            ax.scatter(np.full(len(pts), x[i] + off), pts, s=9, color="black",
+                       alpha=0.55, zorder=3, linewidths=0)
+    ax.set_xticks(x); ax.set_xticklabels(order, rotation=20, ha="right", fontsize=9)
     ax.set_ylabel("Brain predictivity (Pearson $r$)", fontsize=11)
     ax.set_ylim(0, 0.6)
     ax.grid(axis="y", linestyle="--", alpha=0.5, zorder=0)
     style_spines(ax, drop_top_right=True)
     ax.tick_params(labelsize=9)
-    handles = [Line2D([0], [0], color=c, lw=6, label=l) for l, c in
-               [("SFL (3-dim)", C["SFL"]), ("SFL + RFF", C["SFL_RFF"]), ("EMB (sum)", C["EMB_sum"])]]
-    ax.legend(handles=handles, loc="upper right", frameon=False, fontsize=9)
+    ax.legend(handles=[Line2D([0], [0], color=c, lw=6, label=l) for l, c in LEG],
+              loc="upper right", frameon=False, fontsize=9)
+    ax.set_title("Mean $\\pm$ SEM over 5 LMs (dots = individual models)", fontsize=9.5, loc="left")
     fig.tight_layout()
-    save_fig(fig, "brain_summary", str(HERE / "plots"))
-    print("\nwrote plots/brain_summary.{svg,png} (hatched bars = dataset-mean only)")
+    save_fig(fig, "brain_summary", PLOTS)
+
+    # ---- Fig B: per-model detail — one panel per dataset, 3 predictors over model size ----
+    mods = MODELS
+    fig, axes = plt.subplots(1, len(order), figsize=(11.5, 2.6), dpi=300, sharey=True)
+    for ax, ds in zip(axes, order):
+        sub = lp[lp.dataset == ds].set_index("model").reindex(mods)
+        for k in ["SFL", "SFL_RFF", "EMB_sum"]:
+            ax.plot(range(len(mods)), sub[k], marker="o", ms=4, lw=1.4, color=C[k])
+        ax.set_title(ds, fontsize=9.5, weight="bold")
+        ax.set_xticks(range(len(mods)))
+        ax.set_xticklabels(["GPT", "124M", "355M", "774M", "1.5B"], rotation=45, ha="right", fontsize=7.5)
+        ax.grid(axis="y", linestyle="--", alpha=0.5, zorder=0)
+        style_spines(ax, drop_top_right=True)
+        ax.tick_params(labelsize=8)
+    axes[0].set_ylabel("Brain predictivity ($r$)", fontsize=10)
+    axes[0].set_ylim(0, 0.55)
+    axes[-1].legend(handles=[Line2D([0], [0], color=c, marker="o", lw=1.4, label=l) for l, c in LEG],
+                    loc="upper right", frameon=False, fontsize=7.5)
+    fig.suptitle("Per-model results (across GPT / GPT-2 124M–1.5B)", fontsize=10, x=0.01, ha="left")
+    fig.tight_layout()
+    save_fig(fig, "brain_summary_permodel", PLOTS)
+    print("\nwrote plots/brain_summary.{svg,png} (mean±SEM) and brain_summary_permodel.{svg,png}")
 
 
 if __name__ == "__main__":

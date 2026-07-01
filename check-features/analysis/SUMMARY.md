@@ -105,5 +105,6 @@ form-correlated slice of semantics.
 ## Files
 - `make_figures.py` → `plots/feature_predictivity.{svg,png}` (Fig 1, side-by-side bars + group means).
 - `compile_brain_summary.py` → `brain_summary_permodel.csv`, `brain_summary_bydataset.csv`,
-  `plots/brain_summary.{svg,png}`.
+  `plots/brain_summary.{svg,png}` (mean ± SEM over 5 LMs + per-model dots) and
+  `plots/brain_summary_permodel.{svg,png}` (one panel per dataset, 3 predictors over model size).
 - `error_patterns.py` → `ERROR_PATTERNS.md` (full item lists + the Tuckute rating table).
