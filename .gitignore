@@ -17,6 +17,9 @@
 # For data you DO want versioned alongside code, consider git-lfs.
 # ============================================================================
 
+# ----- extraction cache (regenerable embeddings/surprisal, new pipeline) -----
+cache/
+
 # ----- Python -----
 __pycache__/
 *.py[cod]
