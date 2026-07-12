@@ -1,0 +1,25 @@
+# Conda environment for the SFL-EMB pipeline (modern stack; replaces the old
+# neurox environment). Create with:  conda env create -f environment.yml
+#
+# NOTE on torch/CUDA: the pip torch below is a generic build. On a cluster
+# (e.g. MIT Engaging) install the torch wheel that matches the node's CUDA
+# instead, then `pip install himalaya transformers pyreadr`. Only the embedding/
+# surprisal extraction needs a GPU; fitting runs on GPU (himalaya) or CPU (sklearn).
+name: sfl-emb
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy>=1.26
+  - scipy>=1.11
+  - pandas>=2.0
+  - scikit-learn>=1.4
+  - matplotlib>=3.8
+  - openpyxl>=3.1          # read data/subtlex.xlsx
+  - tqdm
+  - pip
+  - pip:
+      - torch                # replace with a cluster-CUDA-matched build if needed
+      - transformers>=4.40
+      - himalaya>=0.4.11     # GPU ridge (default fitting backend)
+      - pyreadr>=0.5         # read data/NaturalStories/natstor_maze.rds

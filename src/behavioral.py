@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 
 from .paths import PROJECT_ROOT
-from . import extract, fit, conditions
+from . import extract, fit, conditions, decompose
 from .models import MODELS
 
 _PUNCT = re.compile(r'[\.\,\:\-\?\!\)\(\"]')
@@ -77,6 +77,8 @@ def run_word_dataset(dataset, sentences, targets, models, results_dir, cache_dir
             rows[tname][model] = conditions.run_all_conditions(
                 sfl_m, emb_m, y, folds, prefix, n_components=D,
                 results_dir=results_dir, backend=backend)
+            decompose.maybe_decompose(model, sfl_m, y, folds, prefix,
+                                      n_blocks=1, results_dir=results_dir, backend=backend)
     _save_tables(dataset, targets, rows, results_dir)
     return rows
 
@@ -120,6 +122,8 @@ def run_spill_dataset(dataset, sentences, target, sent_ids, models, results_dir,
         rows[model] = conditions.run_all_conditions(
             sfl_sp, emb_sp, y_m, folds, prefix, n_components=D,
             results_dir=results_dir, backend=backend)
+        decompose.maybe_decompose(model, sfl_sp, y_m, folds, prefix,
+                                  n_blocks=3, results_dir=results_dir, backend=backend)
     conditions.build_results_table(rows).to_csv(Path(results_dir) / f"{dataset}_results.csv")
     return rows
 

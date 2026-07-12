@@ -15,7 +15,7 @@ from pathlib import Path
 
 import numpy as np
 
-from . import extract, fit, rff, conditions, behavioral
+from . import extract, fit, rff, conditions, behavioral, decompose
 from .models import MODELS
 
 
@@ -73,6 +73,8 @@ def run_sentence_dataset(dataset, sentences, y, models, results_dir, cache_dir,
         }
         rows[model] = conditions.run_conditions(specs, y, folds, f"{dataset}_{model}",
                                                 results_dir, backend)
+        decompose.maybe_decompose(model, sfl_base, y, folds, f"{dataset}_{model}",
+                                  n_blocks=1, results_dir=results_dir, backend=backend)
     conditions.build_results_table(rows).to_csv(Path(results_dir) / f"{dataset}_results.csv")
     return rows
 
@@ -150,5 +152,7 @@ def run_tr_dataset(dataset, stories, models, results_dir, cache_dir,
         }
         rows[model] = conditions.run_conditions(specs, y, folds, f"{dataset}_{model}",
                                                 results_dir, backend)
+        decompose.maybe_decompose(model, sfl_mat, y, folds, f"{dataset}_{model}",
+                                  n_blocks=len(delays), results_dir=results_dir, backend=backend)
     conditions.build_results_table(rows).to_csv(Path(results_dir) / f"{dataset}_results.csv")
     return rows
