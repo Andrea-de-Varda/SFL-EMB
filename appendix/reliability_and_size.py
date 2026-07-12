@@ -2,7 +2,6 @@ import pickle
 import pandas as pd
 import matplotlib.pyplot as plt
 from os import chdir
-from mpl_toolkits.axes_grid.parasite_axes import SubplotHost
 import matplotlib.ticker as ticker
 import numpy as np
 from scipy.stats import pearsonr
@@ -16,11 +15,11 @@ from math import floor
 # --- reproducible paths: resolve repo root (the dir containing utils.py) ---
 from pathlib import Path as _Path
 _here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
-PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_file())
+PROJECT_ROOT = _Path(__file__).resolve().parent.parent
 dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
-freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 
 def progressive_splithalf(nested_list, n_iterations=10, verbose = False):
@@ -76,7 +75,7 @@ def create_word_pos(sentences): # to recreate word and sentence indexes as in or
             sent_nr.append(sentnum)
     return word_pos, sent_nr
 
-natstor = pd.read_csv(PROJECT_ROOT / "main_data/NaturalStories/NaturalStories_RAW.tsv", sep = "\t")
+natstor = pd.read_csv(PROJECT_ROOT / "data/NaturalStories/NaturalStories_RAW.tsv", sep = "\t")
 natstor = natstor[natstor["correct"] == 6]
 
 natst_sent = [re.sub("\n", "", s).split() for s in open("corpora/natural_stories.txt").readlines()] 
@@ -96,7 +95,7 @@ nobs(natstor_data) # 59.63207654630368
 # brown #
 #########
 
-brown = pd.read_csv(PROJECT_ROOT / "main_data/Brown/brown_spr_RAW.csv")
+brown = pd.read_csv(PROJECT_ROOT / "data/Brown/brown_spr_RAW.csv")
 brown_sent = [re.sub("\n", "", s).split() for s in open("corpora/bnc_brown.txt").readlines()]
 
 participants = brown['subject'].unique()
@@ -114,7 +113,7 @@ nobs(brown_data) # 19.05220061412487
 # ucl spr - et #
 ################
 
-eye = pd.read_csv(PROJECT_ROOT / "main_data/UCL_ET_CORPUS/eyetracking.RT.txt", sep="\t")
+eye = pd.read_csv(PROJECT_ROOT / "data/UCL_ET_CORPUS/eyetracking.RT.txt", sep="\t")
 eye = eye[eye.word_pos > 1] # in original analyses, excluded first word
 
 participants = eye['subj_nr'].unique()
@@ -131,7 +130,7 @@ eye_sent_nr = set(eye["sent_nr"])
 # spr #
 #######
 
-spr = pd.read_csv(PROJECT_ROOT / "main_data/UCL_ET_CORPUS/selfpacedreading.RT.txt", sep="\t")
+spr = pd.read_csv(PROJECT_ROOT / "data/UCL_ET_CORPUS/selfpacedreading.RT.txt", sep="\t")
 spr = spr[spr.sent_nr.isin(eye_sent_nr)]
 spr = spr[spr.word_pos > 3]
 
@@ -147,7 +146,7 @@ nobs(spr_data) # 71.11398176291793
 # ucl ERP #
 ###########
 
-mat = scipy.io.loadmat(PROJECT_ROOT / "main_data/ERP_Frank/stimuli_erp.mat")
+mat = scipy.io.loadmat(PROJECT_ROOT / "data/ERP_Frank/stimuli_erp.mat")
 
 ucl_n400 = []
 for idx, sentence in enumerate(mat["sentences"]):
@@ -176,7 +175,7 @@ nobs(ucl_n400) # 24
 
 # note: in provo, first word is already missing -- no need to exclude anything
 
-provo = pd.read_csv(PROJECT_ROOT / "main_data/Provo/Provo_Corpus-Eyetracking_Data.csv", sep=",")
+provo = pd.read_csv(PROJECT_ROOT / "data/Provo/Provo_Corpus-Eyetracking_Data.csv", sep=",")
 provo = provo[['Participant_ID','Word_Unique_ID', 'Word_Number', 'Sentence_Number', 'Word_In_Sentence_Number', 'Word', 'IA_FIRST_FIXATION_DURATION', 'IA_FIRST_RUN_DWELL_TIME']]
 provo['IA_FIRST_FIXATION_DURATION'] = provo['IA_FIRST_FIXATION_DURATION'].fillna(0)
 provo['IA_FIRST_RUN_DWELL_TIME'] = provo['IA_FIRST_RUN_DWELL_TIME'].fillna(0)
@@ -193,7 +192,7 @@ nobs(provo_data) # 84
 # maze #
 ########
 
-maze = pyreadr.read_r(PROJECT_ROOT / "main_data/NaturalStories/natstor_maze.rds")
+maze = pyreadr.read_r(PROJECT_ROOT / "data/NaturalStories/natstor_maze.rds")
 df_maze = maze[None]
 
 maze = df_maze[df_maze["native"].isin(['ENG', 'ENGLISH', 'English','english'])]
@@ -259,7 +258,7 @@ nobs(maze_rt) # 5.85898485468686
 # MECO #
 ########
 
-meco = pd.read_csv(PROJECT_ROOT / "main_data/Meco/Meco_l1.csv", index_col=None)
+meco = pd.read_csv(PROJECT_ROOT / "data/Meco/Meco_l1.csv", index_col=None)
 meco = meco.iloc[: , 1:]; print("N (with NA) =", len(meco))
 meco = meco[meco['ia'].notna()]; print("N (no NA) =",len(meco))
 meco["trialid"] = meco.trialid.astype(int)
@@ -305,7 +304,7 @@ nobs(meco_rt) # 40.13740458015267
 # ZuCo #
 ########
 
-out = pd.read_csv(PROJECT_ROOT / "main_data/ZuCo/ET_data.csv")
+out = pd.read_csv(PROJECT_ROOT / "data/ZuCo/ET_data.csv")
 out = out.fillna(0)
 
 out["unique"] = out["idx"].astype(str) + "-" + out["word_idx"].astype(str)

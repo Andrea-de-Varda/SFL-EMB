@@ -19,7 +19,7 @@ PROJECT_ROOT = next(p for p in (_here, *_here.parents) if (p / "utils.py").is_fi
 dirName = str(PROJECT_ROOT)
 chdir(dirName)
 
-freq = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
+freq = pd.read_excel(PROJECT_ROOT / "data/subtlex.xlsx")
 f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
 
 ########################################
@@ -35,7 +35,7 @@ def create_word_pos(sentences): # to recreate word and sentence indexes as in or
             sent_nr.append(sentnum)
     return word_pos, sent_nr
 
-natstor = pd.read_csv(PROJECT_ROOT / "main_data/NaturalStories/NaturalStories_RAW.tsv", sep = "\t")
+natstor = pd.read_csv(PROJECT_ROOT / "data/NaturalStories/NaturalStories_RAW.tsv", sep = "\t")
 natstor = natstor[natstor["correct"] == 6]
 
 natst_sent = [re.sub("\n", "", s).split() for s in open("corpora/natural_stories.txt").readlines()] 
@@ -70,7 +70,7 @@ natstor_r = np.mean(natstor_r)
 # brown #
 #########
 
-brown = pd.read_csv(PROJECT_ROOT / "main_data/Brown/brown_spr_RAW.csv")
+brown = pd.read_csv(PROJECT_ROOT / "data/Brown/brown_spr_RAW.csv")
 brown_sent = [re.sub("\n", "", s).split() for s in open("corpora/bnc_brown.txt").readlines()]
 
 participants = brown['subject'].unique()
@@ -103,7 +103,7 @@ brown_r = np.mean(brown_r)
 # ucl spr - et #
 ################
 
-eye = pd.read_csv(PROJECT_ROOT / "main_data/UCL_ET_CORPUS/eyetracking.RT.txt", sep="\t")
+eye = pd.read_csv(PROJECT_ROOT / "data/UCL_ET_CORPUS/eyetracking.RT.txt", sep="\t")
 eye = eye[eye.word_pos > 1] # in original analyses, excluded first word
 
 participants = eye['subj_nr'].unique()
@@ -135,7 +135,7 @@ eye_sent_nr = set(eye["sent_nr"])
 # spr #
 #######
 
-spr = pd.read_csv(PROJECT_ROOT / "main_data/UCL_ET_CORPUS/selfpacedreading.RT.txt", sep="\t")
+spr = pd.read_csv(PROJECT_ROOT / "data/UCL_ET_CORPUS/selfpacedreading.RT.txt", sep="\t")
 spr = spr[spr.sent_nr.isin(eye_sent_nr)]
 spr = spr[spr.word_pos > 3]
 
@@ -166,7 +166,7 @@ ucl_spr_r = np.mean(ucl_spr_r)
 # ucl ERP #
 ###########
 
-mat = scipy.io.loadmat(PROJECT_ROOT / "main_data/ERP_Frank/stimuli_erp.mat")
+mat = scipy.io.loadmat(PROJECT_ROOT / "data/ERP_Frank/stimuli_erp.mat")
 mat.keys()
 
 ucl_n400_r = []
@@ -211,7 +211,7 @@ ucl_p600_r = np.mean(ucl_p600_r)
 
 # note: in provo, first word is already missing -- no need to exclude anything
 
-provo = pd.read_csv(PROJECT_ROOT / "main_data/Provo/Provo_Corpus-Eyetracking_Data.csv", sep=",")
+provo = pd.read_csv(PROJECT_ROOT / "data/Provo/Provo_Corpus-Eyetracking_Data.csv", sep=",")
 provo = provo[['Participant_ID', 'Word_Number', 'Sentence_Number', 'Word_In_Sentence_Number', 'Word', 'IA_FIRST_FIXATION_DURATION', 'IA_FIRST_RUN_DWELL_TIME']]
 provo['IA_FIRST_FIXATION_DURATION'] = provo['IA_FIRST_FIXATION_DURATION'].fillna(0)
 provo['IA_FIRST_RUN_DWELL_TIME'] = provo['IA_FIRST_RUN_DWELL_TIME'].fillna(0)
@@ -250,7 +250,7 @@ provo_r = np.mean(provo_r)
 # maze #
 ########
 
-maze = pyreadr.read_r(PROJECT_ROOT / "main_data/NaturalStories/natstor_maze.rds")
+maze = pyreadr.read_r(PROJECT_ROOT / "data/NaturalStories/natstor_maze.rds")
 df_maze = maze[None]
 
 maze = df_maze[df_maze["native"].isin(['ENG', 'ENGLISH', 'English','english'])]
@@ -331,7 +331,7 @@ maze_r = np.mean(maze_r)
 # MECO #
 ########
 
-meco = pd.read_csv(PROJECT_ROOT / "main_data/Meco/Meco_l1.csv", index_col=None)
+meco = pd.read_csv(PROJECT_ROOT / "data/Meco/Meco_l1.csv", index_col=None)
 meco = meco.iloc[: , 1:]; print("N (with NA) =", len(meco))
 meco = meco[meco['ia'].notna()]; print("N (no NA) =",len(meco))
 meco["trialid"] = meco.trialid.astype(int)
@@ -390,7 +390,7 @@ meco_r = np.mean(meco_r)
 # ZuCo #
 ########
 
-out = pd.read_csv(PROJECT_ROOT / "main_data/ZuCo/ET_data.csv")
+out = pd.read_csv(PROJECT_ROOT / "data/ZuCo/ET_data.csv")
 out = out.fillna(0)
 
 out["unique"] = out["idx"].astype(str) + "-" + out["word_idx"].astype(str)

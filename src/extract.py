@@ -31,7 +31,7 @@ _PUNCT = re.compile(r'[\.\,\:\-\?\!\)\(\"]')
 
 
 def extract_words(model_key, sentences, drop_first=True, chunked=False,
-                  cache=None, device=None, n_splits=2, overlap=50):
+                  cache=None, device=None, n_splits=2, overlap=50, layer="last"):
     """Per-word embeddings + surprisal for a list of sentences, stacked.
 
     ``sentences`` is a list of word-lists (one per sentence/passage). Returns
@@ -58,10 +58,10 @@ def extract_words(model_key, sentences, drop_first=True, chunked=False,
             # keep chunks well under the context window (~350 words -> safe for the
             # 512-token original GPT and the 1024-token GPT-2 family)
             ns = max(n_splits, math.ceil(len(words) / 350))
-            e = ex.chunked_word_features(words, n_splits=ns, overlap=overlap)
+            e = ex.chunked_word_features(words, layer=layer, n_splits=ns, overlap=overlap)
             s = ex.chunked_word_surprisal(words, n_splits=ns, overlap=overlap)
         else:
-            e = ex.word_embeddings(words)
+            e = ex.word_embeddings(words, layer=layer)
             s = ex.word_surprisal(words)
         if drop_first:
             e, s = e[1:], s[1:]
@@ -73,6 +73,20 @@ def extract_words(model_key, sentences, drop_first=True, chunked=False,
         cache.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(cache, emb=emb, surp=surp)
     return emb, surp
+
+
+def extract_all_layers(model_key, sentences, drop_first=True, device=None):
+    """Per-word embeddings for every layer, stacked across sentences (short-sentence
+    datasets only; used by the A4 layer sweep). Returns ``{layer: (N, dim)}``."""
+    ex = Extractor(model_key, device)
+    per_layer = None
+    for words in sentences:
+        d = ex.word_embeddings_all([str(w) for w in words])
+        if per_layer is None:
+            per_layer = {k: [] for k in d}
+        for k, v in d.items():
+            per_layer[k].append(v[1:] if drop_first else v)
+    return {k: np.vstack(v) for k, v in per_layer.items()}
 
 
 class Extractor:
@@ -128,6 +142,15 @@ class Extractor:
         surp_by_word[seen] = acc[seen]
         surp_by_word[0] = np.nan  # sentence-initial word is dropped downstream
         return surp_by_word
+
+    @torch.no_grad()
+    def word_embeddings_all(self, words):
+        """Per-word mean-pooled hidden states for EVERY layer, in one model pass.
+        Returns ``{layer_index: (n_words, dim)}`` (for the layer sweep, A4)."""
+        enc, word_ids = self._encode(words)
+        hs = self.lm(**{k: v.to(self.device) for k, v in enc.items()}).hidden_states
+        return {li: self._pool_by_word(hs[li][0].cpu().numpy(), word_ids, len(words))
+                for li in range(len(hs))}
 
     # ------------------------------------------------------------------ #
     @staticmethod

@@ -86,6 +86,22 @@ def rff_concat_build_fn(X_sfl, X_extra, n_components, seed=RFF_SEED):
     return build
 
 
+def sentence_rff_build_fn(word_sfl, wsi, units, n_components, seed=RFF_SEED):
+    """build_fn (for fit.run_folds) that fits the RFF on the train fold's words and
+    SUM-pools per unit -> the pooled SFL_RFF predictor. ``wsi`` maps each word to its
+    unit id; ``units`` is the array of unit ids in row order."""
+    word_sfl = np.asarray(word_sfl, dtype=np.float64)
+    wsi = np.asarray(wsi)
+    units = np.asarray(units)
+
+    def build(train, test):
+        t = fit_rff(word_sfl[np.isin(wsi, units[train])], n_components, seed)
+        pooled = pool_words_to_units(t(word_sfl), wsi, units, "sum")
+        return pooled[train], pooled[test]
+
+    return build
+
+
 # --------------------------------------------------------------------------- #
 # per-word-then-pool helpers (fMRI). ``word_unit`` maps each word to its unit id
 # (sentence index or TR index); units with no words get a zero row.
