@@ -31,7 +31,8 @@ _PUNCT = re.compile(r'[\.\,\:\-\?\!\)\(\"]')
 
 
 def extract_words(model_key, sentences, drop_first=True, chunked=False,
-                  cache=None, device=None, n_splits=2, overlap=50, layer="last"):
+                  cache=None, device=None, n_splits=2, overlap=50, layer="last",
+                  pool="mean"):
     """Per-word embeddings + surprisal for a list of sentences, stacked.
 
     ``sentences`` is a list of word-lists (one per sentence/passage). Returns
@@ -61,7 +62,7 @@ def extract_words(model_key, sentences, drop_first=True, chunked=False,
             e = ex.chunked_word_features(words, layer=layer, n_splits=ns, overlap=overlap)
             s = ex.chunked_word_surprisal(words, n_splits=ns, overlap=overlap)
         else:
-            e = ex.word_embeddings(words, layer=layer)
+            e = ex.word_embeddings(words, layer=layer, reduce=pool)
             s = ex.word_surprisal(words)
         if drop_first:
             e, s = e[1:], s[1:]
@@ -112,13 +113,13 @@ class Extractor:
         return enc, word_ids
 
     @torch.no_grad()
-    def word_embeddings(self, words, layer="last"):
-        """(n_words, dim) mean-pooled sub-word hidden states for ``words``."""
+    def word_embeddings(self, words, layer="last", reduce="mean"):
+        """(n_words, dim) sub-word-pooled hidden states for ``words`` (mean or sum)."""
         enc, word_ids = self._encode(words)
         hs = self.lm(**{k: v.to(self.device) for k, v in enc.items()}).hidden_states
         li = self.cfg["last_layer"] if layer == "last" else layer
         h = hs[li][0].cpu().numpy()  # (n_tokens, dim)
-        return self._pool_by_word(h, word_ids, len(words), reduce="mean")
+        return self._pool_by_word(h, word_ids, len(words), reduce=reduce)
 
     @torch.no_grad()
     def word_surprisal(self, words):

@@ -21,19 +21,23 @@ from matplotlib.lines import Line2D
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, "/home/andrea/.claude/skills/scientific-figure-style/scripts")
-from figure_style import apply_style, style_spines, save_fig  # noqa: E402
-apply_style()
+try:
+    sys.path.insert(0, "/home/andrea/.claude/skills/scientific-figure-style/scripts")
+    from figure_style import apply_style, style_spines, save_fig  # noqa: E402
+    apply_style()
+except Exception:                                # style helper not present -> plain mpl
+    def style_spines(ax, *a, **k): [ax.spines[s].set_visible(False) for s in ("top", "right")]
+    def save_fig(fig, name, path=".", *a, **k): fig.savefig(f"{path}/{name}.png", bbox_inches="tight")
 
 MODELS = ["GPT", "GPT-2 124M", "GPT-2 355M", "GPT-2 774M", "GPT-2 1.5B"]
 # dataset -> per-model matched CSV (rows 0..4 aligned to MODELS). These are the ACTUAL
 # output paths of the matched scripts (each writes <dataset_dir>/results/*.csv).
 MATCHED = {
-    "Pereira":      ROOT / "pereira_1/results/results.csv",
-    "Tuckute":      ROOT / "control_fmri/results/control_results.csv",
-    "NatStor-fMRI": ROOT / "natstor_fmri/results/all_results.csv",
-    "Wehbe-HP":     ROOT / "fMRI/results/all_results.csv",
-    "UCL-N400":     ROOT / "results/results_UCL_N400_matched.csv",
+    "Pereira":      ROOT / "results/pereira_results.csv",
+    "Tuckute":      ROOT / "results/control_results.csv",
+    "NatStor-fMRI": ROOT / "results/natstorfmri_results.csv",
+    "Wehbe-HP":     ROOT / "results/HP_results.csv",
+    "UCL-N400":     ROOT / "results/ucl_n400_n400_results.csv",
 }
 DOC_MEANS = {}                                  # all datasets have per-model CSVs; no fallback needed
 TR_CONFOUNDED = {"NatStor-fMRI", "Wehbe-HP"}   # sum-per-TR pooling confound (see RESULTS doc)
@@ -46,11 +50,11 @@ def main():
             d = pd.read_csv(path)
             for i, m in enumerate(MODELS):
                 long_rows.append(dict(dataset=ds, model=m,
-                                      SFL=d["base"].iloc[i], SFL_RFF=d["sfl_rff"].iloc[i],
-                                      EMB_sum=d["emb_sum"].iloc[i]))
+                                      SFL=d["sfl"].iloc[i], SFL_RFF=d["sfl_rff"].iloc[i],
+                                      EMB=d["emb"].iloc[i]))
             bydataset.append(dict(dataset=ds, source="per-model",
-                                  SFL=d["base"].mean(), SFL_RFF=d["sfl_rff"].mean(),
-                                  EMB_sum=d["emb_sum"].mean()))
+                                  SFL=d["sfl"].mean(), SFL_RFF=d["sfl_rff"].mean(),
+                                  EMB=d["emb"].mean()))
         else:
             missing.append(ds)
             if ds in DOC_MEANS:
@@ -60,7 +64,7 @@ def main():
     lp = pd.DataFrame(long_rows)
     bd = pd.DataFrame(bydataset)
     for df in (lp, bd):
-        for c in ["SFL", "SFL_RFF", "EMB_sum"]:
+        for c in ["SFL", "SFL_RFF", "EMB"]:
             df[c] = df[c].round(3)
     lp.to_csv(HERE / "brain_summary_permodel.csv", index=False)
     bd.to_csv(HERE / "brain_summary_bydataset.csv", index=False)
@@ -76,17 +80,17 @@ def main():
     print(lp.to_string(index=False))
 
     order = ["Pereira", "Tuckute", "NatStor-fMRI", "Wehbe-HP", "UCL-N400"]
-    C = {"SFL": "#999999", "SFL_RFF": "#DD8452", "EMB_sum": "#4C72B0"}
-    LEG = [("SFL (3-dim)", C["SFL"]), ("SFL + RFF", C["SFL_RFF"]), ("EMB (sum)", C["EMB_sum"])]
+    C = {"SFL": "#999999", "SFL_RFF": "#DD8452", "EMB": "#4C72B0"}
+    LEG = [("SFL (3-dim)", C["SFL"]), ("SFL + RFF", C["SFL_RFF"]), ("EMB (sum)", C["EMB"])]
     PLOTS = str(HERE / "plots")
 
     # ---- Fig A: mean +- SEM across the 5 LMs, with individual model dots overlaid ----
-    m = lp.groupby("dataset")[["SFL", "SFL_RFF", "EMB_sum"]].mean().reindex(order)
-    sem = (lp.groupby("dataset")[["SFL", "SFL_RFF", "EMB_sum"]]
+    m = lp.groupby("dataset")[["SFL", "SFL_RFF", "EMB"]].mean().reindex(order)
+    sem = (lp.groupby("dataset")[["SFL", "SFL_RFF", "EMB"]]
            .agg(lambda v: np.std(v, ddof=1) / np.sqrt(len(v))).reindex(order))
     x = np.arange(len(order)); w = 0.27
     fig, ax = plt.subplots(figsize=(6.6, 3.3), dpi=300)
-    for k, off in [("SFL", -w), ("SFL_RFF", 0), ("EMB_sum", w)]:
+    for k, off in [("SFL", -w), ("SFL_RFF", 0), ("EMB", w)]:
         ax.bar(x + off, m[k], w, yerr=sem[k], color=C[k], edgecolor="black", linewidth=0.4,
                error_kw=dict(lw=1.0, ecolor="black", capsize=2.5), zorder=2)
         for i, ds in enumerate(order):                       # per-model dots
@@ -110,7 +114,7 @@ def main():
     fig, axes = plt.subplots(1, len(order), figsize=(11.5, 2.6), dpi=300, sharey=True)
     for ax, ds in zip(axes, order):
         sub = lp[lp.dataset == ds].set_index("model").reindex(mods)
-        for k in ["SFL", "SFL_RFF", "EMB_sum"]:
+        for k in ["SFL", "SFL_RFF", "EMB"]:
             ax.plot(range(len(mods)), sub[k], marker="o", ms=4, lw=1.4, color=C[k])
         ax.set_title(ds, fontsize=9.5, weight="bold")
         ax.set_xticks(range(len(mods)))

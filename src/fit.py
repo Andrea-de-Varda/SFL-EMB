@@ -90,11 +90,11 @@ def make_folds(n, groups=None, n_splits=10):
 # --------------------------------------------------------------------------- #
 # per-fold regressor (shared by every condition)
 # --------------------------------------------------------------------------- #
-def _score_fold(X_tr, X_te, y_tr, y_te, backend):
-    """Standardize on train, fit ridge, return (Pearson r, selected alpha).
+def _fit_predict(X_tr, X_te, y_tr, backend):
+    """Standardize X and y on train, fit ridge, return (test prediction, alpha).
 
-    ``y_te`` is left in its raw scale: Pearson r is invariant to the affine
-    scaling of the target, so only ``y_tr`` needs centering for the fit.
+    The prediction is in the standardized-y space; that is fine for Pearson r
+    (affine-invariant) and for the relative ordering used by OOF interpretation.
     """
     xs, ys = StandardScaler(), StandardScaler()
     X_tr = xs.fit_transform(X_tr)
@@ -107,8 +107,7 @@ def _score_fold(X_tr, X_te, y_tr, y_te, backend):
         reg = RidgeCV(alphas=ALPHAS, cv=KFold(INNER_CV, shuffle=False),
                       fit_intercept=False)
         reg.fit(X_tr, y_trs)
-        y_pred = reg.predict(X_te)
-        alpha = float(reg.alpha_)
+        return reg.predict(X_te), float(reg.alpha_)
     elif backend == "himalaya":
         # himalaya RidgeCV matches sklearn RidgeCV to ~1e-4 in BOTH the n>p and
         # n<p regimes (verified). KernelRidgeCV is faster for n<<p but its inner
@@ -119,10 +118,13 @@ def _score_fold(X_tr, X_te, y_tr, y_te, backend):
         reg = HRidgeCV(alphas=ALPHAS, cv=INNER_CV, fit_intercept=False)
         reg.fit(_to_backend(X_tr), _to_backend(y_trs[:, None]))
         y_pred = _from_backend(reg.predict(_to_backend(X_te))).squeeze()
-        alpha = float(_from_backend(reg.best_alphas_).ravel()[0])
-    else:
-        raise ValueError(f"unknown backend {backend!r}")
+        return y_pred, float(_from_backend(reg.best_alphas_).ravel()[0])
+    raise ValueError(f"unknown backend {backend!r}")
 
+
+def _score_fold(X_tr, X_te, y_tr, y_te, backend):
+    """Fit on train, return (Pearson r vs held-out y, selected alpha)."""
+    y_pred, alpha = _fit_predict(X_tr, X_te, y_tr, backend)
     y_te = np.asarray(y_te, dtype=np.float64).ravel()
     if np.std(y_pred) == 0 or np.std(y_te) == 0:
         return 0.0, alpha
@@ -153,6 +155,28 @@ def run_folds(build_fn, y, folds, backend="himalaya"):
         fold_rs.append(r)
         fold_alphas.append(alpha)
     return fold_rs, fold_alphas
+
+
+def oof_predict(y, folds, X=None, build_fn=None, backend="himalaya"):
+    """Leave-fold-out predictions for every item (for interpretation, not scoring).
+
+    Same per-fold standardized ridge as :func:`run_folds`; returns a length-n array
+    of held-out predictions (standardized-y space). Provide a fixed ``X`` or a
+    per-fold ``build_fn`` (e.g. pooled RFF).
+    """
+    if backend == "himalaya":
+        setup_himalaya()
+    y = np.asarray(y, dtype=np.float64).ravel()
+    n = len(y)
+    if build_fn is None:
+        build_fn = _slicer(X)
+    pred = np.full(n, np.nan)
+    for test in folds:
+        test = np.asarray(test)
+        train = np.setdiff1d(np.arange(n), test, assume_unique=False)
+        X_tr, X_te = build_fn(train, test)
+        pred[test], _ = _fit_predict(X_tr, X_te, y[train], backend)
+    return pred
 
 
 def _slicer(X):
