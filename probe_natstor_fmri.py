@@ -24,8 +24,8 @@ from src.models import MODEL_ORDER
 MODELS_TO_RUN = os.environ.get("SFL_MODELS", ",".join(MODEL_ORDER)).split(",")
 BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 CACHE = PROJECT_ROOT / "cache"
-RESULTS = PROJECT_ROOT / "natstor_fmri/results"
-NF = PROJECT_ROOT / "natstor_fmri"
+RESULTS = PROJECT_ROOT / "results"
+NF = PROJECT_ROOT / "data/natstor_fmri"
 
 with open(NF / "response/d_natstor", "rb") as h:
     d = pickle.load(h)

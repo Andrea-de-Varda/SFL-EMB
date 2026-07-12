@@ -21,9 +21,9 @@ from src.models import MODEL_ORDER
 MODELS_TO_RUN = os.environ.get("SFL_MODELS", ",".join(MODEL_ORDER)).split(",")
 BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 CACHE = PROJECT_ROOT / "cache"
-RESULTS = PROJECT_ROOT / "pereira_1/results"
+RESULTS = PROJECT_ROOT / "results"
 
-meta = pd.read_csv(PROJECT_ROOT / "pereira_1/pereira_averaged_with_passage.csv")
+meta = pd.read_csv(PROJECT_ROOT / "data/pereira/pereira_averaged_with_passage.csv")
 sentences = [str(s).split() for s in meta["Sentence"]]
 y = meta["EffectSize"].to_numpy()
 groups = meta["passage_group"].to_numpy()

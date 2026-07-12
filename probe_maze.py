@@ -24,11 +24,11 @@ BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 CACHE, RESULTS = PROJECT_ROOT / "cache", PROJECT_ROOT / "results"
 
 # --- load + map sentences to file order (defines sent_n / word alignment) ------
-maze = pyreadr.read_r(PROJECT_ROOT / "main_data/NaturalStories/natstor_maze.rds")[None]
+maze = pyreadr.read_r(PROJECT_ROOT / "data/NaturalStories/natstor_maze.rds")[None]
 maze = maze[maze["native"].isin(['ENG', 'ENGLISH', 'English', 'english'])].copy()
 
 maze_sent = [line.split() for line in
-             open(PROJECT_ROOT / "corpora/maze_sentences.txt").read().splitlines()]
+             open(PROJECT_ROOT / "data/corpora/maze_sentences.txt").read().splitlines()]
 recover = {" ".join(words): i for i, words in enumerate(maze_sent)}
 maze["sent_n"] = maze["sentence"].map(recover)
 

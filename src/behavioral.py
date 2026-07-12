@@ -29,7 +29,7 @@ _PUNCT = re.compile(r'[\.\,\:\-\?\!\)\(\"]')
 def load_subtlex(path=None):
     """SUBTLEX log-frequency dict (natural log of FREQcount) + the OOV floor."""
     import pandas as pd
-    path = path or PROJECT_ROOT / "main_data/subtlex.xlsx"
+    path = path or PROJECT_ROOT / "data/subtlex.xlsx"
     freq = pd.read_excel(path)
     f = {row.Word: np.log(row.FREQcount) for _, row in freq.iterrows()}
     return f, min(f.values())

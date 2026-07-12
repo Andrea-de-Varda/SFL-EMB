@@ -2,7 +2,7 @@
 """NatStor self-paced reading (A1). Word-level with i, i-1, i-2 spillover on both
 SFL and EMB.
 
-The stories (datasets/natstor.tsv) are split into sentences at sentence-final
+The stories (data/natstor.tsv) are split into sentences at sentence-final
 punctuation so spillover never crosses a sentence boundary; the target is the
 per-word geometric-mean item RT. Non-finite RTs are dropped by the driver.
 
@@ -26,7 +26,7 @@ CACHE, RESULTS = PROJECT_ROOT / "cache", PROJECT_ROOT / "results"
 
 END = re.compile(r'[\.!?](?:["\')\]]*)$')   # sentence-final punctuation
 
-df = pd.read_csv(PROJECT_ROOT / "datasets/natstor.tsv", sep="\t").sort_values(["item", "zone"])
+df = pd.read_csv(PROJECT_ROOT / "data/natstor.tsv", sep="\t").sort_values(["item", "zone"])
 
 sentences, sent_rts = [], []
 for item in sorted(df["item"].unique()):

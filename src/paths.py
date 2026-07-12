@@ -1,15 +1,12 @@
 """Reproducible repo-root resolution.
 
-Every script resolves the project root as the directory containing ``utils.py``
-(kept as the root marker for backward compatibility). Import ``PROJECT_ROOT``
-from here instead of hardcoding paths or repeating the resolution header.
+``src/paths.py`` lives at ``<repo>/src/paths.py``, so the repo root is its
+grandparent. Import ``PROJECT_ROOT`` / ``project_path`` from here instead of
+hardcoding paths or repeating a resolution header in every script.
 """
 from pathlib import Path
 
-_here = Path(__file__).resolve().parent
-PROJECT_ROOT = next(
-    p for p in (_here, *_here.parents) if (p / "utils.py").is_file()
-)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def project_path(*parts) -> Path:

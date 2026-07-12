@@ -25,7 +25,7 @@ CACHE, RESULTS = PROJECT_ROOT / "cache", PROJECT_ROOT / "results"
 
 MEASURES = {"fpass": "firstrun.dur", "ffix": "firstfix.dur", "totfix": "dur"}
 
-meco = pd.read_csv(PROJECT_ROOT / "main_data/Meco/Meco_l1.csv", index_col=None).iloc[:, 1:]
+meco = pd.read_csv(PROJECT_ROOT / "data/Meco/Meco_l1.csv", index_col=None).iloc[:, 1:]
 meco = meco.dropna(subset=["ia"])
 meco = meco[~meco["subid"].isin(["ee_09", "ee_22", "ru_8"])]   # wrong itemid assignment
 meco = meco[meco["lang"] == "en"].copy()

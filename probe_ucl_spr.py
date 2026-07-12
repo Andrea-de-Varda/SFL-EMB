@@ -21,7 +21,7 @@ MODELS_TO_RUN = os.environ.get("SFL_MODELS", ",".join(MODEL_ORDER)).split(",")
 BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 CACHE, RESULTS = PROJECT_ROOT / "cache", PROJECT_ROOT / "results"
 
-d = pd.read_csv(PROJECT_ROOT / "UCL_reading_all.csv")
+d = pd.read_csv(PROJECT_ROOT / "data/UCL_reading_all.csv")
 sentences, target, sent_ids = [], [], []
 for i, sn in enumerate(sorted(d["sent_nr"].unique())):
     s = d[d["sent_nr"] == sn].sort_values("word_pos")

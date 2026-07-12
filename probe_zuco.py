@@ -24,7 +24,7 @@ MODELS_TO_RUN = os.environ.get("SFL_MODELS", ",".join(MODEL_ORDER)).split(",")
 BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 CACHE, RESULTS = PROJECT_ROOT / "cache", PROJECT_ROOT / "results"
 
-df = pd.read_csv(PROJECT_ROOT / "main_data/ZuCo/ET_data_aggregated.csv")
+df = pd.read_csv(PROJECT_ROOT / "data/ZuCo/ET_data_aggregated.csv")
 MEASURES = {"fpass": "gd", "ffix": "ff", "totfix": "tt"}
 
 sentences, targ = [], {t: [] for t in MEASURES}

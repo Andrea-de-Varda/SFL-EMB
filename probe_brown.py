@@ -3,7 +3,7 @@
 SFL and EMB.
 
 The per-word reading time (`psychometric`, already participant-aggregated) is read
-from the cached dfs/brown_surprisal.csv, whose rows are exactly the non-initial
+from the cached data/brown_surprisal.csv, whose rows are exactly the non-initial
 words of corpora/bnc_brown.txt in order; embeddings/surprisal are recomputed from
 those sentences. Spillover and the 5-condition fit are handled by the shared driver.
 
@@ -25,8 +25,8 @@ BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 CACHE, RESULTS = PROJECT_ROOT / "cache", PROJECT_ROOT / "results"
 
 sentences = [ln.split() for ln in
-             open(PROJECT_ROOT / "corpora/bnc_brown.txt").read().splitlines()]
-target = pd.read_csv(PROJECT_ROOT / "dfs/brown_surprisal.csv")["psychometric"].to_numpy()
+             open(PROJECT_ROOT / "data/corpora/bnc_brown.txt").read().splitlines()]
+target = pd.read_csv(PROJECT_ROOT / "data/brown_surprisal.csv")["psychometric"].to_numpy()
 sent_ids = [s for s, sent in enumerate(sentences) for _ in sent[1:]]  # non-initial words
 print(f"Brown: {len(target)} non-initial words across {len(sentences)} sentences")
 

@@ -24,8 +24,8 @@ from src.models import MODEL_ORDER
 MODELS_TO_RUN = os.environ.get("SFL_MODELS", ",".join(MODEL_ORDER)).split(",")
 BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 CACHE = PROJECT_ROOT / "cache"
-RESULTS = PROJECT_ROOT / "fMRI/results"
-FM = PROJECT_ROOT / "fMRI/fMRI"
+RESULTS = PROJECT_ROOT / "results"
+FM = PROJECT_ROOT / "data/wehbe"
 
 SUBJECTS = ["F", "H", "I", "J", "K", "L", "M", "N"]
 

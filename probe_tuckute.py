@@ -19,9 +19,9 @@ from src.models import MODEL_ORDER
 MODELS_TO_RUN = os.environ.get("SFL_MODELS", ",".join(MODEL_ORDER)).split(",")
 BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 CACHE = PROJECT_ROOT / "cache"
-RESULTS = PROJECT_ROOT / "control_fmri/results"
+RESULTS = PROJECT_ROOT / "results"
 
-df = pd.read_csv(PROJECT_ROOT / "control_fmri/data/brain-lang-data_participant_20230728.csv")
+df = pd.read_csv(PROJECT_ROOT / "data/tuckute/brain-lang-data_participant_20230728.csv")
 df = df[df["roi"] == "lang_LH_netw"]
 g = df.groupby("sentence", sort=True)["response_target"].mean()   # one response per sentence
 sentences = [str(s).split() for s in g.index]

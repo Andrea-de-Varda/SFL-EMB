@@ -3,22 +3,10 @@
 # de Varda et al., "Behavioral and Brain Responses to Language Reflect
 # Different Levels of Linguistic Representation"
 #
-# This repo holds ~114 GB of large data/model/derived files that must NOT go
-# into git. The patterns below exclude them while keeping all CODE and small
-# RESULTS files (results_*.csv, coefs, predictions tables, plots) tracked.
-#
-# The excluded files fall in two classes:
-#   (A) REGENERABLE  - LM activation dumps, surprisal/embedding caches. These
-#                      can be recomputed from the models + stimuli.
-#   (B) RAW DATA      - fMRI subject arrays, audio, R data, raw timeseries.
-#                      NOT regenerable -> back these up to external storage
-#                      (OSF / Google Drive / cluster), do not just delete.
-#
-# For data you DO want versioned alongside code, consider git-lfs.
+# Code + small results + curated input data under data/ are tracked. Large raw
+# arrays / audio / model caches are excluded (regenerable or backed up externally).
+# NOTE: git does not support trailing comments on pattern lines.
 # ============================================================================
-
-# ----- extraction cache (regenerable embeddings/surprisal, new pipeline) -----
-cache/
 
 # ----- Python -----
 __pycache__/
@@ -27,56 +15,28 @@ __pycache__/
 .ipynb_checkpoints/
 .venv/
 venv/
-
-# ----- (A) LM activation dumps (regenerable; the bulk of the 114 GB) -----
-activations_*.json
-*.parquet.gzip
-
-# ----- (A) cached embeddings / surprisal pickles -----
-embeddings/*.pkl
-**/surprisal_*.pkl
-**/activations_*.pkl
-
-# ----- (A) per-model embedding dumps stored as extension-less files -----
-natstor_fmri/embeddings/
-probing_LMs/embeddings/
-probing_LMs/XYdata/
-
-# ----- (A) word-vector / model binaries -----
-*.bin
-*.bin.gz
-cc.en.300.*
-
-# ----- (B) raw fMRI subject data (~2 GB of .npy) -----
-fMRI/fMRI/data_subject_*.npy
-
-# ----- (B) audio -----
-*.wav
-natstor_fmri/sound_data/
-
-# ----- (B) large raw data tables (back up externally, do not delete) -----
-natstor_fmri/NaturalStories_TimeSeries_20220615.csv
-control_fmri/data/brain-lang-data_participant_20230728.csv
-*.rds
-
-# ----- rendered notebook exports -----
-*.html
-
-# ----- vendored third-party repo, unused by current paper (has nested .git) -----
-probing_LMs/SentEval/
-
-# ----- OS / editor noise -----
 .DS_Store
 *.swp
 .idea/
 .vscode/
-
-# ----- main_data/ is the curated input-data dir and IS tracked -----
-# (overrides the broad rules above, e.g. *.rds, so natstor_maze.rds is included;
-#  all files here are <100 MB, within GitHub's per-file limit)
-!main_data/
-!main_data/**
-
 .claude/*
 
-AUDIT*
+# ----- derived / regenerable (recomputed ex novo by the pipeline) -----
+# extractor embedding/surprisal cache
+cache/
+# passage-label source parquet (data/pereira/Pereira.parquet.gzip)
+*.parquet.gzip
+
+# ----- large RAW data (back up externally; do NOT delete) -----
+# ~2 GB fMRI subject arrays
+data/wehbe/data_subject_*.npy
+# large Tuckute response table
+data/tuckute/brain-lang-data_participant_*.csv
+# audio
+data/natstor_fmri/sound_data/
+*.wav
+# raw timeseries
+data/natstor_fmri/NaturalStories_TimeSeries_*.csv
+
+# data/ is otherwise TRACKED, including data/NaturalStories/natstor_maze.rds
+# (~51 MB, under GitHub's per-file limit).

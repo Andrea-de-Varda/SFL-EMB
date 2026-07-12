@@ -32,7 +32,7 @@ RESULTS = PROJECT_ROOT / "results"
 # --------------------------------------------------------------------------- #
 # behavioral data
 # --------------------------------------------------------------------------- #
-provo = pd.read_csv(PROJECT_ROOT / "main_data/Provo/Provo_Corpus-Eyetracking_Data.csv")
+provo = pd.read_csv(PROJECT_ROOT / "data/Provo/Provo_Corpus-Eyetracking_Data.csv")
 provo = provo[['Text_ID', 'Word_Unique_ID', 'Word_Number', 'Sentence_Number',
                'Word_In_Sentence_Number', 'Word', 'Word_Cleaned', 'Word_Length',
                'IA_FIRST_FIXATION_DURATION', 'IA_FIRST_RUN_DWELL_TIME', 'IA_DWELL_TIME']]
@@ -48,11 +48,11 @@ provo = provo.groupby(
 
 # the CSV omits each passage's first word -> recover from the stimuli file
 first_word = [s.split("\t")[2][1:-2].split()[0]
-              for s in open(PROJECT_ROOT / "main_data/Provo/sentences.txt").readlines()]
+              for s in open(PROJECT_ROOT / "data/Provo/sentences.txt").readlines()]
 d_first = {num + 1: first_word[num] for num in range(55)}
 
 # frequency (log SUBTLEX count)
-freq_tbl = pd.read_excel(PROJECT_ROOT / "main_data/subtlex.xlsx")
+freq_tbl = pd.read_excel(PROJECT_ROOT / "data/subtlex.xlsx")
 _f = {row.Word: np.log(row.FREQcount) for _, row in freq_tbl.iterrows()}
 _minf = min(_f.values())
 
