@@ -54,10 +54,15 @@ def extract_words(model_key, sentences, drop_first=True, chunked=False,
     for words in sentences:
         words = list(words)
         if chunked:
-            e = ex.chunked_word_features(words, n_splits=n_splits, overlap=overlap)
+            import math
+            # keep chunks well under the context window (~350 words -> safe for the
+            # 512-token original GPT and the 1024-token GPT-2 family)
+            ns = max(n_splits, math.ceil(len(words) / 350))
+            e = ex.chunked_word_features(words, n_splits=ns, overlap=overlap)
+            s = ex.chunked_word_surprisal(words, n_splits=ns, overlap=overlap)
         else:
             e = ex.word_embeddings(words)
-        s = ex.word_surprisal(words)
+            s = ex.word_surprisal(words)
         if drop_first:
             e, s = e[1:], s[1:]
         embs.append(e)
@@ -141,14 +146,9 @@ class Extractor:
         return out
 
     # ------------------------------------------------------------------ #
-    @torch.no_grad()
-    def chunked_word_features(self, words, layer="last", n_splits=2, overlap=50):
-        """Per-word embeddings for a long passage via overlapping windows.
-
-        Mirrors ``natstor_fmri/get_natstor_embeddings.py``: split into ``n_splits``
-        word-chunks with ``overlap`` words of left context, embed each, then stitch
-        keeping only the non-overlap tail of later chunks. Returns (n_words, dim).
-        """
+    @staticmethod
+    def _chunks(words, n_splits, overlap):
+        """Overlapping word-chunks (left context ``overlap`` words) for a long text."""
         import math
 
         chunk_size = math.ceil(len(words) / n_splits)
@@ -162,8 +162,23 @@ class Extractor:
             else:
                 start = s * chunk_size - overlap * s
                 chunks.append(words[start:start + chunk_size])
-        embs = [self.word_embeddings(c, layer=layer) for c in chunks if len(c)]
-        out = [embs[0]]
-        for e in embs[1:]:
-            out.append(e[overlap:])
+        return [c for c in chunks if len(c)]
+
+    @torch.no_grad()
+    def chunked_word_features(self, words, layer="last", n_splits=2, overlap=50):
+        """Per-word embeddings for a long passage via overlapping windows, stitched
+        keeping only the non-overlap tail of later chunks. Returns (n_words, dim).
+        Mirrors ``natstor_fmri/get_natstor_embeddings.py``.
+        """
+        embs = [self.word_embeddings(c, layer=layer)
+                for c in self._chunks(words, n_splits, overlap)]
+        out = [embs[0]] + [e[overlap:] for e in embs[1:]]
         return np.vstack(out)
+
+    @torch.no_grad()
+    def chunked_word_surprisal(self, words, n_splits=2, overlap=50):
+        """Summed sub-word surprisal for a long passage via overlapping windows.
+        Overlap words take the earlier chunk's value (more left context). (n_words,)."""
+        surps = [self.word_surprisal(c) for c in self._chunks(words, n_splits, overlap)]
+        out = [surps[0]] + [s[overlap:] for s in surps[1:]]
+        return np.concatenate(out)

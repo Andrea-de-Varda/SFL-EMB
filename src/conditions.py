@@ -57,36 +57,44 @@ def build_results_table(rows_by_model, model_order=None):
     return df
 
 
+def run_conditions(specs, y, folds, prefix, results_dir="results",
+                   backend="himalaya", verbose=True):
+    """Score an ordered dict of conditions and return a flat result row.
+
+    ``specs`` maps condition name -> kwargs for ``fit.score`` (either ``X=matrix``
+    for a fixed design or ``build_fn=fn`` for a per-fold builder, e.g. pooled RFF).
+    Returns ``{cond}``/``{cond}_sd`` per condition plus the ``p_*`` contrasts.
+    Per-fold r vectors are persisted for the permutation tests / re-analysis.
+    """
+    row = {}
+    for cond, kw in specs.items():
+        m, sd, _, _ = fit.score(y=y, folds=folds, saveto=f"{prefix}_{cond}",
+                                results_dir=results_dir, backend=backend, **kw)
+        row[cond], row[f"{cond}_sd"] = m, sd
+        if verbose:
+            print(f"  {prefix:<30s} {cond:<12s} r = {m:.4f}  (sd {sd:.4f})")
+    row.update(significance_row(prefix, results_dir))
+    return row
+
+
 def run_all_conditions(X_sfl, X_emb, y, folds, prefix, n_components=None,
                        results_dir="results", backend="himalaya", seed=0,
                        verbose=True):
-    """Score the 5 conditions for one (dataset, model) and return a flat result row.
+    """Score the 5 conditions for a per-unit (word/sentence-row) dataset.
 
-    Returns a dict with ``{cond}`` (mean r), ``{cond}_sd`` for each condition and
-    each ``p_*`` contrast. Per-fold r vectors are persisted under
-    ``<results_dir>/<prefix>_<cond>_predictions`` for the permutation tests and any
-    later re-analysis.
+    RFF is applied directly to the rows of ``X_sfl`` (the modelling unit IS the
+    row). Datasets that fit RFF at the word level and pool afterwards (fMRI) use
+    :func:`run_conditions` with pooled build_fns instead.
     """
     X_sfl = np.asarray(X_sfl, dtype=np.float64)
     X_emb = np.asarray(X_emb, dtype=np.float64)
     if n_components is None:
         n_components = X_emb.shape[1]
-
-    row = {}
     specs = {
         "sfl":         dict(X=X_sfl),
         "emb":         dict(X=X_emb),
         "all":         dict(X=np.hstack([X_sfl, X_emb])),
-        "sfl_rff":     dict(X=None, build_fn=rff.rff_build_fn(X_sfl, n_components, seed)),
-        "sfl_rff_emb": dict(X=None, build_fn=rff.rff_concat_build_fn(X_sfl, X_emb, n_components, seed)),
+        "sfl_rff":     dict(build_fn=rff.rff_build_fn(X_sfl, n_components, seed)),
+        "sfl_rff_emb": dict(build_fn=rff.rff_concat_build_fn(X_sfl, X_emb, n_components, seed)),
     }
-    for cond in CONDITIONS:
-        m, sd, _, _ = fit.score(y=y, folds=folds, saveto=f"{prefix}_{cond}",
-                                results_dir=results_dir, backend=backend, **specs[cond])
-        row[cond] = m
-        row[f"{cond}_sd"] = sd
-        if verbose:
-            print(f"  {prefix:<28s} {cond:<12s} r = {m:.4f}  (sd {sd:.4f})")
-
-    row.update(significance_row(prefix, results_dir))
-    return row
+    return run_conditions(specs, y, folds, prefix, results_dir, backend, verbose)

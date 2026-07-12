@@ -160,8 +160,8 @@ def _slicer(X):
     return lambda train, test: (X[train], X[test])
 
 
-def score(X, y, folds, saveto=None, results_dir="results", backend="himalaya",
-          build_fn=None, warn_boundary=True):
+def score(X=None, y=None, folds=None, saveto=None, results_dir="results",
+          backend="himalaya", build_fn=None, warn_boundary=True):
     """Run a condition and (optionally) persist the per-fold r vector.
 
     Provide either a fixed ``X`` (plain condition) or a ``build_fn`` (RFF). Saves
