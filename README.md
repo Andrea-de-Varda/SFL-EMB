@@ -90,7 +90,11 @@ Env vars: `SFL_MODELS` (comma-separated subset of
 `gpt,gpt2_small,gpt2_medium,gpt2_large,gpt2_xl`; default all) and `SFL_BACKEND`
 (`himalaya` default, or `sklearn`).
 
-On MIT Engaging: `sbatch cluster/slurm_engaging.sh` (see `cluster/ENGAGING.md`).
+On MIT Engaging: `sbatch cluster/slurm_engaging.sh` (single GPU), or
+`sbatch cluster/slurm_engaging_array.sh` to run across **3 GPUs in parallel** — a
+SLURM job array that statically partitions the 13 datasets into cost-balanced
+buckets (one GPU each, per-task logs, no re-runs since results/cache are per-dataset).
+A `flock`-guarded warmup downloads the 5 models once. See `cluster/ENGAGING.md`.
 
 Results land in `results/`: one `results/<dataset>_<target>_results.csv` per
 target (rows = models; columns = the 5 conditions' mean r + sd + permutation
