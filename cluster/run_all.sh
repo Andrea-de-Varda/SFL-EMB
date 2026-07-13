@@ -1,13 +1,12 @@
 #!/bin/bash
-# Run the full SFL-EMB pipeline: every dataset x 5 models x 5 conditions.
+# Run the SFL-EMB pipeline: each dataset x 5 models x 5 conditions.
 # Writes results/<dataset>_..._results.csv and per-fold prediction files.
+# A failing dataset is reported but does NOT stop the rest (no set -e).
 #
 # Usage:
-#   bash cluster/run_all.sh                # all 13 datasets, all 5 models (himalaya)
-#   SFL_MODELS=gpt2_small bash cluster/run_all.sh   # quick single-model smoke run
-#   SFL_BACKEND=sklearn bash cluster/run_all.sh      # CPU reference backend
+#   bash cluster/run_all.sh                        # all 13 datasets, all 5 models
+#   SFL_MODELS=gpt2_small bash cluster/run_all.sh  # quick single-model smoke run
 #   bash cluster/run_all.sh probe_pereira.py probe_wehbe.py   # a subset
-set -e
 cd "$(dirname "$0")/.."
 
 PROBES=("$@")
@@ -22,8 +21,19 @@ if [ ${#PROBES[@]} -eq 0 ]; then
   )
 fi
 
+failed=()
 for p in "${PROBES[@]}"; do
   echo "=================== $p ==================="
-  python "$p"
+  if python -u "$p"; then
+    echo "--- $p OK"
+  else
+    echo "!!! $p FAILED (rc=$?) — continuing with the rest"
+    failed+=("$p")
+  fi
 done
+
+if [ ${#failed[@]} -gt 0 ]; then
+  echo "DONE with failures: ${failed[*]}"
+  exit 1
+fi
 echo "All done. Results in results/"

@@ -19,6 +19,7 @@ export HF_HOME=${HF_HOME:-/orcd/data/evelina9/001/USERS/devar_ag/.hf_cache_new}
 export HF_HUB_ENABLE_HF_TRANSFER=0
 export HF_HUB_DISABLE_TELEMETRY=1
 export TOKENIZERS_PARALLELISM=false
+export PYTHONUNBUFFERED=1          # stream progress live to the SLURM log (no buffering)
 export HF_OFFLOAD_DIR=${HF_OFFLOAD_DIR:-/orcd/data/evelina9/001/USERS/devar_ag/offload}
 mkdir -p "$HF_OFFLOAD_DIR" "$HF_HOME"
 # export HF_TOKEN=...   # only needed for gated models; GPT / GPT-2 are public

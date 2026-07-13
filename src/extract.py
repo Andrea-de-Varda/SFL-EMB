@@ -56,9 +56,13 @@ def extract_words(model_key, sentences, drop_first=True, chunked=False,
         words = list(words)
         if chunked:
             import math
-            # keep chunks well under the context window (~350 words -> safe for the
-            # 512-token original GPT and the 1024-token GPT-2 family)
-            ns = max(n_splits, math.ceil(len(words) / 350))
+            # size chunks from the model's real context window so sub-word tokens
+            # stay comfortably under it (openai-gpt = 512 positions, gpt2 = 1024).
+            # ctx//2 words -> ~1.5 tokens/word keeps us well inside the limit.
+            ctx = (getattr(ex.lm.config, "n_positions", None)
+                   or getattr(ex.lm.config, "max_position_embeddings", 1024))
+            max_words = max(64, ctx // 2)
+            ns = max(n_splits, math.ceil(len(words) / max_words))
             e = ex.chunked_word_features(words, layer=layer, n_splits=ns, overlap=overlap)
             s = ex.chunked_word_surprisal(words, n_splits=ns, overlap=overlap)
         else:
