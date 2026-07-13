@@ -40,3 +40,11 @@ data/natstor_fmri/NaturalStories_TimeSeries_*.csv
 
 # data/ is otherwise TRACKED, including data/NaturalStories/natstor_maze.rds
 # (~51 MB, under GitHub's per-file limit).
+
+# ----- run outputs (regenerable; commit final summary CSVs selectively) -----
+results/*_predictions
+results_extremes/
+check-features/preds/
+check-features/results_features.csv
+check-features/analysis/permodel_*.csv
+check-features/analysis/brain_summary_*.csv
