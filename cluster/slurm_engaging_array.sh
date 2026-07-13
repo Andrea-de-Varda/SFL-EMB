@@ -16,23 +16,13 @@
 #
 #   sbatch cluster/slurm_engaging_array.sh
 #
-# A flock-guarded warmup downloads the 5 models once (the first task to reach it
-# downloads; the others block briefly, then find them cached), avoiding a
-# concurrent-download race. Single command; no dependency chaining needed.
-
-source /etc/profile.d/modules.sh
-module purge
-module load deprecated-modules
-module load anaconda3/2022.05-x86_64
-source /home/software/anaconda3/2023.07/etc/profile.d/conda.sh
-conda activate sfl-emb
-
-export HF_HOME=${HF_HOME:-/orcd/data/evelina9/001/USERS/devar_ag/.hf_cache_new}
-export HF_HUB_DISABLE_TELEMETRY=1
-export TOKENIZERS_PARALLELISM=false
+# The flock-guarded warmup installs himalaya/pyreadr (if missing) and downloads the 5
+# models once: the first task to reach it does the work while the others block
+# briefly, then find everything ready. Single race-free command.
 
 cd "$SLURM_SUBMIT_DIR"
-mkdir -p logs "$HF_HOME"
+mkdir -p logs
+source cluster/env.sh
 
 # --- cost-balanced buckets (heaviest datasets split across GPUs) ---
 BUCKET_0=(probe_maze.py        probe_wehbe.py        probe_ucl_et.py  probe_ucl_n400.py)
@@ -46,9 +36,9 @@ case "$SLURM_ARRAY_TASK_ID" in
   *) echo "unexpected array id $SLURM_ARRAY_TASK_ID"; exit 1 ;;
 esac
 
-# --- one-time model download, serialized across tasks by a lock ---
-echo "[task $SLURM_ARRAY_TASK_ID] ensuring the 5 models are cached ..."
-flock "$HF_HOME/.sfl_warmup.lock" python cluster/warmup_models.py
+# one-time setup, serialized across tasks by a lock
+echo "[task $SLURM_ARRAY_TASK_ID] ensuring deps + 5 models are ready ..."
+flock "$HF_HOME/.sfl_warmup.lock" bash cluster/warmup.sh
 
 echo "[task $SLURM_ARRAY_TASK_ID] running ${#BUCKET[@]} datasets: ${BUCKET[*]}"
 bash cluster/run_all.sh "${BUCKET[@]}"

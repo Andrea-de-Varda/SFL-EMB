@@ -1,10 +1,13 @@
 # Conda environment for the SFL-EMB pipeline (modern stack; replaces the old
-# neurox environment). Create with:  conda env create -f environment.yml
+# neurox environment). For a fresh / external setup:  conda env create -f environment.yml
 #
-# NOTE on torch/CUDA: the pip torch below is a generic build. On a cluster
-# (e.g. MIT Engaging) install the torch wheel that matches the node's CUDA
-# instead, then `pip install himalaya transformers pyreadr`. Only the embedding/
-# surprisal extraction needs a GPU; fitting runs on GPU (himalaya) or CPU (sklearn).
+# On MIT Engaging you do NOT need this file: reuse the existing `modularity-conda`
+# env (torch + transformers already present) and just `pip install himalaya pyreadr`
+# -- cluster/env.sh + cluster/warmup.sh handle that. See cluster/ENGAGING.md.
+#
+# NOTE on torch/CUDA: the pip torch below is a generic build; on a cluster install
+# the wheel matching the node's CUDA. Only extraction needs a GPU; fitting runs on
+# GPU (himalaya) or CPU (sklearn).
 name: sfl-emb
 channels:
   - conda-forge

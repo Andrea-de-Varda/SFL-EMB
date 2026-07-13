@@ -1,60 +1,67 @@
-# Running the matched-brain analyses on Engaging
+# Running SFL-EMB on MIT Engaging
 
-Login node: `engaging` (`orcd-login.mit.edu`, user `devar_ag`). Scratch/project
-dir used here: `/orcd/data/evelina9/001/USERS/devar_ag/`.
+## Environment
 
-## 1. Code (git clone on the cluster)
+Reuse the existing **`modularity-conda`** env (it already has torch + transformers).
+The only extras the pipeline needs are **himalaya** (GPU ridge) and **pyreadr** (reads
+`data/NaturalStories/natstor_maze.rds`); the warmup step below installs them on first
+run, or install once yourself:
+
 ```bash
-ssh engaging
+# after the module load + conda activation in cluster/env.sh:
+pip install himalaya pyreadr
+```
+
+`cluster/env.sh` centralizes the setup — the module loads, the finicky conda
+**activate → deactivate → activate** dance `modularity-conda` needs in a batch shell,
+and the HF cache/offload env vars. Both SLURM scripts `source` it, so change the env
+name or cache paths there in one place. GPT / GPT-2 are public, so no `HF_TOKEN` is
+required (uncomment it in `env.sh` only if you add a gated model).
+
+## Code + data
+
+```bash
 cd /orcd/data/evelina9/001/USERS/devar_ag
-git clone https://github.com/Andrea-de-Varda/SFL-EMB.git   # or git@ if keys are set up
+git clone https://github.com/Andrea-de-Varda/SFL-EMB.git   # branch: refactor/modernize-pipeline
 cd SFL-EMB
 ```
-This brings the scripts + all tracked small files (`main_data/`, `*/SFL.csv`,
-`UCL_reading_all.csv`, `results/`, `environment_neurox.yml`, …).
 
-## 2. Data (rsync the gitignored inputs from the laptop, ~45 GB)
-Run **on the laptop**:
-```bash
-cd ~/Documents/PhD/SFL-EMB
-bash sync_to_engaging.sh        # rsync -P, resumable
-```
-Moves: `control_fmri/activations_*` + `data/`; `natstor_fmri/embeddings,response,transcribed`;
-`fMRI/HP_emb/activations_*` + `fMRI/fMRI/*.npy` + `fMRI/SFL` + `sentences.txt`.
-UCL-N400 embeddings are **not** moved — they're extracted on the cluster (GPU).
+Everything the pipeline reads is tracked under `data/` **except** the large arrays
+that are `.gitignore`d (fMRI subject `.npy`, the Tuckute response table, audio, the
+NatStor timeseries, the Pereira parquet). rsync those from the laptop to the matching
+`data/{wehbe,tuckute,natstor_fmri,pereira}/` paths.
 
-## 3. Environment (`neurox`, python 3.9)
-The laptop env: python 3.9, neurox 1.0.9, scikit-learn **0.24.2** (pin this — RidgeCV/
-RBFSampler behaviour), numpy 1.19.5, scipy 1.5.4, pandas 1.4.4.
-```bash
-# load conda on Engaging (anaconda is under deprecated-modules; conda must be sourced)
-source /etc/profile.d/modules.sh
-module purge
-module load deprecated-modules
-module load anaconda3/2022.05-x86_64
-source /home/software/anaconda3/2023.07/etc/profile.d/conda.sh
+## Run
 
-conda create -y -n neurox python=3.9
-conda activate neurox
-pip install neurox==1.0.9 scikit-learn==0.24.2 numpy==1.19.5 scipy==1.5.4 pandas==1.4.4 pyarrow
-# neurox pulls torch + transformers. If the cluster CUDA rejects the default torch,
-# install a cluster-matching build (only the N400 extraction actually needs a GPU).
-```
-`environment_neurox.yml` / `requirements_neurox.txt` are committed as reference (the
-torch pin there is the laptop's `+cu102` build — replace with a cluster build).
-
-## 4. Run
-- **CPU jobs** (load precomputed activations + CV): Tuckute, NatStor-fMRI, HP.
-- **GPU job**: UCL-N400 (extracts embeddings first). Set HF cache + token as usual:
-  `export HF_HOME=/orcd/data/evelina9/001/USERS/devar_ag/.hf_cache_new`.
+Single GPU (all 13 datasets sequentially):
 
 ```bash
-conda activate neurox
-bash run_matched_brain.sh natstorfmri      # one dataset
-bash run_matched_brain.sh                   # all four (control, n400, natstorfmri, HP)
+sbatch cluster/slurm_engaging.sh
+sbatch cluster/slurm_engaging.sh probe_pereira.py probe_wehbe.py   # a subset
 ```
-Each overwrites its `results/*.csv` (base/act/all + p_* kept for plotting.py, plus
-the matched columns + all-pairs permutation p-values).
 
-Suggested SLURM split: a CPU job (`-c 4 --mem=64G -t 12:00:00`) for control+natstorfmri+HP,
-and a separate GPU job for n400.
+**3 GPUs in parallel** (recommended — ~3x faster):
+
+```bash
+sbatch cluster/slurm_engaging_array.sh
+```
+
+A SLURM job array (`--array=0-2`), one A100 per task. The 13 datasets are statically
+split into 3 cost-balanced buckets, so each dataset runs on exactly one GPU — no
+re-runs, no clobber (`results/` and `cache/` are per-dataset keyed). Per-task logs
+land in `logs/sfl_emb_<jobid>_{0,1,2}.out`. A `flock`-guarded warmup installs the two
+deps and downloads the 5 models once (the first task does it; the others wait, then
+find everything cached). Edit the `BUCKET_0/1/2` arrays to re-balance.
+
+Both scripts extract embeddings/surprisal fresh and cache them under `cache/`
+(git-ignored), so re-runs skip extraction. Outputs: `results/<dataset>_..._results.csv`
+plus per-fold prediction files.
+
+## Figures / appendix (after the run)
+
+```bash
+python figures/plot_results.py                 # main comparison + SFL decomposition
+python appendix/layer_sweep.py                 # A4 layer sweep (gpt2_medium)
+python appendix/reliability_and_size.py        # A5 reliability
+python check-features/predict_features.py      # SFL_RFF meaning-vs-form probe
+```
