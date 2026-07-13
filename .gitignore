@@ -48,3 +48,7 @@ check-features/preds/
 check-features/results_features.csv
 check-features/analysis/permodel_*.csv
 check-features/analysis/brain_summary_*.csv
+
+# generated figures (regenerable)
+figures/*.svg
+figures/*.png
