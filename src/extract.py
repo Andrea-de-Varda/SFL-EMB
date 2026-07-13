@@ -90,7 +90,9 @@ def extract_words_dual(model_key, sentences, drop_first=True, chunked=False,
         cache = Path(cache)
         if cache.exists():
             z = np.load(cache)
-            return z["emb_mean"], z["emb_sum"], z["surp"]
+            if "emb_mean" in z:                 # new dual-pooling cache
+                return z["emb_mean"], z["emb_sum"], z["surp"]
+            # stale single-pooling cache -> recompute (avoids a manual wipe)
     ex = Extractor(model_key, device)
     ms, ss, sps = [], [], []
     for words in sentences:
