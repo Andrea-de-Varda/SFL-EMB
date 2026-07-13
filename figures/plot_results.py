@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
 """Figures for the SFL-EMB paper, from the results/ tables.
 
-  main_{behavioral,brain}   the ORIGINAL paper style: per dataset, grouped bars
-                            over the 5 models x 3 conditions (EMB / SFL / SFL+EMB),
-                            lightblue / lightgreen / indianred, SEM error bars.
-  rff_{behavioral,brain}    the same layout PLUS the two RFF conditions
-                            (SFL_RFF, SFL_RFF+EMB) -> 5 bars per model.
-  sfl_decomposition         appendix A2: S/F/L independent contributions (gpt2_medium).
+Per-dataset paper figures (paper/ subdir) — one per dataset, big title, NO legend,
+in the original style: 5 models x 3 bars (EMB / SFL / SFL+EMB, lightblue / lightgreen
+/ indianred), SEM error bars, and an "n.s." bracket over any pair whose difference is
+NOT significant (two-sided permutation test). EMB here is the mean-pooled variant.
 
-Reads results/<dataset>_<target>_results.csv (index=model; cols <cond>, <cond>_sd).
-Figures are written to figures/ as .svg + .png.
+Aggregate overview figures (figures/ root):
+  main_{behavioral,brain}  EMB_avg / SFL / SFL+EMB_avg grid
+  sum_{behavioral,brain}   the sum-pooled EMB variants
+  rff_{behavioral,brain}   adds SFL_RFF and SFL_RFF+EMB_avg
+  sfl_decomposition        appendix A2
+
+Reads results/<dataset>_<target>_results.csv (index=model; cols <cond>, <cond>_sd,
+p_*). Run after the pipeline.
 """
 import os
 import sys
+from math import sqrt
 
 import numpy as np
 import pandas as pd
@@ -25,13 +30,15 @@ from src.models import MODEL_ORDER, MODEL_LABELS
 
 RESULTS = PROJECT_ROOT / "results"
 FIGDIR = PROJECT_ROOT / "figures"
+PAPERDIR = FIGDIR / "paper"
 
-# ---- conditions: (results-column, legend label, colour) ----
-# original three (identical to the paper) + the two RFF additions
-MAIN = [("emb", "EMB", "lightblue"), ("sfl", "SFL", "lightgreen"),
-        ("all", r"EMB$^\frown$SFL", "indianred")]
+# condition -> (results-column, legend label, colour)
+MAIN = [("emb_avg", "EMB", "lightblue"), ("sfl", "SFL", "lightgreen"),
+        ("all_avg", r"EMB$^\frown$SFL", "indianred")]
+SUM = [("emb_sum", "EMB (sum)", "lightblue"), ("sfl", "SFL", "lightgreen"),
+       ("all_sum", r"EMB$^\frown$SFL (sum)", "indianred")]
 RFF = MAIN + [("sfl_rff", r"SFL$_{RFF}$", "#f2c14e"),
-              ("sfl_rff_emb", r"SFL$_{RFF}^\frown$EMB", "#b48ce0")]
+              ("sfl_rff_emb_avg", r"SFL$_{RFF}^\frown$EMB", "#b48ce0")]
 
 # dataset -> (results-file stem, pretty title)
 BEHAVIORAL = [("provo_fpass", "Provo"), ("meco_fpass", "Meco-en"), ("zuco_fpass", "ZuCo-2"),
@@ -39,6 +46,13 @@ BEHAVIORAL = [("provo_fpass", "Provo"), ("meco_fpass", "Meco-en"), ("zuco_fpass"
               ("natstor_spr", "NatStor-SPR"), ("maze_maze", "NatStor-Maze")]
 BRAIN = [("ucl_n400_n400", "UCL-N400"), ("HP", "Wehbe2014"), ("natstorfmri", "NatStor-fMRI"),
          ("pereira", "Pereira2018"), ("control", "Tuckute2024")]
+ALL_DATASETS = BEHAVIORAL + BRAIN
+# every per-target stem to render as its own paper figure
+PAPER_STEMS = [(s, t) for s, t in ALL_DATASETS] + [
+    ("provo_ffix", "Provo (first-fix)"), ("provo_totfix", "Provo (total-fix)"),
+    ("meco_ffix", "Meco-en (first-fix)"), ("meco_totfix", "Meco-en (total-fix)"),
+    ("zuco_ffix", "ZuCo-2 (first-fix)"), ("zuco_totfix", "ZuCo-2 (total-fix)"),
+    ("ucl_et_ffix", "UCL-ET (first-fix)"), ("ucl_et_totfix", "UCL-ET (total-fix)")]
 
 
 def _load(stem):
@@ -46,36 +60,97 @@ def _load(stem):
     return pd.read_csv(f, index_col=0) if f.exists() else None
 
 
-def _panel(ax, df, title, conds, ylim=None):
-    """One dataset: 5 models x len(conds) grouped bars, original base_plot look."""
+def _two_sided_ns(p):
+    """A directed permutation p = P(A>=B) is 'n.s.' (two-sided) if min(p,1-p) > .025."""
+    return min(p, 1 - p) > 0.025
+
+
+# ---------------------------------------------------------------- per-dataset (paper)
+def _bracket(ax, i, j, ns, centers, heights, yerr, dh, barh):
+    """Draw an 'n.s.' bracket over bars i,j only when the pair is non-significant."""
+    if not ns:
+        return
+    lx, rx = centers[i], centers[j]
+    y = max(heights[i] + yerr[i], heights[j] + yerr[j]) + dh
+    ax.plot([lx, lx, rx, rx], [y, y + barh, y + barh, y], c="black", lw=0.8)
+    ax.text((lx + rx) / 2, y + barh, "n.s.", ha="center", va="bottom", fontsize=7)
+
+
+def paper_figure(stem, title):
+    df = _load(stem)
+    if df is None:
+        return
+    models = [m for m in MODEL_ORDER if m in df.index]
+    keys = [k for k, _, _ in MAIN]                      # emb_avg, sfl, all_avg
+    pos = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19][:3 * len(models)]
+    heights, yerr, colors = [], [], []
+    for m in models:
+        for k, _, c in MAIN:
+            heights.append(float(df.loc[m, k]))
+            yerr.append(float(df.loc[m, f"{k}_sd"]) / sqrt(10))
+            colors.append(c)
+    fig, ax = plt.subplots(figsize=(5 / 1.4, 3.5 / 1.4), dpi=300)
+    ax.grid(axis="y", which="major", color="#666666", lw=0.5, zorder=0)
+    ax.bar(pos, heights, width=0.9, color=colors, yerr=yerr, capsize=2,
+           error_kw={"lw": 0.8}, zorder=5)
+    ymax = max(h + e for h, e in zip(heights, yerr))
+    ax.set_ylim(0, ymax * 1.28)
+    # significance brackets: EMB-SFL, SFL-all, EMB-all per model (n.s. only)
+    P = {c: (list(df.loc[models, c]) if c in df else [np.nan] * len(models))
+         for c in ("p_sfl_emb", "p_all_sfl", "p_all_emb")}
+    for g in range(len(models)):
+        b0, b1, b2 = 3 * g, 3 * g + 1, 3 * g + 2       # EMB, SFL, all
+        _bracket(ax, b0, b1, _two_sided_ns(P["p_sfl_emb"][g]), pos, heights, yerr, ymax * 0.03, ymax * 0.03)
+        _bracket(ax, b1, b2, _two_sided_ns(P["p_all_sfl"][g]), pos, heights, yerr, ymax * 0.09, ymax * 0.03)
+        _bracket(ax, b0, b2, _two_sided_ns(P["p_all_emb"][g]), pos, heights, yerr, ymax * 0.15, ymax * 0.03)
+    centers = [pos[3 * g + 1] for g in range(len(models))]
+    ax.set_xticks(centers)
+    ax.set_xticklabels([MODEL_LABELS[m] for m in models], rotation=35, ha="right",
+                       rotation_mode="anchor", fontsize=11)
+    ax.set_ylabel("r", fontsize=12)
+    ax.set_title(title, fontsize=16)
+    ax.tick_params(axis="x", which="both", bottom=False)
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    fig.tight_layout()
+    PAPERDIR.mkdir(parents=True, exist_ok=True)
+    for ext in ("svg", "png"):
+        fig.savefig(PAPERDIR / f"{stem}.{ext}", bbox_inches="tight")
+    plt.close(fig)
+
+
+def paper_figures():
+    for stem, title in PAPER_STEMS:
+        paper_figure(stem, title)
+    print(f"wrote per-dataset paper figures -> figures/paper/  "
+          f"({sum((RESULTS / f'{s}_results.csv').exists() for s, _ in PAPER_STEMS)} datasets)")
+
+
+# ---------------------------------------------------------------- aggregate grids
+def _panel(ax, df, title, conds):
     models = [m for m in MODEL_ORDER if m in df.index]
     nc = len(conds)
-    # x positions: groups of nc bars with a gap between models (like the paper)
     step = nc + 1
     for j, (key, _, col) in enumerate(conds):
+        if key not in df.columns:
+            continue
         x = [1 + i * step + j for i in range(len(models))]
         vals = df.loc[models, key].to_numpy(float)
-        sem = (df.loc[models, f"{key}_sd"].to_numpy(float) / np.sqrt(10)
-               if f"{key}_sd" in df else None)
-        ax.bar(x, vals, width=0.9, color=col, yerr=sem, capsize=2,
-               error_kw={"lw": 0.8}, zorder=5)
+        sem = df.loc[models, f"{key}_sd"].to_numpy(float) / np.sqrt(10) if f"{key}_sd" in df else None
+        ax.bar(x, vals, width=0.9, color=col, yerr=sem, capsize=2, error_kw={"lw": 0.7}, zorder=5)
     centers = [1 + i * step + (nc - 1) / 2 for i in range(len(models))]
     ax.set_xticks(centers)
     ax.set_xticklabels([MODEL_LABELS[m] for m in models], rotation=35, ha="right",
                        rotation_mode="anchor", fontsize=8)
     ax.set_ylabel("r", fontsize=9)
     ax.set_title(title, fontsize=10)
-    if ylim:
-        ax.set_ylim(*ylim)
-    ax.grid(axis="y", which="major", color="#666666", ls="-", lw=0.5, zorder=0)
-    ax.grid(axis="y", which="minor", color="#999999", ls="-", lw=0.4, alpha=0.3, zorder=0)
-    ax.minorticks_on()
+    ax.grid(axis="y", color="#666666", lw=0.5, zorder=0)
     ax.tick_params(axis="x", which="both", bottom=False)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
 
 
-def figure(group, name, conds, fname):
+def grid(group, name, conds, fname):
     panels = [(s, t, _load(s)) for s, t in group]
     panels = [(s, t, d) for s, t, d in panels if d is not None]
     if not panels:
@@ -89,8 +164,9 @@ def figure(group, name, conds, fname):
         _panel(ax, d, t, conds)
     for ax in axes[len(panels):]:
         ax.axis("off")
-    handles = [mpatches.Patch(color=c, label=l) for _, l, c in conds]
-    axes[len(panels) - 1].legend(handles=handles, fontsize=7.5, loc="best", framealpha=0.9)
+    axes[len(panels) - 1].legend(
+        handles=[mpatches.Patch(color=c, label=l) for _, l, c in conds],
+        fontsize=7.5, loc="best", framealpha=0.9)
     fig.suptitle(name, fontsize=12)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
     for ext in ("svg", "png"):
@@ -100,7 +176,7 @@ def figure(group, name, conds, fname):
 
 
 def decomposition_figure(model="gpt2_medium"):
-    stems = dict(BEHAVIORAL + BRAIN)
+    stems = dict(ALL_DATASETS)
     order = ["S", "F", "L", "SF", "FL", "SL", "SFL"]
     found = [(s, pd.read_csv(RESULTS / f"{s}_{model}_decomposed.csv", index_col=0))
              for s in stems if (RESULTS / f"{s}_{model}_decomposed.csv").exists()]
@@ -118,7 +194,7 @@ def decomposition_figure(model="gpt2_medium"):
                color="#9b90c2", capsize=2, zorder=5)
         ax.set_title(stems[s], fontsize=10)
         ax.set_ylabel("r", fontsize=9)
-        ax.grid(axis="y", color="#666666", ls="-", lw=0.5, zorder=0)
+        ax.grid(axis="y", color="#666666", lw=0.5, zorder=0)
         for sp in ("top", "right"):
             ax.spines[sp].set_visible(False)
     for ax in axes[len(found):]:
@@ -132,11 +208,11 @@ def decomposition_figure(model="gpt2_medium"):
 
 
 if __name__ == "__main__":
-    # main figures — identical to the paper (EMB / SFL / SFL+EMB)
-    figure(BEHAVIORAL, "SFL vs EMB — behavioral", MAIN, "main_behavioral")
-    figure(BRAIN, "SFL vs EMB — brain", MAIN, "main_brain")
-    # extra figures — with the RFF conditions
-    figure(BEHAVIORAL, "with RFF — behavioral", RFF, "rff_behavioral")
-    figure(BRAIN, "with RFF — brain", RFF, "rff_brain")
-    # appendix A2
+    paper_figures()                                     # per-dataset, paper style
+    grid(BEHAVIORAL, "SFL vs EMB — behavioral", MAIN, "main_behavioral")
+    grid(BRAIN, "SFL vs EMB — brain", MAIN, "main_brain")
+    grid(BEHAVIORAL, "sum-pooled EMB — behavioral", SUM, "sum_behavioral")
+    grid(BRAIN, "sum-pooled EMB — brain", SUM, "sum_brain")
+    grid(BEHAVIORAL, "with RFF — behavioral", RFF, "rff_behavioral")
+    grid(BRAIN, "with RFF — brain", RFF, "rff_brain")
     decomposition_figure()

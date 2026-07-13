@@ -44,32 +44,38 @@ def run_sentence_dataset(dataset, sentences, y, models, results_dir, cache_dir,
 
     rows = {}
     for model in models:
-        emb_w, surp_w = extract.extract_words(
+        emb_mean_w, emb_sum_w, surp_w = extract.extract_words_dual(
             model, sentences, drop_first=True, chunked=chunked,
             cache=Path(cache_dir) / f"{dataset}_{model}.npz")
         word_sfl = np.column_stack([surp_w, freqs, lens])
         assert len(word_sfl) == len(wsi)
         D = MODELS[model]["dim"]
 
-        sfl_base = rff.pool_words_to_units(word_sfl, wsi, units, "mean")   # (n, 3)
-        emb_mean = rff.pool_words_to_units(emb_w, wsi, units, "mean")      # (n, D)
+        sfl_base = rff.pool_words_to_units(word_sfl, wsi, units, "mean")     # (n, 3)
+        emb_avg = rff.pool_words_to_units(emb_mean_w, wsi, units, "mean")    # (n, D) avg
+        emb_sum = rff.pool_words_to_units(emb_sum_w, wsi, units, "sum")      # (n, D) sum
 
         def rff_build(train, test, _ws=word_sfl, _wsi=wsi, _u=units, _D=D):
             mask = np.isin(_wsi, _u[train])
             t = rff.fit_rff(_ws[mask], _D, seed)
-            pooled = rff.pool_words_to_units(t(_ws), _wsi, _u, "sum")      # (n, D)
+            pooled = rff.pool_words_to_units(t(_ws), _wsi, _u, "sum")        # (n, D)
             return pooled[train], pooled[test]
 
-        def rffemb_build(train, test, _e=emb_mean, _rb=rff_build):
-            a, b = _rb(train, test)
-            return np.hstack([a, _e[train]]), np.hstack([b, _e[test]])
+        def rffemb_build(emb, _rb=rff_build):
+            def build(train, test):
+                a, b = _rb(train, test)
+                return np.hstack([a, emb[train]]), np.hstack([b, emb[test]])
+            return build
 
         specs = {
-            "sfl":         dict(X=sfl_base),
-            "emb":         dict(X=emb_mean),
-            "all":         dict(X=np.hstack([sfl_base, emb_mean])),
-            "sfl_rff":     dict(build_fn=rff_build),
-            "sfl_rff_emb": dict(build_fn=rffemb_build),
+            "sfl":             dict(X=sfl_base),
+            "emb_avg":         dict(X=emb_avg),
+            "emb_sum":         dict(X=emb_sum),
+            "all_avg":         dict(X=np.hstack([sfl_base, emb_avg]), banded_split=3),
+            "all_sum":         dict(X=np.hstack([sfl_base, emb_sum]), banded_split=3),
+            "sfl_rff":         dict(build_fn=rff_build),
+            "sfl_rff_emb_avg": dict(build_fn=rffemb_build(emb_avg)),
+            "sfl_rff_emb_sum": dict(build_fn=rffemb_build(emb_sum)),
         }
         rows[model] = conditions.run_conditions(specs, y, folds, f"{dataset}_{model}",
                                                 results_dir, backend)
@@ -114,20 +120,23 @@ def run_tr_dataset(dataset, stories, models, results_dir, cache_dir,
     for model in models:
         D = MODELS[model]["dim"]
         # per-story word features (cached), pooled EMB/SFL-base per TR + lags
-        emb_tr, sflbase_tr, word_sfl_by, wtr_by = [], [], [], []
+        embavg_tr, embsum_tr, sflbase_tr, word_sfl_by, wtr_by = [], [], [], [], []
         for si, st in enumerate(stories):
-            emb_w, surp_w = extract.extract_words(
+            emb_mean_w, emb_sum_w, surp_w = extract.extract_words_dual(
                 model, [st["words"]], drop_first=True, chunked=True,
                 cache=Path(cache_dir) / f"{dataset}_{model}_story{si}.npz")
             fr, ln = behavioral.freq_length([st["words"]])
             wsfl = np.column_stack([surp_w, fr, ln])
             wtr = np.asarray(st["word_tr"], int)
-            emb_tr.append(_agg(emb_w, wtr, st["n_tr"], keeps[si], "mean"))
+            embavg_tr.append(_agg(emb_mean_w, wtr, st["n_tr"], keeps[si], "mean"))
+            embsum_tr.append(_agg(emb_sum_w, wtr, st["n_tr"], keeps[si], "sum"))
             sflbase_tr.append(_agg(wsfl, wtr, st["n_tr"], keeps[si], "mean"))
             word_sfl_by.append(wsfl)
             wtr_by.append(wtr)
-        emb_mat = np.vstack(emb_tr)
-        sfl_mat = np.vstack(sflbase_tr)
+        emb_avg = np.vstack(embavg_tr)          # (n_tr, D*n_delays)
+        emb_sum = np.vstack(embsum_tr)
+        sfl_mat = np.vstack(sflbase_tr)         # (n_tr, 3*n_delays)
+        rff_dim = D * len(delays)               # RFF block width after lagging
 
         def rff_build(train, test, _wsfl=word_sfl_by, _wtr=wtr_by, _D=D):
             train_stories = [i for i in range(len(stories))
@@ -139,16 +148,21 @@ def run_tr_dataset(dataset, stories, models, results_dir, cache_dir,
             X = np.vstack(per_story)
             return X[train], X[test]
 
-        def rffemb_build(train, test, _e=emb_mat, _rb=rff_build):
-            a, b = _rb(train, test)
-            return np.hstack([a, _e[train]]), np.hstack([b, _e[test]])
+        def rffemb_build(emb, _rb=rff_build):
+            def build(train, test):
+                a, b = _rb(train, test)
+                return np.hstack([a, emb[train]]), np.hstack([b, emb[test]])
+            return build
 
         specs = {
-            "sfl":         dict(X=sfl_mat),
-            "emb":         dict(X=emb_mat),
-            "all":         dict(X=np.hstack([sfl_mat, emb_mat])),
-            "sfl_rff":     dict(build_fn=rff_build),
-            "sfl_rff_emb": dict(build_fn=rffemb_build),
+            "sfl":             dict(X=sfl_mat),
+            "emb_avg":         dict(X=emb_avg),
+            "emb_sum":         dict(X=emb_sum),
+            "all_avg":         dict(X=np.hstack([sfl_mat, emb_avg]), banded_split=sfl_mat.shape[1]),
+            "all_sum":         dict(X=np.hstack([sfl_mat, emb_sum]), banded_split=sfl_mat.shape[1]),
+            "sfl_rff":         dict(build_fn=rff_build),
+            "sfl_rff_emb_avg": dict(build_fn=rffemb_build(emb_avg)),
+            "sfl_rff_emb_sum": dict(build_fn=rffemb_build(emb_sum)),
         }
         rows[model] = conditions.run_conditions(specs, y, folds, f"{dataset}_{model}",
                                                 results_dir, backend)

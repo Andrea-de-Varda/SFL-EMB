@@ -62,20 +62,23 @@ def run_word_dataset(dataset, sentences, targets, models, results_dir, cache_dir
     freqs, lens = freq_length(sentences)
     rows = {t: {} for t in targets}
     for model in models:
-        emb, surp = extract.extract_words(model, sentences, drop_first=True,
-                                          chunked=chunked,
-                                          cache=_cache(cache_dir, f"{dataset}_{model}"))
+        emb_avg, emb_sum, surp = extract.extract_words_dual(
+            model, sentences, drop_first=True, chunked=chunked,
+            cache=_cache(cache_dir, f"{dataset}_{model}"))
         sfl = np.column_stack([surp, freqs, lens])
         assert len(sfl) == len(next(iter(targets.values()))), \
             f"{dataset}/{model}: {len(sfl)} feature rows vs target length"
-        emb_m, sfl_m = (emb, sfl) if row_mask is None else (emb[row_mask], sfl[row_mask])
+        if row_mask is None:
+            ea, es, sfl_m = emb_avg, emb_sum, sfl
+        else:
+            ea, es, sfl_m = emb_avg[row_mask], emb_sum[row_mask], sfl[row_mask]
         tgt = targets if row_mask is None else {t: np.asarray(y)[row_mask] for t, y in targets.items()}
         folds = fit.make_folds(len(sfl_m), n_splits=10)
         D = MODELS[model]["dim"]
         for tname, y in tgt.items():
             prefix = f"{dataset}_{tname}_{model}"
             rows[tname][model] = conditions.run_all_conditions(
-                sfl_m, emb_m, y, folds, prefix, n_components=D,
+                sfl_m, ea, es, y, folds, prefix, n_components=D,
                 results_dir=results_dir, backend=backend)
             decompose.maybe_decompose(model, sfl_m, y, folds, prefix,
                                       n_blocks=1, results_dir=results_dir, backend=backend)
@@ -109,18 +112,19 @@ def run_spill_dataset(dataset, sentences, target, sent_ids, models, results_dir,
     y = target[keep]
     rows = {}
     for model in models:
-        emb, surp = extract.extract_words(model, sentences, drop_first=True,
-                                          cache=_cache(cache_dir, f"{dataset}_{model}"))
+        emb_avg, emb_sum, surp = extract.extract_words_dual(
+            model, sentences, drop_first=True, cache=_cache(cache_dir, f"{dataset}_{model}"))
         sfl = np.column_stack([surp, freqs, lens])
-        sfl_sp = _spill(sfl, keep)          # (n, 9)
-        emb_sp = _spill(emb, keep)          # (n, 3D)
+        sfl_sp = _spill(sfl, keep)              # (n, 9)  i, i-1, i-2
+        ea_sp = _spill(emb_avg, keep)           # (n, 3D)
+        es_sp = _spill(emb_sum, keep)           # (n, 3D)
         finite = np.isfinite(y) & np.isfinite(sfl_sp).all(1)   # drop non-finite RT/SFL
-        sfl_sp, emb_sp, y_m = sfl_sp[finite], emb_sp[finite], y[finite]
+        sfl_sp, ea_sp, es_sp, y_m = sfl_sp[finite], ea_sp[finite], es_sp[finite], y[finite]
         folds = fit.make_folds(len(y_m), n_splits=10)
         D = MODELS[model]["dim"]
         prefix = f"{dataset}_{model}"
         rows[model] = conditions.run_all_conditions(
-            sfl_sp, emb_sp, y_m, folds, prefix, n_components=D,
+            sfl_sp, ea_sp, es_sp, y_m, folds, prefix, n_components=D,
             results_dir=results_dir, backend=backend)
         decompose.maybe_decompose(model, sfl_sp, y_m, folds, prefix,
                                   n_blocks=3, results_dir=results_dir, backend=backend)

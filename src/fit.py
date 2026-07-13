@@ -132,14 +132,74 @@ def _score_fold(X_tr, X_te, y_tr, y_te, backend):
 
 
 # --------------------------------------------------------------------------- #
+# banded ridge — a SEPARATE ridge penalty per feature block (SFL vs EMB, or
+# RFF vs EMB). A single global alpha over-regularizes a small strong block (the 3
+# SFL scalars) to control a large weak block (768-1600 EMB dims), so the
+# concatenation can score BELOW the strong block alone. Banded ridge fixes this and
+# guarantees all >= max(components). For our exactly-two-block concatenations we
+# select the block2/block1 penalty RATIO on a deterministic grid by inner CV, then
+# the overall alpha as usual -> reproducible, fast, no random search. See README.
+# --------------------------------------------------------------------------- #
+BANDED_RATIOS = tuple(np.logspace(-3, 3, 7))
+
+
+def _ridgecv_fit(X_tr, y_tr, backend):
+    """Fit RidgeCV; return (inner-CV score, alpha, predict-fn on new X)."""
+    if backend == "sklearn":
+        from sklearn.linear_model import RidgeCV
+
+        reg = RidgeCV(alphas=ALPHAS, cv=KFold(INNER_CV, shuffle=False),
+                      fit_intercept=False).fit(X_tr, y_tr)
+        return float(getattr(reg, "best_score_", np.nan)), float(reg.alpha_), reg.predict
+    from himalaya.ridge import RidgeCV as HRidgeCV
+
+    reg = HRidgeCV(alphas=ALPHAS, cv=INNER_CV, fit_intercept=False)
+    reg.fit(_to_backend(X_tr), _to_backend(y_tr[:, None]))
+    score = float(np.asarray(_from_backend(reg.cv_scores_)).mean())
+    alpha = float(_from_backend(reg.best_alphas_).ravel()[0])
+    return score, alpha, lambda X: _from_backend(reg.predict(_to_backend(X))).squeeze()
+
+
+def _banded_fit_predict(X_tr, X_te, y_tr, split, backend):
+    """Two-block banded ridge (block boundary at column ``split``). Standardize,
+    pick the between-block penalty ratio by inner CV, refit, predict."""
+    xs, ys = StandardScaler(), StandardScaler()
+    X_tr = xs.fit_transform(X_tr)
+    X_te = xs.transform(X_te)
+    y_trs = ys.fit_transform(np.asarray(y_tr, dtype=np.float64)[:, None]).ravel()
+    best = (-np.inf, 1.0)
+    for g in BANDED_RATIOS:
+        s = X_tr.copy()
+        s[:, split:] *= g
+        score, _, _ = _ridgecv_fit(s, y_trs, backend)
+        if score > best[0]:
+            best = (score, g)
+    g = best[1]
+    s_tr = X_tr.copy(); s_tr[:, split:] *= g
+    s_te = X_te.copy(); s_te[:, split:] *= g
+    _, alpha, predict = _ridgecv_fit(s_tr, y_trs, backend)
+    return predict(s_te), (g, alpha)
+
+
+def _score_fold_banded(X_tr, X_te, y_tr, y_te, split, backend):
+    y_pred, info = _banded_fit_predict(X_tr, X_te, y_tr, split, backend)
+    y_te = np.asarray(y_te, dtype=np.float64).ravel()
+    if np.std(y_pred) == 0 or np.std(y_te) == 0:
+        return 0.0, info
+    return float(pearsonr(y_te, y_pred)[0]), info
+
+
+# --------------------------------------------------------------------------- #
 # the encoder
 # --------------------------------------------------------------------------- #
-def run_folds(build_fn, y, folds, backend="himalaya"):
+def run_folds(build_fn, y, folds, backend="himalaya", banded_split=None):
     """Score a condition over ``folds``.
 
     ``build_fn(train_idx, test_idx) -> (X_tr, X_te)`` returns the (raw, un-scaled)
     design matrices for a fold. For plain conditions it slices a fixed matrix;
     for SFL_RFF it fits gamma/scaler/RBFSampler on the train rows and projects.
+    ``banded_split`` (an int) turns on two-block banded ridge with the block
+    boundary at that column (used for the SFL+EMB / RFF+EMB concatenations).
     Returns ``(fold_rs, fold_alphas)``.
     """
     if backend == "himalaya":
@@ -151,7 +211,10 @@ def run_folds(build_fn, y, folds, backend="himalaya"):
         test = np.asarray(test)
         train = np.setdiff1d(np.arange(n), test, assume_unique=False)
         X_tr, X_te = build_fn(train, test)
-        r, alpha = _score_fold(X_tr, X_te, y[train], y[test], backend)
+        if banded_split:
+            r, alpha = _score_fold_banded(X_tr, X_te, y[train], y[test], banded_split, backend)
+        else:
+            r, alpha = _score_fold(X_tr, X_te, y[train], y[test], backend)
         fold_rs.append(r)
         fold_alphas.append(alpha)
     return fold_rs, fold_alphas
@@ -185,20 +248,23 @@ def _slicer(X):
 
 
 def score(X=None, y=None, folds=None, saveto=None, results_dir="results",
-          backend="himalaya", build_fn=None, warn_boundary=True):
+          backend="himalaya", build_fn=None, warn_boundary=True, banded_split=None):
     """Run a condition and (optionally) persist the per-fold r vector.
 
     Provide either a fixed ``X`` (plain condition) or a ``build_fn`` (RFF). Saves
     to ``<results_dir>/<saveto>_predictions`` (pickle of the fold-r list), the
-    format ``significance.significance_testing`` reads. Returns
+    format ``significance.significance_testing`` reads. ``banded_split`` enables
+    two-block banded ridge (SFL+EMB / RFF+EMB). Returns
     ``(mean_r, sd_r, fold_rs, fold_alphas)``.
     """
     if build_fn is None:
         if X is None:
             raise ValueError("provide X or build_fn")
         build_fn = _slicer(X)
-    fold_rs, fold_alphas = run_folds(build_fn, y, folds, backend=backend)
-    if warn_boundary and any(a in (ALPHAS[0], ALPHAS[-1]) for a in fold_alphas):
+    fold_rs, fold_alphas = run_folds(build_fn, y, folds, backend=backend,
+                                     banded_split=banded_split)
+    scalar_alphas = [a for a in fold_alphas if np.isscalar(a)]
+    if warn_boundary and any(a in (ALPHAS[0], ALPHAS[-1]) for a in scalar_alphas):
         warnings.warn(f"[{saveto}] alpha hit grid boundary in some folds "
                       f"({[f'{a:.0e}' for a in fold_alphas]}); consider widening ALPHAS.")
     if saveto is not None:

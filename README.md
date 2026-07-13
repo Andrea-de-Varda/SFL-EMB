@@ -53,13 +53,15 @@ audio, the Tuckute table) are `.gitignore`d — back them up externally.
 
 ## The pipeline
 
-Every dataset runs the **5 predictor conditions**:
+Every dataset runs **8 predictor conditions**. EMB is pooled two ways — `_avg`
+(mean over sub-words, and over words for the pooled datasets) and `_sum` (sum):
 
-1. `SFL` · 2. `EMB` · 3. `SFL+EMB` (`all`) · 4. `SFL_RFF` · 5. `SFL_RFF+EMB`
+1. `sfl` · 2. `emb_avg` · 3. `emb_sum` · 4. `all_avg` (SFL+EMB_avg) ·
+5. `all_sum` · 6. `sfl_rff` · 7. `sfl_rff_emb_avg` · 8. `sfl_rff_emb_sum`
 
-where `SFL_RFF` projects SFL through random Fourier features to `D` = the model's
-hidden size (dimensionality-matched to EMB), with the RBF bandwidth set by the
-median heuristic and everything fit on the training fold only (leakage-safe).
+where `sfl_rff` projects SFL through random Fourier features to `D` = the model's
+hidden size (dimensionality-matched to EMB), RBF bandwidth by the median heuristic,
+everything fit on the training fold only (leakage-safe).
 
 **Fitting** (`src/fit.py`): ridge regression, **10-fold sequential** outer CV
 (GroupKFold by passage for Pereira; leave-one-story-out for NatStor-fMRI), alpha
@@ -67,6 +69,27 @@ chosen by inner `KFold(5)` over a log grid, per-fold `StandardScaler` on X and y
 with `fit_intercept=False`. The **himalaya** GPU backend is the default and agrees
 with the **sklearn** backend to ~1e-4. Significance is a paired permutation test on
 the fold-level r values.
+
+### Methods notes (for the paper)
+
+- **Banded ridge for SFL+EMB.** A single global ridge α on the concatenation of the
+  3 SFL scalars with the 768–1600 EMB dims is a bad compromise: to control the large
+  EMB block it over-shrinks the 3 strong SFL coefficients, so `SFL+EMB` can score
+  *below* SFL alone (e.g. Provo first-pass: SFL 0.866, single-α `all` 0.852). This is
+  a regularization artefact — the concatenation cannot be worse than its best block
+  under proper regularization — and per-fold standardization exposes it (raw features
+  hide it via an *implicit* scale-based per-feature penalty). Fix: **banded ridge** —
+  a separate penalty per feature block (Nunez-Elizalde 2019; Dupré la Tour 2022).
+  We select the between-block penalty ratio on a deterministic grid by inner CV
+  (`src/fit.py:_banded_fit_predict`), which restores `all ≥ max(SFL, EMB)` (Provo:
+  0.879). Applied to `all_avg`/`all_sum` only; `sfl_rff_emb_*` are two same-width
+  D-dim blocks (RFF vs EMB) with no size mismatch, so single-α is already monotone.
+- **Why `SFL_RFF+EMB` looked "too good".** It never had the heterogeneity problem
+  (both blocks are D-dim), so it was fine while `SFL+EMB` was artificially low. With
+  banded ridge the `all` bars rise and the comparison is honest.
+- **Sub-word / word pooling.** EMB is reported for BOTH mean (`_avg`) and sum (`_sum`)
+  pooling over sub-words (and over words for sentence/TR datasets). Surprisal is
+  always summed over sub-words; length/frequency are unaffected.
 
 Extraction is **ex novo**: `src/extract.py` runs the model for both embeddings
 (mean over sub-word tokens) and surprisal (sum over sub-word tokens) every run,
