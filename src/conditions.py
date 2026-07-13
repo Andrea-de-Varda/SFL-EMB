@@ -72,7 +72,7 @@ def run_conditions(specs, y, folds, prefix, results_dir="results",
                                 results_dir=results_dir, backend=backend, **kw)
         row[cond], row[f"{cond}_sd"] = m, sd
         if verbose:
-            print(f"  {prefix:<30s} {cond:<12s} r = {m:.4f}  (sd {sd:.4f})")
+            print(f"  {prefix:<30s} {cond:<12s} r = {m:.4f}  (sd {sd:.4f})", flush=True)
     row.update(significance_row(prefix, results_dir))
     return row
 

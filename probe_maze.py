@@ -33,7 +33,7 @@ recover = {" ".join(words): i for i, words in enumerate(maze_sent)}
 maze["sent_n"] = maze["sentence"].map(recover)
 
 # --- Boyce exclusions -----------------------------------------------------------
-attentive = maze.groupby("subject")["correct"].apply(lambda c: (c == "yes").mean() > 0.8)
+attentive = maze.groupby("subject", observed=True)["correct"].apply(lambda c: (c == "yes").mean() > 0.8)
 
 # per-word error flag: a word (and the word after an error) is flagged
 error, prev_idx, prev_cor = [], 0, True
@@ -52,7 +52,7 @@ maze = maze.dropna(subset=["sent_n"]).copy()
 maze["sent_n"] = maze["sent_n"].astype(int)
 
 # participant-mean RT per surviving word
-agg = maze.groupby(["sent_n", "word_num"], as_index=False).agg({"rt": "mean"})
+agg = maze.groupby(["sent_n", "word_num"], as_index=False, observed=True).agg({"rt": "mean"})
 rt_map = {(int(r.sent_n), int(r.word_num)): float(r.rt) for r in agg.itertuples()}
 
 # --- build sentences + target/mask aligned to the non-initial-word flattening ---
