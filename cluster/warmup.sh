@@ -6,6 +6,10 @@
 set -e
 cd "$(dirname "$0")/.."
 
+# activate the env if it isn't already (so `bash cluster/warmup.sh` works standalone
+# on the login node, not only under sbatch which sources env.sh first)
+command -v python >/dev/null 2>&1 || source cluster/env.sh
+
 # install any missing dependency (idempotent; a no-op if all present)
 python - <<'PY'
 import importlib, subprocess, sys
