@@ -9,7 +9,7 @@ run, or install once yourself:
 
 ```bash
 # after the module load + conda activation in cluster/env.sh:
-pip install himalaya pyreadr
+pip install himalaya pyreadr openpyxl
 ```
 
 `cluster/env.sh` centralizes the setup — the module loads, the finicky conda
