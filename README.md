@@ -53,11 +53,10 @@ audio, the Tuckute table) are `.gitignore`d — back them up externally.
 
 ## The pipeline
 
-Every dataset runs **8 predictor conditions**. EMB is pooled two ways — `_avg`
-(mean over sub-words, and over words for the pooled datasets) and `_sum` (sum):
+Every dataset runs **5 predictor conditions**. EMB is mean-pooled (over sub-words,
+and over words for the pooled datasets):
 
-1. `sfl` · 2. `emb_avg` · 3. `emb_sum` · 4. `all_avg` (SFL+EMB_avg) ·
-5. `all_sum` · 6. `sfl_rff` · 7. `sfl_rff_emb_avg` · 8. `sfl_rff_emb_sum`
+1. `sfl` · 2. `emb` · 3. `all` (SFL+EMB) · 4. `sfl_rff` · 5. `sfl_rff_emb`
 
 where `sfl_rff` projects SFL through random Fourier features to `D` = the model's
 hidden size (dimensionality-matched to EMB), RBF bandwidth by the median heuristic,
@@ -82,14 +81,14 @@ the fold-level r values.
   a separate penalty per feature block (Nunez-Elizalde 2019; Dupré la Tour 2022).
   We select the between-block penalty ratio on a deterministic grid by inner CV
   (`src/fit.py:_banded_fit_predict`), which restores `all ≥ max(SFL, EMB)` (Provo:
-  0.879). Applied to `all_avg`/`all_sum` only; `sfl_rff_emb_*` are two same-width
-  D-dim blocks (RFF vs EMB) with no size mismatch, so single-α is already monotone.
+  0.879). Applied to `all` only; `sfl_rff_emb` is two same-width D-dim blocks (RFF vs
+  EMB) with no size mismatch, so single-α is already monotone.
 - **Why `SFL_RFF+EMB` looked "too good".** It never had the heterogeneity problem
   (both blocks are D-dim), so it was fine while `SFL+EMB` was artificially low. With
   banded ridge the `all` bars rise and the comparison is honest.
-- **Sub-word / word pooling.** EMB is reported for BOTH mean (`_avg`) and sum (`_sum`)
-  pooling over sub-words (and over words for sentence/TR datasets). Surprisal is
-  always summed over sub-words; length/frequency are unaffected.
+- **Sub-word / word pooling.** EMB is mean-pooled over sub-words (and over words for
+  sentence/TR datasets). Surprisal is always summed over sub-words; length/frequency
+  are unaffected.
 
 Extraction is **ex novo**: `src/extract.py` runs the model for both embeddings
 (mean over sub-word tokens) and surprisal (sum over sub-word tokens) every run,

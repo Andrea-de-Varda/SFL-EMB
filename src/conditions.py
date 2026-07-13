@@ -18,25 +18,20 @@ import numpy as np
 
 from . import fit, rff, significance
 
-# Eight conditions. EMB is pooled two ways: `_avg` (mean over sub-words / words) and
-# `_sum` (sum). The concatenations (all_*, sfl_rff_emb_*) use banded ridge (separate
-# penalty per feature block) so they can't score below their strongest component.
-CONDITIONS = ["sfl", "emb_avg", "emb_sum", "all_avg", "all_sum",
-              "sfl_rff", "sfl_rff_emb_avg", "sfl_rff_emb_sum"]
+# Five conditions. EMB is mean-pooled (over sub-words, and over words for the pooled
+# datasets). The SFL+EMB concatenation (`all`) uses banded ridge (separate penalty
+# per feature block) so it can't score below its strongest component.
+CONDITIONS = ["sfl", "emb", "all", "sfl_rff", "sfl_rff_emb"]
 
 # canonical directed contrasts: p = P(mean r of A >= mean r of B) by permutation.
-# The first three keep the paper's names/comparisons (using the avg EMB).
 CONTRASTS = {
-    "p_sfl_emb":            ("sfl", "emb_avg"),     # behavior: SFL wins; brain: EMB wins
-    "p_all_sfl":            ("all_avg", "sfl"),
-    "p_all_emb":            ("all_avg", "emb_avg"),
-    "p_sfl_embsum":         ("sfl", "emb_sum"),
-    "p_allsum_sfl":         ("all_sum", "sfl"),
-    "p_allsum_embsum":      ("all_sum", "emb_sum"),
-    "p_sflrff_sfl":         ("sfl_rff", "sfl"),     # does the RFF expansion help
-    "p_sflrff_emb":         ("sfl_rff", "emb_avg"), # dimensionality-matched SFL vs EMB
-    "p_rffembavg_allavg":   ("sfl_rff_emb_avg", "all_avg"),
-    "p_rffembavg_emb":      ("sfl_rff_emb_avg", "emb_avg"),
+    "p_sfl_emb":        ("sfl", "emb"),          # behavior: SFL wins; brain: EMB wins
+    "p_all_sfl":        ("all", "sfl"),
+    "p_all_emb":        ("all", "emb"),
+    "p_sflrff_sfl":     ("sfl_rff", "sfl"),      # does the RFF expansion help
+    "p_sflrff_emb":     ("sfl_rff", "emb"),      # dimensionality-matched SFL vs EMB
+    "p_sflrffemb_all":  ("sfl_rff_emb", "all"),
+    "p_sflrffemb_emb":  ("sfl_rff_emb", "emb"),
 }
 
 
@@ -85,30 +80,25 @@ def run_conditions(specs, y, folds, prefix, results_dir="results",
     return row
 
 
-def run_all_conditions(X_sfl, X_emb_avg, X_emb_sum, y, folds, prefix, n_components=None,
+def run_all_conditions(X_sfl, X_emb, y, folds, prefix, n_components=None,
                        results_dir="results", backend="himalaya", seed=0,
                        verbose=True):
-    """Score the 8 conditions for a per-unit (word/sentence-row) dataset.
+    """Score the 5 conditions for a per-unit (word/sentence-row) dataset.
 
-    ``X_emb_avg`` / ``X_emb_sum`` are the mean- and sum-pooled EMB design matrices.
-    RFF is applied to the rows of ``X_sfl`` (unit == row); the concatenations use
-    banded ridge (``banded_split`` = the SFL/RFF block width). Datasets that fit RFF
-    at the word level and pool afterwards (fMRI) build their own specs in brain.py.
+    RFF is applied to the rows of ``X_sfl`` (unit == row); the SFL+EMB concatenation
+    (`all`) uses banded ridge (``banded_split`` = the SFL block width). Datasets that
+    fit RFF at the word level and pool afterwards (fMRI) build their own specs in
+    brain.py.
     """
     X_sfl = np.asarray(X_sfl, dtype=np.float64)
-    X_emb_avg = np.asarray(X_emb_avg, dtype=np.float64)
-    X_emb_sum = np.asarray(X_emb_sum, dtype=np.float64)
-    D = n_components or X_emb_avg.shape[1]
+    X_emb = np.asarray(X_emb, dtype=np.float64)
+    D = n_components or X_emb.shape[1]
     ns = X_sfl.shape[1]
     specs = {
-        "sfl":             dict(X=X_sfl),
-        "emb_avg":         dict(X=X_emb_avg),
-        "emb_sum":         dict(X=X_emb_sum),
-        "all_avg":         dict(X=np.hstack([X_sfl, X_emb_avg]), banded_split=ns),
-        "all_sum":         dict(X=np.hstack([X_sfl, X_emb_sum]), banded_split=ns),
-        "sfl_rff":         dict(build_fn=rff.rff_build_fn(X_sfl, D, seed)),
-        # RFF+EMB are two same-width D-dim blocks -> single-alpha is already fine
-        "sfl_rff_emb_avg": dict(build_fn=rff.rff_concat_build_fn(X_sfl, X_emb_avg, D, seed)),
-        "sfl_rff_emb_sum": dict(build_fn=rff.rff_concat_build_fn(X_sfl, X_emb_sum, D, seed)),
+        "sfl":         dict(X=X_sfl),
+        "emb":         dict(X=X_emb),
+        "all":         dict(X=np.hstack([X_sfl, X_emb]), banded_split=ns),
+        "sfl_rff":     dict(build_fn=rff.rff_build_fn(X_sfl, D, seed)),
+        "sfl_rff_emb": dict(build_fn=rff.rff_concat_build_fn(X_sfl, X_emb, D, seed)),
     }
     return run_conditions(specs, y, folds, prefix, results_dir, backend, verbose)

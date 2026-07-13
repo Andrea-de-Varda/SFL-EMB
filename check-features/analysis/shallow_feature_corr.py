@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-POINTS 2-3: correlation between the PREDICTED brain/ERP response (EMB act, EMB sum,
-SFL+RFF; GPT-2-XL) and shallow / semantic features.
+POINTS 2-3: correlation between the PREDICTED brain/ERP response (EMB, SFL+RFF;
+GPT-2-XL) and shallow / semantic features.
   Pereira  -> sentence length
   Tuckute  -> the 14 semantic+form ratings (rated subset)
   UCL-N400 -> surprisal / log-frequency / length
@@ -33,8 +33,7 @@ def main():
     L = p.text.map(lambda s: len(str(s).split()))
     w("## Pereira — corr(prediction, sentence length)   n=%d" % len(p))
     w("| predictor | r with length |\n|---|---|")
-    w(f"| EMB (act) | {r(p.pred_act, L):+.3f} |")
-    w(f"| EMB (sum) | {r(p.pred_emb_sum, L):+.3f} |")
+    w(f"| EMB | {r(p.pred_act, L):+.3f} |")
     w(f"| SFL+RFF | {r(p.pred_sfl_rff, L):+.3f} |")
 
     # ---- Tuckute: 14 ratings ----
@@ -48,11 +47,11 @@ def main():
     FORM = ["avg_word_length", "avg_word_freq_zipf", "rating_frequency_mean",
             "rating_conversational_mean", "rating_gram_mean", "log-prob-pcfg_mean", "dep_length_mean"]
     w("\n## Tuckute — corr(prediction, feature)   rated subset n=%d" % len(cf))
-    w("| feature | group | EMB (act) | EMB (sum) | SFL+RFF |\n|---|---|---|---|---|")
+    w("| feature | group | EMB | SFL+RFF |\n|---|---|---|---|")
     for grp, cols in [("semantic", SEM), ("form", FORM)]:
         for f in cols:
             w(f"| {f} | {grp} | {r(cf.pred_act, cf[f]):+.3f} | "
-              f"{r(cf.pred_emb_sum, cf[f]):+.3f} | {r(cf.pred_sfl_rff, cf[f]):+.3f} |")
+              f"{r(cf.pred_sfl_rff, cf[f]):+.3f} |")
 
     # ---- N400: surprisal / logfreq / length ----
     n = pd.read_csv(RES / "n400_xl_predictions.csv")
@@ -64,9 +63,9 @@ def main():
     cov = dni[["s_GPT2_xl", "logfreq", "length"]].to_numpy(float)[filtr][valid]
     assert len(cov) == len(n), (len(cov), len(n))
     w("\n## UCL-N400 — corr(prediction, covariate)   n=%d" % len(n))
-    w("| covariate | EMB (act) | EMB (sum) | SFL+RFF |\n|---|---|---|---|")
+    w("| covariate | EMB | SFL+RFF |\n|---|---|---|")
     for nm, v in [("surprisal", cov[:, 0]), ("log-frequency", cov[:, 1]), ("length", cov[:, 2])]:
-        w(f"| {nm} | {r(n.pred_act, v):+.3f} | {r(n.pred_emb_sum, v):+.3f} | {r(n.pred_sfl_rff, v):+.3f} |")
+        w(f"| {nm} | {r(n.pred_act, v):+.3f} | {r(n.pred_sfl_rff, v):+.3f} |")
 
     (HERE / "SHALLOW_FEATURE_CORR.md").write_text(
         "# Predictions vs. shallow / semantic features (GPT-2-XL)\n\n" + "\n".join(OUT) + "\n")

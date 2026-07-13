@@ -5,7 +5,7 @@ runs. Both reach similar predictivity but rank items differently -- WHERE and on
 kind of item do they diverge?
 
 For each dataset we score every item by the disagreement
-    d = z(EMB_sum prediction) - z(SFL+RFF prediction)
+    d = z(EMB prediction) - z(SFL+RFF prediction)
 Large positive d = EMB predicts high response where SFL+RFF does not (EMB-favored);
 large negative d = SFL+RFF-favored. We print the extreme items of each and quantify
 what distinguishes them (length; and for Tuckute, the human semantic/form ratings).
@@ -37,16 +37,16 @@ def wc(s):                       # word count of a string
 
 def analyze(key, name, ctx_col=None):
     c = pd.read_csv(ROOT / "results_extremes" / f"{key}_xl_predictions.csv")
-    c["d"] = zscore(c["pred_emb_sum"]) - zscore(c["pred_sfl_rff"])
+    c["d"] = zscore(c["pred_act"]) - zscore(c["pred_sfl_rff"])
     c["nwords"] = c["text"].map(wc)
     c["nchars"] = c["text"].str.len()
     q = 0.15
     hi = c[c.d >= c.d.quantile(1 - q)]           # EMB-favored
     lo = c[c.d <= c.d.quantile(q)]               # SFL+RFF-favored
     w(f"\n{'='*78}\n{name}  (n={len(c)}, unit={'word' if ctx_col else 'sentence'})\n{'='*78}")
-    w(f"predictivity: EMB_sum r={pearsonr(c.pred_emb_sum, c.y)[0]:.3f}  "
+    w(f"predictivity: EMB r={pearsonr(c.pred_act, c.y)[0]:.3f}  "
       f"SFL+RFF r={pearsonr(c.pred_sfl_rff, c.y)[0]:.3f}  "
-      f"agreement Spearman={pd.Series(c.pred_emb_sum).corr(c.pred_sfl_rff, 'spearman'):.3f}")
+      f"agreement Spearman={pd.Series(c.pred_act).corr(c.pred_sfl_rff, 'spearman'):.3f}")
     # what surface variable predicts the disagreement?
     unit = "word length (chars)" if ctx_col else "sentence length (words)"
     lenvar = c["nchars"] if ctx_col else c["nwords"]

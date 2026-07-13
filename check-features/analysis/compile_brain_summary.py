@@ -2,7 +2,7 @@
 """
 Compile the dimensionality-matched brain-encoding results into ONE tidy dataset:
 per brain dataset x per LM, the prediction accuracy of
-  SFL      (base, 3-dim)      SFL+RFF  (sfl_rff, D)      EMB  (emb_sum, D)  [EMB uses SUM pooling]
+  SFL      (base, 3-dim)      SFL+RFF  (sfl_rff, D)      EMB  (emb, D, mean pooling)
 
 Reads the per-model matched CSVs (rows 0..4 = GPT, GPT-2 124M/355M/774M/1.5B). Any
 dataset whose per-model CSV is not in the repo is reported as MISSING (its numbers were

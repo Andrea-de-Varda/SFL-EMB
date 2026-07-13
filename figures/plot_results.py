@@ -7,9 +7,8 @@ in the original style: 5 models x 3 bars (EMB / SFL / SFL+EMB, lightblue / light
 NOT significant (two-sided permutation test). EMB here is the mean-pooled variant.
 
 Aggregate overview figures (figures/ root):
-  main_{behavioral,brain}  EMB_avg / SFL / SFL+EMB_avg grid
-  sum_{behavioral,brain}   the sum-pooled EMB variants
-  rff_{behavioral,brain}   adds SFL_RFF and SFL_RFF+EMB_avg
+  main_{behavioral,brain}  EMB / SFL / SFL+EMB grid
+  rff_{behavioral,brain}   adds SFL_RFF and SFL_RFF+EMB
   sfl_decomposition        appendix A2
 
 Reads results/<dataset>_<target>_results.csv (index=model; cols <cond>, <cond>_sd,
@@ -33,12 +32,10 @@ FIGDIR = PROJECT_ROOT / "figures"
 PAPERDIR = FIGDIR / "paper"
 
 # condition -> (results-column, legend label, colour)
-MAIN = [("emb_avg", "EMB", "lightblue"), ("sfl", "SFL", "lightgreen"),
-        ("all_avg", r"EMB$^\frown$SFL", "indianred")]
-SUM = [("emb_sum", "EMB (sum)", "lightblue"), ("sfl", "SFL", "lightgreen"),
-       ("all_sum", r"EMB$^\frown$SFL (sum)", "indianred")]
+MAIN = [("emb", "EMB", "lightblue"), ("sfl", "SFL", "lightgreen"),
+        ("all", r"EMB$^\frown$SFL", "indianred")]
 RFF = MAIN + [("sfl_rff", r"SFL$_{RFF}$", "#f2c14e"),
-              ("sfl_rff_emb_avg", r"SFL$_{RFF}^\frown$EMB", "#b48ce0")]
+              ("sfl_rff_emb", r"SFL$_{RFF}^\frown$EMB", "#b48ce0")]
 
 # dataset -> (results-file stem, pretty title)
 BEHAVIORAL = [("provo_fpass", "Provo"), ("meco_fpass", "Meco-en"), ("zuco_fpass", "ZuCo-2"),
@@ -81,7 +78,7 @@ def paper_figure(stem, title):
     if df is None:
         return
     models = [m for m in MODEL_ORDER if m in df.index]
-    keys = [k for k, _, _ in MAIN]                      # emb_avg, sfl, all_avg
+    keys = [k for k, _, _ in MAIN]                      # emb, sfl, all
     pos = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19][:3 * len(models)]
     heights, yerr, colors = [], [], []
     for m in models:
@@ -211,8 +208,6 @@ if __name__ == "__main__":
     paper_figures()                                     # per-dataset, paper style
     grid(BEHAVIORAL, "SFL vs EMB — behavioral", MAIN, "main_behavioral")
     grid(BRAIN, "SFL vs EMB — brain", MAIN, "main_brain")
-    grid(BEHAVIORAL, "sum-pooled EMB — behavioral", SUM, "sum_behavioral")
-    grid(BRAIN, "sum-pooled EMB — brain", SUM, "sum_brain")
     grid(BEHAVIORAL, "with RFF — behavioral", RFF, "rff_behavioral")
     grid(BRAIN, "with RFF — brain", RFF, "rff_brain")
     decomposition_figure()

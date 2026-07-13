@@ -31,8 +31,7 @@ _PUNCT = re.compile(r'[\.\,\:\-\?\!\)\(\"]')
 
 
 def extract_words(model_key, sentences, drop_first=True, chunked=False,
-                  cache=None, device=None, n_splits=2, overlap=50, layer="last",
-                  pool="mean"):
+                  cache=None, device=None, n_splits=2, overlap=50, layer="last"):
     """Per-word embeddings + surprisal for a list of sentences, stacked.
 
     ``sentences`` is a list of word-lists (one per sentence/passage). Returns
@@ -48,7 +47,9 @@ def extract_words(model_key, sentences, drop_first=True, chunked=False,
         cache = Path(cache)
         if cache.exists():
             z = np.load(cache)
-            return z["emb"], z["surp"]
+            # tolerate an older dual-pooling cache (emb_mean/emb_sum) -> use the mean
+            emb = z["emb"] if "emb" in z else z["emb_mean"]
+            return emb, z["surp"]
 
     ex = Extractor(model_key, device)
     embs, surps = [], []
@@ -66,7 +67,7 @@ def extract_words(model_key, sentences, drop_first=True, chunked=False,
             e = ex.chunked_word_features(words, layer=layer, n_splits=ns, overlap=overlap)
             s = ex.chunked_word_surprisal(words, n_splits=ns, overlap=overlap)
         else:
-            e = ex.word_embeddings(words, layer=layer, reduce=pool)
+            e = ex.word_embeddings(words, layer=layer)
             s = ex.word_surprisal(words)
         if drop_first:
             e, s = e[1:], s[1:]
@@ -78,42 +79,6 @@ def extract_words(model_key, sentences, drop_first=True, chunked=False,
         cache.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(cache, emb=emb, surp=surp)
     return emb, surp
-
-
-def extract_words_dual(model_key, sentences, drop_first=True, chunked=False,
-                       cache=None, device=None, n_splits=2, overlap=50):
-    """Like :func:`extract_words` but returns BOTH sub-word poolings from one pass:
-    ``(emb_mean, emb_sum, surp)``. Used for the EMB avg/sum variants."""
-    import math
-
-    if cache is not None:
-        cache = Path(cache)
-        if cache.exists():
-            z = np.load(cache)
-            if "emb_mean" in z:                 # new dual-pooling cache
-                return z["emb_mean"], z["emb_sum"], z["surp"]
-            # stale single-pooling cache -> recompute (avoids a manual wipe)
-    ex = Extractor(model_key, device)
-    ms, ss, sps = [], [], []
-    for words in sentences:
-        words = list(words)
-        if chunked:
-            ctx = (getattr(ex.lm.config, "n_positions", None)
-                   or getattr(ex.lm.config, "max_position_embeddings", 1024))
-            ns = max(n_splits, math.ceil(len(words) / max(64, ctx // 2)))
-            m, s = ex.chunked_word_features_both(words, n_splits=ns, overlap=overlap)
-            sp = ex.chunked_word_surprisal(words, n_splits=ns, overlap=overlap)
-        else:
-            m, s = ex.word_embeddings_both(words)
-            sp = ex.word_surprisal(words)
-        if drop_first:
-            m, s, sp = m[1:], s[1:], sp[1:]
-        ms.append(m); ss.append(s); sps.append(sp)
-    emb_mean, emb_sum, surp = np.vstack(ms), np.vstack(ss), np.concatenate(sps)
-    if cache is not None:
-        cache.parent.mkdir(parents=True, exist_ok=True)
-        np.savez_compressed(cache, emb_mean=emb_mean, emb_sum=emb_sum, surp=surp)
-    return emb_mean, emb_sum, surp
 
 
 def extract_all_layers(model_key, sentences, drop_first=True, device=None):
@@ -153,23 +118,13 @@ class Extractor:
         return enc, word_ids
 
     @torch.no_grad()
-    def word_embeddings(self, words, layer="last", reduce="mean"):
-        """(n_words, dim) sub-word-pooled hidden states for ``words`` (mean or sum)."""
+    def word_embeddings(self, words, layer="last"):
+        """(n_words, dim) mean-pooled sub-word hidden states for ``words``."""
         enc, word_ids = self._encode(words)
         hs = self.lm(**{k: v.to(self.device) for k, v in enc.items()}).hidden_states
         li = self.cfg["last_layer"] if layer == "last" else layer
         h = hs[li][0].cpu().numpy()  # (n_tokens, dim)
-        return self._pool_by_word(h, word_ids, len(words), reduce=reduce)
-
-    @torch.no_grad()
-    def word_embeddings_both(self, words, layer="last"):
-        """Per-word mean AND sum sub-word pooling from one forward pass -> (mean, sum)."""
-        enc, word_ids = self._encode(words)
-        hs = self.lm(**{k: v.to(self.device) for k, v in enc.items()}).hidden_states
-        li = self.cfg["last_layer"] if layer == "last" else layer
-        h = hs[li][0].cpu().numpy()
-        return (self._pool_by_word(h, word_ids, len(words), "mean"),
-                self._pool_by_word(h, word_ids, len(words), "sum"))
+        return self._pool_by_word(h, word_ids, len(words))
 
     @torch.no_grad()
     def word_surprisal(self, words):
@@ -205,7 +160,7 @@ class Extractor:
 
     # ------------------------------------------------------------------ #
     @staticmethod
-    def _pool_by_word(token_mat, word_ids, n_words, reduce="mean"):
+    def _pool_by_word(token_mat, word_ids, n_words):
         dim = token_mat.shape[1]
         out = np.zeros((n_words, dim), dtype=np.float64)
         cnt = np.zeros(n_words, dtype=np.float64)
@@ -215,8 +170,7 @@ class Extractor:
             out[w] += token_mat[tpos]
             cnt[w] += 1
         nz = cnt > 0
-        if reduce == "mean":
-            out[nz] /= cnt[nz, None]
+        out[nz] /= cnt[nz, None]
         return out
 
     # ------------------------------------------------------------------ #
@@ -248,15 +202,6 @@ class Extractor:
                 for c in self._chunks(words, n_splits, overlap)]
         out = [embs[0]] + [e[overlap:] for e in embs[1:]]
         return np.vstack(out)
-
-    @torch.no_grad()
-    def chunked_word_features_both(self, words, layer="last", n_splits=2, overlap=50):
-        """Chunked per-word embeddings, both mean and sum sub-word pooling -> (mean, sum)."""
-        pairs = [self.word_embeddings_both(c, layer=layer)
-                 for c in self._chunks(words, n_splits, overlap)]
-        means, sums = zip(*pairs)
-        stitch = lambda ps: np.vstack([ps[0]] + [p[overlap:] for p in ps[1:]])
-        return stitch(means), stitch(sums)
 
     @torch.no_grad()
     def chunked_word_surprisal(self, words, n_splits=2, overlap=50):

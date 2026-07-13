@@ -3,7 +3,6 @@
 or ERP response under each encoding predictor, and do the predictors agree?
 
   act      EMB (D), mean-over-sub-word pooling            (the embedding readout)
-  emb_sum  EMB (D), sum pooling (over words / sub-words)
   sfl_rff  SFL(3) -> RBFSampler(D)                         (dimensionality-matched SFL)
 
 For each dataset (Pereira, Tuckute/control, UCL-N400) and GPT-2 XL (D=1600) we
@@ -33,7 +32,7 @@ from src.models import MODELS
 
 MODEL = os.environ.get("SFL_MODEL", "gpt2_xl")   # paper uses GPT-2 XL
 D = MODELS[MODEL]["dim"]
-PREDS = ["act", "emb_sum", "sfl_rff"]
+PREDS = ["act", "sfl_rff"]
 BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 OUTDIR = PROJECT_ROOT / "results_extremes"
 CACHE = PROJECT_ROOT / "cache"
@@ -79,31 +78,26 @@ LOADERS = {"pereira": load_pereira, "control": load_control, "n400": load_n400}
 
 # ----------------------------------------------------------------- feature build
 def prepare(D_):
-    """Extract embeddings/SFL ex novo and build act / emb_sum / sfl_rff inputs."""
+    """Extract embeddings/SFL ex novo and build act / sfl_rff inputs."""
     sents = D_["sentences"]
     wsi = _wsi(sents)
     freqs, lens = behavioral.freq_length(sents)
     emb_mean, surp = extract.extract_words(MODEL, sents, drop_first=True,
                                            cache=CACHE / f"extremes_{D_['name']}_mean.npz")
     word_sfl = np.column_stack([surp, freqs, lens])
-    n_units = len(D_["y"]) if D_["level"] == "word" and "row_mask" not in D_ else None
 
     if D_["level"] == "sentence":
         units = np.arange(len(sents))
         act = rff.pool_words_to_units(emb_mean, wsi, units, "mean")
-        emb_sum = rff.pool_words_to_units(emb_mean, wsi, units, "sum")
         covars = {c: rff.pool_words_to_units(v[:, None], wsi, units, "mean").ravel()
                   for c, v in zip(("surprisal", "length", "logfreq"),
                                   (surp, lens, freqs))}
         rff_build = rff.sentence_rff_build_fn(word_sfl, wsi, units, D)
-        return dict(act=act, emb_sum=emb_sum, covars=covars, rff_build=rff_build,
-                    word_sfl=None)
-    # word level (n400): unit == word; emb_sum = sum-over-sub-words
-    emb_sumw, _ = extract.extract_words(MODEL, sents, drop_first=True, pool="sum",
-                                        cache=CACHE / f"extremes_{D_['name']}_sum.npz")
+        return dict(act=act, covars=covars, rff_build=rff_build, word_sfl=None)
+    # word level (n400): unit == word
     mask = D_.get("row_mask", np.ones(len(word_sfl), bool))
     covars = {"surprisal": surp[mask], "length": lens[mask], "logfreq": freqs[mask]}
-    return dict(act=emb_mean[mask], emb_sum=emb_sumw[mask], covars=covars,
+    return dict(act=emb_mean[mask], covars=covars,
                 rff_build=rff.rff_build_fn(word_sfl[mask], D), word_sfl=word_sfl[mask])
 
 
@@ -125,7 +119,6 @@ def analyze(D_):
     folds = fit.make_folds(len(y), groups=D_["groups"], n_splits=10)
 
     preds = {"act": fit.oof_predict(y, folds, X=F["act"], backend=BACKEND),
-             "emb_sum": fit.oof_predict(y, folds, X=F["emb_sum"], backend=BACKEND),
              "sfl_rff": fit.oof_predict(y, folds, build_fn=F["rff_build"], backend=BACKEND)}
 
     OUTDIR.mkdir(parents=True, exist_ok=True)
