@@ -69,9 +69,8 @@ def _load(stem):
 
 
 def _ns(p):
-    """A directed permutation p = P(A>=B) is 'n.s.' (two-sided) if min(p,1-p) > .025.
-    A missing/NaN p (contrast not computed yet) draws no bracket."""
-    return bool(np.isfinite(p)) and min(p, 1 - p) > 0.025
+    """A directed permutation p = P(A>=B) is 'n.s.' (two-sided) if min(p,1-p) > .025."""
+    return min(p, 1 - p) > 0.025
 
 
 # ---------------------------------------------------------------- per-dataset (paper)
@@ -114,9 +113,9 @@ def paper_figure(stem, title, conds, pk, outdir):
     gap, step, barh = min(0.02, head * 0.16), min(0.035, head * 0.30), min(0.012, head * 0.09)
     L = (top + gap, top + gap + step, top + gap + 2 * step)
 
-    def parr(key):
-        return list(df.loc[models, key]) if key in df.columns else [np.nan] * n
-    p01, p12, p02 = parr(pk[0]), parr(pk[1]), parr(pk[2])
+    p01, p12, p02 = (list(df.loc[models, pk[0]]),
+                     list(df.loc[models, pk[1]]),
+                     list(df.loc[models, pk[2]]))
     for g in range(n):
         b = 3 * g
         _bracket(ax, b,     b + 1, _ns(p01[g]), pos, L[0], barh)
@@ -147,7 +146,7 @@ def paper_figures():
 
 
 # ---------------------------------------------------------------- aggregate grids
-def _panel(ax, df, title, conds):
+def _panel(ax, df, title, conds, ylim=1.0):
     models = [m for m in MODEL_ORDER if m in df.index]
     nc = len(conds)
     step = nc + 1
@@ -164,8 +163,8 @@ def _panel(ax, df, title, conds):
                        rotation_mode="anchor", fontsize=8)
     ax.set_ylabel("r", fontsize=9)
     ax.set_title(title, fontsize=10)
-    ax.set_ylim(0, 1)                                   # identical y-axis on every panel
-    ax.set_yticks(np.arange(0, 1.01, 0.2))
+    ax.set_ylim(0, ylim)                                # identical y-axis on every panel
+    ax.set_yticks(np.arange(0, ylim + 1e-9, 0.2))
     ax.set_axisbelow(True)
     ax.grid(axis="y", color="#666666", lw=0.5)
     ax.tick_params(axis="x", which="both", bottom=False)
@@ -173,7 +172,7 @@ def _panel(ax, df, title, conds):
         ax.spines[s].set_visible(False)
 
 
-def grid(group, name, conds, fname):
+def grid(group, name, conds, fname, ylim=1.0):
     panels = [(s, t, _load(s)) for s, t in group]
     panels = [(s, t, d) for s, t, d in panels if d is not None]
     if not panels:
@@ -184,12 +183,16 @@ def grid(group, name, conds, fname):
     fig, axes = plt.subplots(nrow, ncol, figsize=(3.0 * ncol, 2.6 * nrow), dpi=200)
     axes = np.atleast_1d(axes).ravel()
     for ax, (s, t, d) in zip(axes, panels):
-        _panel(ax, d, t, conds)
-    for ax in axes[len(panels):]:
+        _panel(ax, d, t, conds, ylim=ylim)
+    empties = axes[len(panels):]
+    for ax in empties:
         ax.axis("off")
-    axes[len(panels) - 1].legend(
-        handles=[mpatches.Patch(color=c, label=l) for _, l, c in conds],
-        fontsize=7.5, loc="best", framealpha=0.9)
+    handles = [mpatches.Patch(color=c, label=l) for _, l, c in conds]
+    if len(empties):                                    # legend outside the data panels
+        empties[0].legend(handles=handles, fontsize=10, loc="center", framealpha=0)
+    else:                                               # full grid -> legend below
+        fig.legend(handles=handles, fontsize=9, loc="lower center",
+                   ncol=len(conds), framealpha=0.9, bbox_to_anchor=(0.5, -0.03))
     fig.suptitle(name, fontsize=12)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
     for ext in ("svg", "png"):
@@ -235,5 +238,5 @@ if __name__ == "__main__":
     grid(BEHAVIORAL, "SFL vs EMB — behavioral", MAIN, "main_behavioral")
     grid(BRAIN, "SFL vs EMB — brain", MAIN, "main_brain")
     grid(BEHAVIORAL, r"SFL$_{RFF}$ expanded — behavioral", RFF3, "rff_behavioral")
-    grid(BRAIN, r"SFL$_{RFF}$ expanded — brain", RFF3, "rff_brain")
+    grid(BRAIN, r"SFL$_{RFF}$ expanded — brain", RFF3, "rff_brain", ylim=0.6)
     decomposition_figure()
