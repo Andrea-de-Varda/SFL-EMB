@@ -11,7 +11,8 @@ no re-extraction; runs in seconds.
 If the prediction pickles are NOT present (e.g. a fresh checkout), there is nothing to
 recompute from -- re-run the probe scripts instead.
 
-    python recompute_significance.py
+On Engaging, submit via SLURM (never run compute on the login node):
+    sbatch cluster/slurm_recompute.sh
 """
 import os
 import sys
