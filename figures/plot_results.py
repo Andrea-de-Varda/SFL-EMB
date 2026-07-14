@@ -164,7 +164,10 @@ def _panel(ax, df, title, conds):
                        rotation_mode="anchor", fontsize=8)
     ax.set_ylabel("r", fontsize=9)
     ax.set_title(title, fontsize=10)
-    ax.grid(axis="y", color="#666666", lw=0.5, zorder=0)
+    ax.set_ylim(0, 1)                                   # identical y-axis on every panel
+    ax.set_yticks(np.arange(0, 1.01, 0.2))
+    ax.set_axisbelow(True)
+    ax.grid(axis="y", color="#666666", lw=0.5)
     ax.tick_params(axis="x", which="both", bottom=False)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
