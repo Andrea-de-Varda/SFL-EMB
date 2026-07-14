@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Figures for the SFL-EMB paper, from the results/ tables.
 
-Per-dataset paper figures (paper/ subdir) — one per dataset, big title, NO legend,
-in the original style: 5 models x 3 bars (EMB / SFL / SFL+EMB, lightblue / lightgreen
-/ indianred), SEM error bars, and an "n.s." bracket over any pair whose difference is
-NOT significant (two-sided permutation test). EMB here is the mean-pooled variant.
+Per-dataset paper figures — one per dataset, big title, NO legend, original style:
+5 models x 3 bars, SEM error bars, fixed y-axis (0..1) with identical grid, and an
+"n.s." bracket (aligned across model-groups) over any pair whose difference is NOT
+significant (two-sided permutation test). Two variants:
+  paper/       EMB / SFL / SFL+EMB          (lightblue / lightgreen / indianred)
+  paper_rff/   EMB / SFL_RFF / SFL_RFF+EMB  (same code, slightly shifted blue+green)
 
 Aggregate overview figures (figures/ root):
   main_{behavioral,brain}  EMB / SFL / SFL+EMB grid
-  rff_{behavioral,brain}   adds SFL_RFF and SFL_RFF+EMB
+  rff_{behavioral,brain}   EMB / SFL_RFF / SFL_RFF+EMB grid
   sfl_decomposition        appendix A2
 
 Reads results/<dataset>_<target>_results.csv (index=model; cols <cond>, <cond>_sd,
@@ -30,12 +32,21 @@ from src.models import MODEL_ORDER, MODEL_LABELS
 RESULTS = PROJECT_ROOT / "results"
 FIGDIR = PROJECT_ROOT / "figures"
 PAPERDIR = FIGDIR / "paper"
+PAPERDIR_RFF = FIGDIR / "paper_rff"
 
 # condition -> (results-column, legend label, colour)
+# MAIN: EMB / SFL / EMB+SFL (the paper's main comparison).
 MAIN = [("emb", "EMB", "lightblue"), ("sfl", "SFL", "lightgreen"),
         ("all", r"EMB$^\frown$SFL", "indianred")]
-RFF = MAIN + [("sfl_rff", r"SFL$_{RFF}$", "#f2c14e"),
-              ("sfl_rff_emb", r"SFL$_{RFF}^\frown$EMB", "#b48ce0")]
+# RFF3: same layout with SFL expanded to its RFF version -- EMB / SFL_RFF / SFL_RFF+EMB.
+# Same colour code as MAIN (blue / green / red) but slightly shifted blue+green so the
+# RFF figures are visually distinguishable from the main ones.
+RFF3 = [("emb", "EMB", "#8ec3e0"), ("sfl_rff", r"SFL$_{RFF}$", "#84cf84"),
+        ("sfl_rff_emb", r"SFL$_{RFF}^\frown$EMB", "indianred")]
+
+# per-variant bracket p-key triples, in bar order: (bar0-bar1, bar1-bar2, bar0-bar2)
+MAIN_PK = ("p_sfl_emb", "p_all_sfl", "p_all_emb")
+RFF3_PK = ("p_sflrff_emb", "p_sflrffemb_sflrff", "p_sflrffemb_emb")
 
 # dataset -> (results-file stem, pretty title)
 BEHAVIORAL = [("provo_fpass", "Provo"), ("meco_fpass", "Meco-en"), ("zuco_fpass", "ZuCo-2"),
@@ -57,50 +68,61 @@ def _load(stem):
     return pd.read_csv(f, index_col=0) if f.exists() else None
 
 
-def _two_sided_ns(p):
-    """A directed permutation p = P(A>=B) is 'n.s.' (two-sided) if min(p,1-p) > .025."""
-    return min(p, 1 - p) > 0.025
+def _ns(p):
+    """A directed permutation p = P(A>=B) is 'n.s.' (two-sided) if min(p,1-p) > .025.
+    A missing/NaN p (contrast not computed yet) draws no bracket."""
+    return bool(np.isfinite(p)) and min(p, 1 - p) > 0.025
 
 
 # ---------------------------------------------------------------- per-dataset (paper)
-def _bracket(ax, i, j, ns, centers, heights, yerr, dh, barh):
-    """Draw an 'n.s.' bracket over bars i,j only when the pair is non-significant."""
-    if not ns:
+def _bracket(ax, i, j, draw, centers, y, barh):
+    """Draw an 'n.s.' bracket over bars i,j at absolute height ``y`` (only when ``draw``)."""
+    if not draw:
         return
     lx, rx = centers[i], centers[j]
-    y = max(heights[i] + yerr[i], heights[j] + yerr[j]) + dh
     ax.plot([lx, lx, rx, rx], [y, y + barh, y + barh, y], c="black", lw=0.8)
-    ax.text((lx + rx) / 2, y + barh, "n.s.", ha="center", va="bottom", fontsize=7)
+    ax.text((lx + rx) / 2, y + barh, "n.s.", ha="center", va="bottom", fontsize=6.5)
 
 
-def paper_figure(stem, title):
+def paper_figure(stem, title, conds, pk, outdir):
+    """One per-dataset paper figure: 3 bars/model, fixed y-axis (0..1), aligned n.s.
+    brackets. ``conds`` is a 3-entry [(col,label,colour)]; ``pk`` the bracket p-keys
+    (bar0-bar1, bar1-bar2, bar0-bar2); ``outdir`` where to write <stem>.{svg,png}."""
     df = _load(stem)
     if df is None:
         return
     models = [m for m in MODEL_ORDER if m in df.index]
-    keys = [k for k, _, _ in MAIN]                      # emb, sfl, all
-    pos = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19][:3 * len(models)]
+    n = len(models)
+    pos = [1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19][:3 * n]
     heights, yerr, colors = [], [], []
     for m in models:
-        for k, _, c in MAIN:
+        for k, _, c in conds:
             heights.append(float(df.loc[m, k]))
             yerr.append(float(df.loc[m, f"{k}_sd"]) / sqrt(10))
             colors.append(c)
     fig, ax = plt.subplots(figsize=(5 / 1.4, 3.5 / 1.4), dpi=300)
-    ax.grid(axis="y", which="major", color="#666666", lw=0.5, zorder=0)
+    ax.set_axisbelow(True)
+    ax.yaxis.grid(True, which="major", color="#666666", lw=0.5)
     ax.bar(pos, heights, width=0.9, color=colors, yerr=yerr, capsize=2,
            error_kw={"lw": 0.8}, zorder=5)
-    ymax = max(h + e for h, e in zip(heights, yerr))
-    ax.set_ylim(0, ymax * 1.28)
-    # significance brackets: EMB-SFL, SFL-all, EMB-all per model (n.s. only)
-    P = {c: (list(df.loc[models, c]) if c in df else [np.nan] * len(models))
-         for c in ("p_sfl_emb", "p_all_sfl", "p_all_emb")}
-    for g in range(len(models)):
-        b0, b1, b2 = 3 * g, 3 * g + 1, 3 * g + 2       # EMB, SFL, all
-        _bracket(ax, b0, b1, _two_sided_ns(P["p_sfl_emb"][g]), pos, heights, yerr, ymax * 0.03, ymax * 0.03)
-        _bracket(ax, b1, b2, _two_sided_ns(P["p_all_sfl"][g]), pos, heights, yerr, ymax * 0.09, ymax * 0.03)
-        _bracket(ax, b0, b2, _two_sided_ns(P["p_all_emb"][g]), pos, heights, yerr, ymax * 0.15, ymax * 0.03)
-    centers = [pos[3 * g + 1] for g in range(len(models))]
+    ax.set_ylim(0, 1)                                   # fixed across every dataset
+    ax.set_yticks(np.arange(0, 1.01, 0.2))              # identical grid everywhere
+    # three nested bracket levels, placed at the SAME height across all model-groups
+    # (just above the tallest bar in the panel) so brackets never vary group-to-group.
+    top = max(h + e for h, e in zip(heights, yerr))
+    head = 1.0 - top
+    gap, step, barh = min(0.02, head * 0.16), min(0.035, head * 0.30), min(0.012, head * 0.09)
+    L = (top + gap, top + gap + step, top + gap + 2 * step)
+
+    def parr(key):
+        return list(df.loc[models, key]) if key in df.columns else [np.nan] * n
+    p01, p12, p02 = parr(pk[0]), parr(pk[1]), parr(pk[2])
+    for g in range(n):
+        b = 3 * g
+        _bracket(ax, b,     b + 1, _ns(p01[g]), pos, L[0], barh)
+        _bracket(ax, b + 1, b + 2, _ns(p12[g]), pos, L[1], barh)
+        _bracket(ax, b,     b + 2, _ns(p02[g]), pos, L[2], barh)
+    centers = [pos[3 * g + 1] for g in range(n)]
     ax.set_xticks(centers)
     ax.set_xticklabels([MODEL_LABELS[m] for m in models], rotation=35, ha="right",
                        rotation_mode="anchor", fontsize=11)
@@ -110,17 +132,18 @@ def paper_figure(stem, title):
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
     fig.tight_layout()
-    PAPERDIR.mkdir(parents=True, exist_ok=True)
+    outdir.mkdir(parents=True, exist_ok=True)
     for ext in ("svg", "png"):
-        fig.savefig(PAPERDIR / f"{stem}.{ext}", bbox_inches="tight")
+        fig.savefig(outdir / f"{stem}.{ext}", bbox_inches="tight")
     plt.close(fig)
 
 
 def paper_figures():
     for stem, title in PAPER_STEMS:
-        paper_figure(stem, title)
-    print(f"wrote per-dataset paper figures -> figures/paper/  "
-          f"({sum((RESULTS / f'{s}_results.csv').exists() for s, _ in PAPER_STEMS)} datasets)")
+        paper_figure(stem, title, MAIN, MAIN_PK, PAPERDIR)       # EMB / SFL / EMB+SFL
+        paper_figure(stem, title, RFF3, RFF3_PK, PAPERDIR_RFF)   # EMB / SFL_RFF / SFL_RFF+EMB
+    nd = sum((RESULTS / f'{s}_results.csv').exists() for s, _ in PAPER_STEMS)
+    print(f"wrote per-dataset paper figures -> figures/paper/ + figures/paper_rff/  ({nd} datasets)")
 
 
 # ---------------------------------------------------------------- aggregate grids
@@ -208,6 +231,6 @@ if __name__ == "__main__":
     paper_figures()                                     # per-dataset, paper style
     grid(BEHAVIORAL, "SFL vs EMB — behavioral", MAIN, "main_behavioral")
     grid(BRAIN, "SFL vs EMB — brain", MAIN, "main_brain")
-    grid(BEHAVIORAL, "with RFF — behavioral", RFF, "rff_behavioral")
-    grid(BRAIN, "with RFF — brain", RFF, "rff_brain")
+    grid(BEHAVIORAL, r"SFL$_{RFF}$ expanded — behavioral", RFF3, "rff_behavioral")
+    grid(BRAIN, r"SFL$_{RFF}$ expanded — brain", RFF3, "rff_brain")
     decomposition_figure()

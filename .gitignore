@@ -53,3 +53,4 @@ check-features/analysis/brain_summary_*.csv
 figures/*.svg
 figures/*.png
 figures/paper/
+figures/paper_rff/

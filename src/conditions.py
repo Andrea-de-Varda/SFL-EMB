@@ -32,6 +32,7 @@ CONTRASTS = {
     "p_sflrff_emb":     ("sfl_rff", "emb"),      # dimensionality-matched SFL vs EMB
     "p_sflrffemb_all":  ("sfl_rff_emb", "all"),
     "p_sflrffemb_emb":  ("sfl_rff_emb", "emb"),
+    "p_sflrffemb_sflrff": ("sfl_rff_emb", "sfl_rff"),  # does adding EMB to SFL_RFF help
 }
 
 
