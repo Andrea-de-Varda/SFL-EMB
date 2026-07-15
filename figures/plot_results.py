@@ -84,6 +84,9 @@ def _ns(p):
 VSHIFT = .03      # gap: bars -> level 1, and between levels (axes fraction)
 BARH = .05        # bracket arm height (axes fraction), as in the original
 
+SPINE_LW = 1.6    # plot border (all four spines)
+GRID_LW = 0.4     # y-grid lines (minor grid is drawn at half this)
+
 
 def _bracket_at(ax, num1, num2, center, y, barh, label=True):
     """Draw one bracket with its baseline at absolute height ``y``; return (x_mid, y_top).
@@ -133,9 +136,12 @@ def paper_figure(stem, title, conds, pk, outdir, vspace=None):
     # geometry/styling identical to the original plotting.py base_plot, so the files
     # drop straight into the Overleaf source (same size, same scale).
     fig, ax = plt.subplots(figsize=(5 / 1.7, 3.5 / 1.7), dpi=300)
-    ax.grid(axis="y", which="major", color="#666666", linestyle="-", zorder=0)
+    ax.grid(axis="y", which="major", color="#666666", linestyle="-", lw=GRID_LW, zorder=0)
     ax.minorticks_on()
-    ax.grid(axis="y", which="minor", color="#999999", linestyle="-", alpha=0.2, zorder=3)
+    ax.grid(axis="y", which="minor", color="#999999", linestyle="-", lw=GRID_LW / 2,
+            alpha=0.2, zorder=3)
+    for sp in ax.spines.values():
+        sp.set_linewidth(SPINE_LW)
     ax.bar(pos, heights, width=0.9, color=colors, yerr=yerr, capsize=2, zorder=5)
     ax.set_ylim(0, 1)                                   # fixed across every dataset
     ax.set_yticks(np.arange(0, 1.01, 0.2))              # identical grid everywhere
@@ -264,9 +270,12 @@ def decomposition_figures(model="gpt2_medium"):
         colors = [DECOMP_BLUE[len(c)] for c in cols]
         # geometry/styling identical to the original plot_sfl_decomposed.py
         fig, ax = plt.subplots(figsize=(5 / 1.7, 3.5 / 1.7), dpi=300)
-        ax.grid(axis="y", which="major", color="#666666", linestyle="-", zorder=0)
+        ax.grid(axis="y", which="major", color="#666666", linestyle="-", lw=GRID_LW, zorder=0)
         ax.minorticks_on()
-        ax.grid(axis="y", which="minor", color="#999999", linestyle="-", alpha=0.2, zorder=3)
+        ax.grid(axis="y", which="minor", color="#999999", linestyle="-", lw=GRID_LW / 2,
+                alpha=0.2, zorder=3)
+        for sp in ax.spines.values():
+            sp.set_linewidth(SPINE_LW)
         ax.bar(pos, df.loc["m", cols].to_numpy(float), width=0.9, color=colors,
                yerr=df.loc["sd", cols].to_numpy(float) / sqrt(10), capsize=2, zorder=5)
         ax.set_xticks(pos)
