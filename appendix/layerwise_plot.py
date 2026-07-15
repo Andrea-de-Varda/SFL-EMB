@@ -59,7 +59,22 @@ def sfl_standard(name, df):
     return r, sd
 
 
-def panel(ax, d, name, df):
+def group_ylim(names, df, pad=0.03, step=0.05):
+    """One y-range shared by every panel of a group: the span of everything drawn
+    (curves +/- SEM and the SFL band), padded and rounded outward to `step`."""
+    lo, hi = [], []
+    for nm in names:
+        d = df[df.dataset == nm]
+        e = d.emb_sd.to_numpy() / np.sqrt(NFOLD)
+        r, sd = sfl_standard(nm, df)
+        s = sd / np.sqrt(NFOLD)
+        lo += [float((d.emb_r.to_numpy() - e).min()), r - s]
+        hi += [float((d.emb_r.to_numpy() + e).max()), r + s]
+    lo, hi = min(lo) - pad, max(hi) + pad
+    return np.floor(lo / step) * step, np.ceil(hi / step) * step
+
+
+def panel(ax, d, name, df, ylim):
     d = d.sort_values("layer")
     x = d.layer.to_numpy()
     y, e = d.emb_r.to_numpy(), d.emb_sd.to_numpy() / np.sqrt(NFOLD)
@@ -74,6 +89,7 @@ def panel(ax, d, name, df):
     ax.set_title(NICE.get(name, name), fontsize=11)
     ax.grid(alpha=.25, lw=.4)
     ax.set_xlim(0, x.max())
+    ax.set_ylim(*ylim)                 # shared within a group (behavior / brain)
     for sp in ax.spines.values():
         sp.set_linewidth(1.1)
 
@@ -89,8 +105,10 @@ def plot_all(df):
         fig, axes = plt.subplots(nrow, ncol, figsize=(3.1 * ncol, 2.7 * nrow),
                                  dpi=200, squeeze=False)
         axes = axes.ravel()
+        ylim = group_ylim(names, df)
+        print(f"  {grp}: shared ylim = ({ylim[0]:.2f}, {ylim[1]:.2f})")
         for ax, nm in zip(axes, names):
-            panel(ax, df[df.dataset == nm], nm, df)
+            panel(ax, df[df.dataset == nm], nm, df, ylim)
         for ax in axes[len(names):]:
             ax.axis("off")
         for i, ax in enumerate(axes[:len(names)]):
