@@ -86,7 +86,7 @@ BARH = .05        # bracket arm height (axes fraction), as in the original
 
 SPINE_LW = 1.3    # plot border (all four spines)
 GRID_LW = 0.4     # y-grid lines (minor grid is drawn at half this)
-YLABEL_SIZE = 13  # the "r" axis label (bold)
+YLABEL_SIZE = 12  # the "r" axis label
 YTICK_SIZE = 11   # the 0.0/0.2/... tick labels
 
 
@@ -176,7 +176,7 @@ def paper_figure(stem, title, conds, pk, outdir, vspace=None):
     ax.set_xticks(centers)
     ax.set_xticklabels([MODEL_LABELS[m] for m in models], rotation=35, ha="right",
                        rotation_mode="anchor", fontsize=11)
-    ax.set_ylabel("r", fontsize=YLABEL_SIZE, fontweight="bold")
+    ax.set_ylabel("r", fontsize=YLABEL_SIZE)
     ax.tick_params(axis="y", labelsize=YTICK_SIZE)
     ax.set_title(title, fontsize=16)
     ax.tick_params(axis="x", which="both", bottom=False, top=False, labelbottom=True)
@@ -284,7 +284,7 @@ def decomposition_figures(model="gpt2_medium"):
         ax.set_xticks(pos)
         ax.set_xticklabels(cols, fontsize=13)
         ax.tick_params(axis="y", labelsize=13)
-        ax.set_ylabel("r", fontsize=YLABEL_SIZE, fontweight="bold")
+        ax.set_ylabel("r", fontsize=YLABEL_SIZE)
         ax.set_ylim(-0.1, 0.9)
         ax.set_title(title, fontsize=20)
         ax.tick_params(axis="x", which="both", bottom=False, top=False, labelbottom=True)
