@@ -77,9 +77,10 @@ def _ns(p):
 # Bracket placement is the original plotting.py `barplot_annotate_brackets` verbatim:
 # the bracket sits `dh` above the taller of the two bars (dh/barh are axes fractions),
 # and the label uses the default font size.
-def _annotate_bracket(ax, num1, num2, draw, center, height, yerr=None, dh=.05, barh=.05, fs=None):
-    if not draw:
-        return
+def _annotate_bracket(ax, num1, num2, center, height, yerr=None, dh=.05, barh=.05,
+                      fs=None, label=True):
+    """Draw one bracket; return its (x_mid, y_top). ``label=False`` omits the 'n.s.'
+    text, so a group of brackets can share a single label."""
     lx, ly = center[num1], height[num1]
     rx, ry = center[num2], height[num2]
     if yerr:
@@ -90,10 +91,13 @@ def _annotate_bracket(ax, num1, num2, draw, center, height, yerr=None, dh=.05, b
     barh *= (ax_y1 - ax_y0)
     y = max(ly, ry) + dh
     ax.plot([lx, lx, rx, rx], [y, y + barh, y + barh, y], c="black")
-    kwargs = dict(ha="center", va="bottom")
-    if fs is not None:
-        kwargs["fontsize"] = fs
-    ax.text((lx + rx) / 2, y + barh + 0.002, "n.s.", **kwargs)
+    mid = ((lx + rx) / 2, y + barh)
+    if label:
+        kwargs = dict(ha="center", va="bottom")
+        if fs is not None:
+            kwargs["fontsize"] = fs
+        ax.text(mid[0], mid[1] + 0.002, "n.s.", **kwargs)
+    return mid
 
 
 # Per-dataset bracket tuning, verbatim from the original base_plot call sites.
@@ -161,9 +165,17 @@ def paper_figure(stem, title, conds, pk, outdir, tuning=None):
         b = 3 * g
         dh2 = t["dhlist2"][g] if t["dhlist2"] else t["dh2"]
         dh3 = t["dhlist3"][g] if t["dhlist3"] else t["dh3"]
-        _annotate_bracket(ax, b,     b + 1, _ns(p01[g]), pos, heights, yerr, dh=t["dh1"], barh=t["barh1"])
-        _annotate_bracket(ax, b + 1, b + 2, _ns(p12[g]), pos, heights, yerr, dh=dh2, barh=t["barh2"])
-        _annotate_bracket(ax, b,     b + 2, _ns(p02[g]), pos, heights, yerr, dh=dh3, barh=t["barh3"])
+        drawn = [(i, j, dh, bh) for i, j, is_ns, dh, bh in (
+            (b,     b + 1, _ns(p01[g]), t["dh1"], t["barh1"]),
+            (b + 1, b + 2, _ns(p12[g]), dh2,      t["barh2"]),
+            (b,     b + 2, _ns(p02[g]), dh3,      t["barh3"])) if is_ns]
+        # with 2-3 n.s. pairs in a triplet, draw the brackets but label them once
+        single = len(drawn) == 1
+        mids = [_annotate_bracket(ax, i, j, pos, heights, yerr, dh=dh, barh=bh, label=single)
+                for i, j, dh, bh in drawn]
+        if not single and mids:
+            x, y = max(mids, key=lambda m: m[1])          # above the topmost bracket
+            ax.text(x, y + 0.002, "n.s.", ha="center", va="bottom")
     centers = [pos[3 * g + 1] for g in range(n)]
     ax.set_xticks(centers)
     ax.set_xticklabels([MODEL_LABELS[m] for m in models], rotation=35, ha="right",
