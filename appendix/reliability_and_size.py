@@ -145,7 +145,7 @@ def load_maze():
     recover = {" ".join(l): idx for idx, l in enumerate(sents)}
     maze["sent_n"] = maze.sentence.map(recover)
     part_ok = {s: (len(t[t["correct"] == "yes"]) / len(t) > .8)
-               for s, t in maze.groupby("subject")}
+               for s, t in maze.groupby("subject", observed=True)}
     error, prev_idx, prev_cor = [], 0, True
     for _, row in tqdm(maze.iterrows(), total=len(maze), desc="maze error"):
         cur_idx, cur_cor = row["word_num"], row["correct"] == "yes"
@@ -159,7 +159,7 @@ def load_maze():
     rt = []
     for sn in tqdm(sorted(set(maze.sent_n.dropna())), desc="maze items"):
         temp = maze[maze.sent_n == sn]
-        for n in range(sent_len[sn]):
+        for n in range(sent_len[int(sn)]):
             row = temp[temp.word_num == n]
             if not row.empty and n != 0:
                 rt.append(row["rt"].tolist())
@@ -203,9 +203,10 @@ def load_pereira():
                          columns=["UID", "Sentence", "ROI", "EffectSize"])
     lang = ["Lang_LH_IFGorb", "Lang_LH_IFG", "Lang_LH_MFG", "Lang_LH_AntTemp", "Lang_LH_PostTemp"]
     pereira = df[df.ROI.isin(lang)].copy()
-    g = (pereira.groupby(["UID", "ROI", "Sentence"]).agg({"EffectSize": "mean"})
-         .groupby(["UID", "Sentence"]).agg({"EffectSize": "mean"})
-         .groupby(["Sentence"]).agg({"EffectSize": list}))
+    pereira["ROI"] = pereira["ROI"].cat.remove_unused_categories()
+    g = (pereira.groupby(["UID", "ROI", "Sentence"], observed=True).agg({"EffectSize": "mean"})
+         .groupby(["UID", "Sentence"], observed=True).agg({"EffectSize": "mean"})
+         .groupby(["Sentence"], observed=True).agg({"EffectSize": list}))
     data = g["EffectSize"].tolist()
     return [[x for x in row if not (isinstance(x, float) and np.isnan(x))] for row in data]
 
@@ -313,7 +314,7 @@ def plot_group(fname, dfs, names, title="", themax=0, ylim=None, shifts=None):
 def make_figures(R):
     plot_group("eyetracking", [R["eye"], R["provo"], R["meco"], R["zuco"]],
                ["UCL$_{ET}$", "Provo", "MECO-en", "ZuCo-2"], title="Eye-tracking",
-               shifts=[[3, -.05], [3, 0], [-22, +.04], [-19, .05]], ylim=1)
+               shifts=[[3, -.05], [3, 0], [-22, +.04], [-19, .05]], themax=90, ylim=1)
     plot_group("spr", [R["natstor"], R["brown"], R["spr"]],
                ["NatStor$_{SPR}$", "Brown", "UCL$_{SPR}$"], title="Self-paced reading",
                themax=90, ylim=0.76)
