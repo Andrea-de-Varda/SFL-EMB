@@ -201,36 +201,47 @@ def grid(group, name, conds, fname, ylim=1.0):
     print(f"wrote figures/{fname}.svg/.png")
 
 
-def decomposition_figure(model="gpt2_medium"):
-    stems = dict(ALL_DATASETS)
-    order = ["S", "F", "L", "SF", "FL", "SL", "SFL"]
-    found = [(s, pd.read_csv(RESULTS / f"{s}_{model}_decomposed.csv", index_col=0))
-             for s in stems if (RESULTS / f"{s}_{model}_decomposed.csv").exists()]
-    if not found:
-        print(f"[skip] no {model} decomposition files")
-        return
-    ncol = 4
-    nrow = int(np.ceil(len(found) / ncol))
-    fig, axes = plt.subplots(nrow, ncol, figsize=(3.0 * ncol, 2.4 * nrow), dpi=200)
-    axes = np.atleast_1d(axes).ravel()
-    for ax, (s, df) in zip(axes, found):
-        cols = [c for c in order if c in df.columns]
-        ax.bar(cols, df.loc["m", cols].to_numpy(float),
-               yerr=df.loc["sd", cols].to_numpy(float) / np.sqrt(10),
-               color="#9b90c2", capsize=2, zorder=5)
-        ax.set_title(stems[s], fontsize=10)
-        ax.set_ylabel("r", fontsize=9)
-        ax.grid(axis="y", color="#666666", lw=0.5, zorder=0)
-        for sp in ("top", "right"):
-            ax.spines[sp].set_visible(False)
-    for ax in axes[len(found):]:
-        ax.axis("off")
-    fig.suptitle(f"SFL decomposition ({MODEL_LABELS.get(model, model)})", fontsize=12)
-    fig.tight_layout(rect=[0, 0, 1, 0.97])
-    for ext in ("svg", "png"):
-        fig.savefig(FIGDIR / f"sfl_decomposition.{ext}", bbox_inches="tight")
-    plt.close(fig)
-    print("wrote figures/sfl_decomposition.svg/.png")
+# SFL decomposition (appendix): the 7 feature subsets, GROUPED by cardinality
+# (singles S/F/L | pairs SF/FL/SL | triple SFL) with a light->dark blue gradient,
+# one big-title figure per dataset (the paper style).
+DECOMP_ORDER = ["S", "F", "L", "SF", "FL", "SL", "SFL"]
+DECOMP_POS = [1, 2, 3, 4.5, 5.5, 6.5, 8]
+DECOMP_BLUE = {1: "#87CEFA", 2: "#4169E1", 3: "#0000CD"}   # by number of features
+DECOMPDIR = FIGDIR / "decomp"
+
+
+def decomposition_figures(model="gpt2_medium"):
+    n = 0
+    for stem, title in ALL_DATASETS:
+        f = RESULTS / f"{stem}_{model}_decomposed.csv"
+        if not f.exists():
+            continue
+        df = pd.read_csv(f, index_col=0)
+        cols = [c for c in DECOMP_ORDER if c in df.columns]
+        pos = [DECOMP_POS[DECOMP_ORDER.index(c)] for c in cols]
+        colors = [DECOMP_BLUE[len(c)] for c in cols]
+        fig, ax = plt.subplots(figsize=(5 / 1.4, 3.5 / 1.4), dpi=300)
+        ax.set_axisbelow(True)
+        ax.yaxis.grid(True, which="major", color="#666666", lw=0.5)
+        ax.bar(pos, df.loc["m", cols].to_numpy(float), width=0.9, color=colors,
+               yerr=df.loc["sd", cols].to_numpy(float) / sqrt(10), capsize=2,
+               error_kw={"lw": 0.8}, zorder=5)
+        ax.set_xticks(pos)
+        ax.set_xticklabels(cols, fontsize=12)
+        ax.set_ylabel("r", fontsize=12)
+        ax.set_ylim(-0.1, 0.9)
+        ax.set_title(title, fontsize=16)
+        ax.tick_params(axis="x", which="both", bottom=False)
+        for s in ("top", "right"):
+            ax.spines[s].set_visible(False)
+        fig.tight_layout()
+        DECOMPDIR.mkdir(parents=True, exist_ok=True)
+        for ext in ("svg", "png"):
+            fig.savefig(DECOMPDIR / f"{stem}.{ext}", bbox_inches="tight")
+        plt.close(fig)
+        n += 1
+    print(f"wrote SFL decomposition figures -> figures/decomp/  "
+          f"({n} datasets, {MODEL_LABELS.get(model, model)})")
 
 
 if __name__ == "__main__":
@@ -239,4 +250,4 @@ if __name__ == "__main__":
     grid(BRAIN, "SFL vs EMB — brain", MAIN, "main_brain")
     grid(BEHAVIORAL, r"SFL$_{RFF}$ expanded — behavioral", RFF3, "rff_behavioral")
     grid(BRAIN, r"SFL$_{RFF}$ expanded — brain", RFF3, "rff_brain", ylim=0.6)
-    decomposition_figure()
+    decomposition_figures()
