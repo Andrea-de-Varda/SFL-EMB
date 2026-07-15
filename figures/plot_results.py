@@ -106,6 +106,21 @@ PAPER_TUNING = {
     "ucl_spr":      dict(dh2=.22),
     "HP":           dict(dh1=.07, dhlist2=[.4, .3, .3, .3, .3],
                          dhlist3=[.52, .42, .44, .43, .43]),
+    # Brain sets where EMB ~= EMB+SFL: the EMB-SFL (L1) and EMB-all (L3) brackets
+    # otherwise land on top of each other, so L3 is lifted per-model clear of L1's
+    # label -- and left low for models where L1 is not drawn.
+    "ucl_n400_n400":  dict(dhlist3=[.03, .14, .14, .03, .03]),
+    # natstorfmri: gpt2_medium lifted to sit level with GPT's tallest bracket.
+    "natstorfmri":    dict(dhlist3=[.16, .18, .117, .03, .03]),
+}
+
+# Same idea for the RFF variant (a new figure, so nothing to copy from the paper):
+# only the brain sets where EMB ~= SFL_RFF+EMB stack more than one bracket.
+RFF_TUNING = {
+    "HP":          dict(dhlist2=[.21, .23, .215, .205, .03],
+                        dhlist3=[.35, .35, .35, .35, .19]),
+    "natstorfmri": dict(dhlist3=[.17, .17, .03, .141, .03]),
+    "pereira":     dict(dhlist2=[.16, .158, .03, .161, .165]),
 }
 
 
@@ -166,8 +181,8 @@ def paper_figures():
     for stem, title in PAPER_STEMS:
         # EMB / SFL / EMB+SFL -- with the paper's hand-tuned bracket placement
         paper_figure(stem, title, MAIN, MAIN_PK, PAPERDIR, tuning=PAPER_TUNING.get(stem))
-        # EMB / SFL_RFF / SFL_RFF+EMB -- new figure, original defaults
-        paper_figure(stem, title, RFF3, RFF3_PK, PAPERDIR_RFF)
+        # EMB / SFL_RFF / SFL_RFF+EMB -- new figure
+        paper_figure(stem, title, RFF3, RFF3_PK, PAPERDIR_RFF, tuning=RFF_TUNING.get(stem))
     nd = sum((RESULTS / f'{s}_results.csv').exists() for s, _ in PAPER_STEMS)
     print(f"wrote per-dataset paper figures -> figures/paper/ + figures/paper_rff/  ({nd} datasets)")
 
