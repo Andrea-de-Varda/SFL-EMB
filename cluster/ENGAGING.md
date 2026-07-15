@@ -57,11 +57,12 @@ Both scripts extract embeddings/surprisal fresh and cache them under `cache/`
 (git-ignored), so re-runs skip extraction. Outputs: `results/<dataset>_..._results.csv`
 plus per-fold prediction files.
 
-## Figures / appendix (after the run)
+## Figures / appendix (run LOCALLY after pulling results — not on the login node)
 
 ```bash
-python figures/plot_results.py                 # main comparison + SFL decomposition
+python figures/plot_results.py                 # main + RFF + decomposition + model-size
 python appendix/layer_sweep.py                 # A4 layer sweep (gpt2_medium)
-python appendix/reliability_and_size.py        # A5 reliability
+python appendix/reliability_and_size.py        # A5 reliability (CPU, from raw data; caches to cache/)
+python appendix/reliability_and_size.py --replot   # re-plot A5 from cache, no recompute
 python check-features/predict_features.py      # SFL_RFF meaning-vs-form probe
 ```

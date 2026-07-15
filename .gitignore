@@ -59,3 +59,6 @@ figures/paper_rff/
 6a56bd55cbb8310ac4c1e6db/*
 # generated SFL-decomposition figures
 figures/decomp/
+
+# generated reliability figures
+figures/reliability/

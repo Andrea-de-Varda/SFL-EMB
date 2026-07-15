@@ -1,562 +1,342 @@
+#!/usr/bin/env python3
+"""Appendix A5: measurement reliability vs sample size (progressive split-half).
+
+For each dataset we take, per item, the vector of measurements across participants
+(reading time / ERP / BOLD). At sample size ``n`` we draw two disjoint halves of ``n``
+observations per item, correlate the item means across the halves, and average over
+random draws -> reliability ``R(n)``. Curves are grouped by modality (eye-tracking,
+self-paced reading, N400, Maze, fMRI-sentences, fMRI-stories) and saved to
+``figures/reliability/``.
+
+Runs locally (conda ``analysis``). The heavy raw arrays it reads (Wehbe .npy,
+NatStor-fMRI timeseries, Tuckute csv, Pereira parquet) are ``.gitignore``d but must be
+present under ``data/``. Split-half results are cached so re-plotting is instant.
+
+    python appendix/reliability_and_size.py            # compute (cached) + plot
+    python appendix/reliability_and_size.py --replot   # re-plot from cache only
+"""
+import argparse
+import os
 import pickle
+import random
+import re
+import sys
+from math import floor
+from pathlib import Path
+
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from os import chdir
-import matplotlib.ticker as ticker
-import numpy as np
-from scipy.stats import pearsonr
 import scipy.io
+from scipy.stats import pearsonr
 from tqdm import tqdm
-import re
-import pyreadr
-import random
-from math import floor
 
-# --- reproducible paths: resolve repo root (the dir containing utils.py) ---
-from pathlib import Path as _Path
-_here = _Path(__file__).resolve().parent if "__file__" in globals() else _Path.cwd()
-PROJECT_ROOT = _Path(__file__).resolve().parent.parent
-dirName = str(PROJECT_ROOT)
-chdir(dirName)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.paths import PROJECT_ROOT
 
-freq = pd.read_excel(PROJECT_ROOT / "data/subtlex.xlsx")
-f = {row.Word : np.log(row.FREQcount) for index, row in freq.iterrows()}
+DATA = PROJECT_ROOT / "data"
+CORP = DATA / "corpora"
+FIGDIR = PROJECT_ROOT / "figures" / "reliability"
+CACHE = PROJECT_ROOT / "cache" / "reliab_size.pkl"
 
-def progressive_splithalf(nested_list, n_iterations=10, verbose = False):
-    shortest_length = max(len(sublist) for sublist in nested_list)  # length of the longest element in the nested list
-    out_all = []
-    # iterate over half of the longest sublist length
-    for n_samples in tqdm(range(1, int(shortest_length / 2) + 1, 1), total = int(shortest_length / 2)):
-        out_n = []
-        for n_iter in range(n_iterations):
+
+# --------------------------------------------------------------------------- core
+def progressive_splithalf(nested_list, n_iterations=10):
+    """R(n) for n = 1..max_item_len/2: correlate item means of two disjoint n-halves."""
+    shortest = max(len(s) for s in nested_list)
+    out = []
+    for n_samples in tqdm(range(1, int(shortest / 2) + 1), total=int(shortest / 2)):
+        rs = []
+        for it in range(n_iterations):
             a, b = [], []
-            for sublist in nested_list:
-                use_n_samples = min(n_samples, floor(len(sublist) / 2))
-                random.seed(n_iter)
-                random.shuffle(sublist)
-                # Calculate mean avoiding empty slices
-                first_half_mean = np.mean(sublist[:use_n_samples]) if sublist[:use_n_samples] else np.nan
-                second_half_mean = np.mean(sublist[use_n_samples:use_n_samples * 2]) if sublist[use_n_samples:use_n_samples * 2] else np.nan
-                if not np.isnan(first_half_mean) and not np.isnan(second_half_mean):
-                    a.append(first_half_mean)
-                    b.append(second_half_mean)
-            
-            # check a and b are not empty and do not contain nans
+            for sub in nested_list:
+                use = min(n_samples, floor(len(sub) / 2))
+                random.seed(it)
+                random.shuffle(sub)
+                h1 = np.mean(sub[:use]) if sub[:use] else np.nan
+                h2 = np.mean(sub[use:use * 2]) if sub[use:use * 2] else np.nan
+                if not np.isnan(h1) and not np.isnan(h2):
+                    a.append(h1)
+                    b.append(h2)
             if a and b and not any(np.isnan(a + b)):
-                r, _ = pearsonr(a, b)
-                out_n.append(r)
-        if out_n:  # check if empty list
-            out_all.append([n_samples*2, np.mean(out_n), np.std(out_n)])
-            if verbose:
-                print(f"Processed {n_samples} of {int(shortest_length / 2) + 1}\nR = {np.mean(out_n)}")
+                rs.append(pearsonr(a, b)[0])
+        if rs:
+            out.append([n_samples * 2, np.mean(rs), np.std(rs)])
+    return pd.DataFrame(out, columns=["n", "m", "sd"])
 
-    out_all = pd.DataFrame(out_all, columns=["n", "m", "sd"])
-    plt.figure(dpi = 300)
-    plt.errorbar(out_all['n'], out_all['m'], yerr=out_all['sd'], fmt='-o', capsize=5, elinewidth=2, markeredgewidth=2)
-    plt.xlabel('Sample size')
-    plt.ylabel('R')
-    plt.grid(True)
-    plt.show()
-    return out_all    
 
-def nobs(dataset):
-    print(np.mean([len(sublist) for sublist in dataset]))
-    
-########################################
-# natstor & brown -- need to recompute #
-########################################
+def _sent_words(path):
+    return [re.sub("\n", "", s).split() for s in open(path).readlines()]
 
-def create_word_pos(sentences): # to recreate word and sentence indexes as in original analyses 
-    word_pos = []
-    sent_nr = []
-    for sentnum, sent in enumerate(sentences):
-        for toknum, tok in enumerate(sent):
-            word_pos.append(toknum+1)
-            sent_nr.append(sentnum)
+
+def _create_word_pos(sentences):
+    word_pos, sent_nr = [], []
+    for snum, sent in enumerate(sentences):
+        for tnum, _ in enumerate(sent):
+            word_pos.append(tnum + 1)
+            sent_nr.append(snum)
     return word_pos, sent_nr
 
-natstor = pd.read_csv(PROJECT_ROOT / "data/NaturalStories/NaturalStories_RAW.tsv", sep = "\t")
-natstor = natstor[natstor["correct"] == 6]
 
-natst_sent = [re.sub("\n", "", s).split() for s in open("corpora/natural_stories.txt").readlines()] 
+# --------------------------------------------------------------------- per dataset
+# Each loader returns a nested list: one sublist per item, holding that item's
+# measurements across participants (the input to progressive_splithalf).
 
-participants = natstor['WorkerId'].unique()
+def load_natstor_spr():
+    df = pd.read_csv(DATA / "NaturalStories/NaturalStories_RAW.tsv", sep="\t")
+    df = df[df["correct"] == 6]
+    pos = _create_word_pos(_sent_words(CORP / "natural_stories.txt"))
+    g = df.groupby(["item", "zone", "word"], as_index=False).agg({"RT": list})
+    g["word_pos"], g["sent_nr"] = pos
+    return g[g["word_pos"] > 3]["RT"].tolist()
 
-pos = create_word_pos(natst_sent)
-grouped_natstor = natstor.groupby(["item", "zone", "word"], as_index=False).agg({'RT': list})
-grouped_natstor["word_pos"], grouped_natstor["sent_nr"] = pos
 
-natstor_data = grouped_natstor[grouped_natstor["word_pos"]>3]["RT"].tolist()
+def load_brown():
+    df = pd.read_csv(DATA / "Brown/brown_spr_RAW.csv")
+    pos = _create_word_pos(_sent_words(CORP / "bnc_brown.txt"))
+    g = df.groupby(["text_id", "text_pos", "word"], as_index=False).agg({"time": list})
+    g["word_pos"], g["sent_nr"] = pos
+    return g[g["word_pos"] > 3]["time"].tolist()
 
-out_natstor = progressive_splithalf(natstor_data)  
-nobs(natstor_data) # 59.63207654630368
 
-#########
-# brown #
-#########
+def load_ucl_et():
+    eye = pd.read_csv(DATA / "UCL_ET_CORPUS/eyetracking.RT.txt", sep="\t")
+    eye = eye[eye.word_pos > 1]                     # exclude sentence-initial word
+    g = eye.groupby(["sent_nr", "word_pos"], as_index=False).agg({"RTfirstfix": list})
+    return g["RTfirstfix"].tolist(), set(eye["sent_nr"])
 
-brown = pd.read_csv(PROJECT_ROOT / "data/Brown/brown_spr_RAW.csv")
-brown_sent = [re.sub("\n", "", s).split() for s in open("corpora/bnc_brown.txt").readlines()]
 
-participants = brown['subject'].unique()
+def load_ucl_spr(keep_sent_nr):
+    spr = pd.read_csv(DATA / "UCL_ET_CORPUS/selfpacedreading.RT.txt", sep="\t")
+    spr = spr[spr.sent_nr.isin(keep_sent_nr)]
+    spr = spr[spr.word_pos > 3]
+    g = spr.groupby(["sent_nr", "word_pos"], as_index=False).agg({"RT": list})
+    return g["RT"].tolist()
 
-pos = create_word_pos(brown_sent)
-grouped_brown = brown.groupby(["text_id", "text_pos", "word"], as_index=False).agg({'time': list})
-grouped_brown["word_pos"], grouped_brown["sent_nr"] = pos
 
-brown_data = grouped_brown[grouped_brown["word_pos"]>3]["time"].tolist()
+def load_ucl_n400():
+    mat = scipy.io.loadmat(DATA / "ERP_Frank/stimuli_erp.mat")
+    out = []
+    for idx, sentence in enumerate(mat["sentences"]):
+        words = [t[0] for t in sentence[0][0]]
+        ERP = mat["ERP"][idx][0]
+        artefact = mat["artefact"][idx][0]
+        ERP[np.where(artefact == 1)] = np.nan
+        for i in range(1, len(words)):              # drop sentence-initial word
+            if ("." in words[i]) or ("," in words[i]):
+                continue
+            out.append(ERP[i][:, 2].tolist())       # channel 2 = N400 window
+    return out
 
-out_brown = progressive_splithalf(brown_data)
-nobs(brown_data) # 19.05220061412487
 
-################
-# ucl spr - et #
-################
+def load_provo():
+    p = pd.read_csv(DATA / "Provo/Provo_Corpus-Eyetracking_Data.csv")
+    p["IA_FIRST_RUN_DWELL_TIME"] = p["IA_FIRST_RUN_DWELL_TIME"].fillna(0)
+    g = p.groupby(["Word_Unique_ID", "Word_Number", "Sentence_Number",
+                   "Word_In_Sentence_Number", "Word"], as_index=False
+                  ).agg({"IA_FIRST_RUN_DWELL_TIME": list})
+    return g["IA_FIRST_RUN_DWELL_TIME"].tolist()
 
-eye = pd.read_csv(PROJECT_ROOT / "data/UCL_ET_CORPUS/eyetracking.RT.txt", sep="\t")
-eye = eye[eye.word_pos > 1] # in original analyses, excluded first word
 
-participants = eye['subj_nr'].unique()
+def load_maze():
+    maze = pyreadr_read(DATA / "NaturalStories/natstor_maze.rds")
+    maze = maze[maze["native"].isin(["ENG", "ENGLISH", "English", "english"])]
+    sents = _sent_words(CORP / "maze_sentences.txt")
+    recover = {" ".join(l): idx for idx, l in enumerate(sents)}
+    maze["sent_n"] = maze.sentence.map(recover)
+    part_ok = {s: (len(t[t["correct"] == "yes"]) / len(t) > .8)
+               for s, t in maze.groupby("subject")}
+    error, prev_idx, prev_cor = [], 0, True
+    for _, row in tqdm(maze.iterrows(), total=len(maze), desc="maze error"):
+        cur_idx, cur_cor = row["word_num"], row["correct"] == "yes"
+        error.append(0 if ((cur_cor and prev_cor) if cur_idx - prev_idx == 1 else cur_cor) else 1)
+        prev_idx, prev_cor = cur_idx, cur_cor
+    maze["error"] = error
+    maze["is_attentive"] = maze["subject"].map(part_ok)
+    maze = maze[(maze["type"] != "practice") & (maze["rt"] < 5000) & (maze["rt"] > 100)
+                & (maze["is_attentive"]) & (maze["word_num"] != 0) & (maze["error"] == 0)]
+    sent_len = {idx: len(l) for idx, l in enumerate(sents)}
+    rt = []
+    for sn in tqdm(sorted(set(maze.sent_n.dropna())), desc="maze items"):
+        temp = maze[maze.sent_n == sn]
+        for n in range(sent_len[sn]):
+            row = temp[temp.word_num == n]
+            if not row.empty and n != 0:
+                rt.append(row["rt"].tolist())
+    return [r for r in rt if len(r) > 1]
 
-grouped_eye = eye.groupby(["sent_nr", "word_pos"], as_index=False).agg({'RTfirstfix': list})
-eye_data = grouped_eye["RTfirstfix"].tolist()
 
-out_eye = progressive_splithalf(eye_data)
-nobs(eye_data) # 42.005793742757824
+def load_meco():
+    meco = pd.read_csv(DATA / "Meco/Meco_l1.csv", index_col=None).iloc[:, 1:]
+    meco = meco[meco["ia"].notna()]
+    for c in ("trialid", "itemid", "ianum"):
+        meco[c] = meco[c].astype(int)
+    meco["unique"] = meco.trialid.astype(str) + "-" + meco.ianum.astype(str) + "-" + meco.lang
+    meco = meco[~meco["subid"].isin(["ee_09", "ee_22", "ru_8"])]
+    meco["firstrun.dur"] = meco["firstrun.dur"].fillna(0)
+    uniques = []
+    for textid in sorted(set(meco.trialid)):
+        temp = meco[(meco["lang"] == "en") & (meco["trialid"] == textid)]
+        ids = []
+        for i in range(1, int(max(temp.ianum)) + 1):
+            u = list(set(temp[temp.ianum == i].unique))
+            if u:
+                ids.append(u[0])
+        uniques.append(ids)
+    rt = []
+    for ids in tqdm(uniques, desc="meco"):
+        for uniq in ids[1:]:                        # drop sentence-initial item
+            temp = meco[meco.unique == uniq]
+            rt.append(temp["firstrun.dur"].fillna(0).tolist())
+    return rt
 
-eye_sent_nr = set(eye["sent_nr"])
 
-#######
-# spr #
-#######
+def load_zuco():
+    out = pd.read_csv(DATA / "ZuCo/ET_data.csv").fillna(0)
+    out["unique"] = out["idx"].astype(str) + "-" + out["word_idx"].astype(str)
+    out = out[out.word_idx != 0]
+    return [out[out.unique == u]["gd"].tolist() for u in tqdm(sorted(set(out["unique"])), desc="zuco")]
 
-spr = pd.read_csv(PROJECT_ROOT / "data/UCL_ET_CORPUS/selfpacedreading.RT.txt", sep="\t")
-spr = spr[spr.sent_nr.isin(eye_sent_nr)]
-spr = spr[spr.word_pos > 3]
 
-subjects = spr['subj_nr'].unique()
+def load_pereira():
+    df = pd.read_parquet(DATA / "pereira/Pereira.parquet.gzip",
+                         columns=["UID", "Sentence", "ROI", "EffectSize"])
+    lang = ["Lang_LH_IFGorb", "Lang_LH_IFG", "Lang_LH_MFG", "Lang_LH_AntTemp", "Lang_LH_PostTemp"]
+    pereira = df[df.ROI.isin(lang)].copy()
+    g = (pereira.groupby(["UID", "ROI", "Sentence"]).agg({"EffectSize": "mean"})
+         .groupby(["UID", "Sentence"]).agg({"EffectSize": "mean"})
+         .groupby(["Sentence"]).agg({"EffectSize": list}))
+    data = g["EffectSize"].tolist()
+    return [[x for x in row if not (isinstance(x, float) and np.isnan(x))] for row in data]
 
-grouped_spr = spr.groupby(["sent_nr", "word_pos"], as_index=False).agg({'RT': list})
-spr_data = grouped_spr["RT"].tolist()
 
-out_spr = progressive_splithalf(spr_data)
-nobs(spr_data) # 71.11398176291793
+def load_wehbe():
+    parts = "F H I J K L M N".split()
+    arrs = [np.load(DATA / f"wehbe/data_subject_{p}.npy") for p in parts]
+    roi = np.load(DATA / "wehbe/HP_subj_roi_inds.npy", allow_pickle=True).tolist()
+    n_items = arrs[0].shape[0]
+    data = [[] for _ in range(n_items)]
+    for arr, name in zip(arrs, parts):
+        m = arr[:, roi[name]["all"]].mean(axis=1)
+        for i, v in enumerate(m):
+            data[i].append(v)
+    return data
 
-###########
-# ucl ERP #
-###########
 
-mat = scipy.io.loadmat(PROJECT_ROOT / "data/ERP_Frank/stimuli_erp.mat")
+def load_natstor_fmri():
+    ns = pd.read_csv(DATA / "natstor_fmri/NaturalStories_TimeSeries_20220615.csv")
+    groups = {
+        "kingofbirds": ["StoriesAud_4_kingofbirds_N", "Stories_ToM_4_kingofbirds_N", "Stories_4_kingofbirds_N"],
+        "elvis": ["StoriesAud_5_elvis_T", "Stories_ToM_5_elvis_T", "Stories_5_elvis_T", "ISCmega_elvis"],
+        "aqua": ["Stories_ToM_2_aqua_T", "Stories_2_aqua_T", "StoriesAud_2_aqua_T"],
+        "tulips": ["Stories_9_tulips_T"],
+        "boar": ["Stories_ToM_1_boar_T", "Stories_1_boar_T", "StoriesAud_1_boar_T"],
+        "tree": ["ISCmega_tree"],
+        "highschool": ["Stories_ToM_7_highschool_N", "Stories_7_highschool_N"],
+        "matchstickseller": ["Stories_3_matchstickseller_N"],
+        "mrsticky": ["Stories_6_mrsticky_N"]}
+    lang = ["Lang_LH_AntTemp", "Lang_LH_IFG", "Lang_LH_IFGorb", "Lang_LH_MFG", "Lang_LH_PostTemp"]
+    tr_cols = ["T_" + str(n) for n in range(1, 227)]
+    elvis_cols = ["T_" + str(n) for n in range(1, 152)]
+    data = []
+    for grp, stories in groups.items():
+        temp = ns[(ns.Story.isin(stories)) & (ns.ROI.isin(lang))].copy().dropna(axis=1, how="all")
+        cols = elvis_cols if grp == "elvis" else tr_cols
+        ts = np.array([temp[temp.UID == p].filter(cols).mean(axis=0).tolist()
+                       for p in temp.UID.unique()])
+        data.extend(ts.T.tolist())                  # (items, parts) -> per-item across parts
+    return data
 
-ucl_n400 = []
-for idx, sentence in enumerate(mat["sentences"]):
-    tokens = sentence[0][0]
-    sentence = [t[0] for t in tokens]
-    ERP = mat["ERP"][idx][0]
-    artefact = mat["artefact"][idx][0]
-    ERP[np.where(artefact == 1)] = np.nan # filter artefacts
-    for index in range(1, len(sentence)): # from 1 since filtered sent-initial in main analyses
-        word = sentence[index]
-        if "." in word: # removing punct as in original analyses
-            pass
-        elif "," in word:
-            pass
+
+def load_control():
+    ctl = pd.read_csv(DATA / "tuckute/brain-lang-data_participant_20230728.csv")
+    ctl = ctl[ctl["roi"] == "lang_LH_netw"]
+    return [ctl[ctl.sentence == s]["response_target"].tolist()
+            for s in tqdm(sorted(set(ctl["sentence"])), desc="control")]
+
+
+def pyreadr_read(path):
+    import pyreadr
+    return pyreadr.read_r(path)[None]
+
+
+# --------------------------------------------------------------------- compute all
+def compute_all():
+    R = {}
+    R["provo"] = progressive_splithalf(load_provo())
+    R["meco"] = progressive_splithalf(load_meco())
+    R["zuco"] = progressive_splithalf(load_zuco())
+    eye, keep = load_ucl_et()
+    R["eye"] = progressive_splithalf(eye)
+    R["spr"] = progressive_splithalf(load_ucl_spr(keep))
+    R["natstor"] = progressive_splithalf(load_natstor_spr())
+    R["brown"] = progressive_splithalf(load_brown())
+    R["maze"] = progressive_splithalf(load_maze())
+    R["n400"] = progressive_splithalf(load_ucl_n400())
+    R["control"] = progressive_splithalf(load_control())
+    R["pereira"] = progressive_splithalf(load_pereira())
+    R["natstor_fmri"] = progressive_splithalf(load_natstor_fmri())
+    R["hp"] = progressive_splithalf(load_wehbe())
+    CACHE.parent.mkdir(parents=True, exist_ok=True)
+    with open(CACHE, "wb") as fh:
+        pickle.dump(R, fh)
+    print(f"cached split-half results -> {CACHE}")
+    return R
+
+
+# --------------------------------------------------------------------- plotting
+def plot_group(fname, dfs, names, title="", themax=0, ylim=None, shifts=None):
+    """Paper-style reliability curves: R vs sample size, one labelled line per dataset."""
+    plt.figure(figsize=(4, 3), dpi=300)
+    for idx, (out_all, name) in enumerate(zip(dfs, names)):
+        plt.errorbar(out_all["n"], out_all["m"], yerr=out_all["sd"], fmt="-",
+                     capsize=0, linewidth=2, elinewidth=2, markeredgewidth=0, alpha=.8)
+        newmax = out_all["n"].max()
+        if shifts is not None:
+            plt.text(newmax + shifts[idx][0], out_all["m"].iloc[-1] + shifts[idx][1], name, fontsize=12)
         else:
-            erp = ERP[index]
-            n400 = erp[:, 2].tolist()
-            ucl_n400.append(n400)
-           
-out_n400 = progressive_splithalf(ucl_n400)
-nobs(ucl_n400) # 24
-
-#########
-# provo #
-#########
-
-# note: in provo, first word is already missing -- no need to exclude anything
-
-provo = pd.read_csv(PROJECT_ROOT / "data/Provo/Provo_Corpus-Eyetracking_Data.csv", sep=",")
-provo = provo[['Participant_ID','Word_Unique_ID', 'Word_Number', 'Sentence_Number', 'Word_In_Sentence_Number', 'Word', 'IA_FIRST_FIXATION_DURATION', 'IA_FIRST_RUN_DWELL_TIME']]
-provo['IA_FIRST_FIXATION_DURATION'] = provo['IA_FIRST_FIXATION_DURATION'].fillna(0)
-provo['IA_FIRST_RUN_DWELL_TIME'] = provo['IA_FIRST_RUN_DWELL_TIME'].fillna(0)
-
-participant_ids = provo['Participant_ID'].unique()
-
-grouped_provo = provo.groupby(['Word_Unique_ID', 'Word_Number', 'Sentence_Number', 'Word_In_Sentence_Number', 'Word'], as_index=False).agg({'IA_FIRST_RUN_DWELL_TIME': list})
-provo_data = grouped_provo["IA_FIRST_RUN_DWELL_TIME"].tolist()
-
-out_provo = progressive_splithalf(provo_data)
-nobs(provo_data) # 84
-
-########
-# maze #
-########
-
-maze = pyreadr.read_r(PROJECT_ROOT / "data/NaturalStories/natstor_maze.rds")
-df_maze = maze[None]
-
-maze = df_maze[df_maze["native"].isin(['ENG', 'ENGLISH', 'English','english'])]
-
-sent_n_dict = {sent : idx for idx, sent in enumerate(set(maze["sentence"]))}
-sent_n_d_rev = {value : key for key, value in sent_n_dict.items()}
-maze["sent_n"] = maze.sentence.map(sent_n_dict)
-maze["unique"] = maze["sent_n"].astype(str)+"-"+maze["word_num"].astype(str)
-
-maze_sent = [re.sub("\n", "", s).split() for s in open("corpora/maze_sentences.txt").readlines()]
-maze_sent_dict_recover = {" ".join(l):idx for idx, l in enumerate(maze_sent)}
-maze["sent_n"] = maze.sentence.map(maze_sent_dict_recover)
-
-part_dict = {}
-for subj in set(maze["subject"]):
-    temp = maze[maze["subject"] == subj]
-    corr = len(temp[temp["correct"] == "yes"])/len(temp) > .8
-    part_dict[subj] = corr
-    
-error = []
-previous_idx = 0
-previous_cor = True
-for index, row in tqdm(maze.iterrows()):
-    current_idx = row["word_num"]
-    current_cor = row["correct"] == "yes"
-    if current_idx - previous_idx == 1:
-        if current_cor and previous_cor:
-            error.append(0)
-        else:
-            error.append(1)
-    else:
-        if current_cor:
-            error.append(0)
-        else:
-            error.append(1)
-    previous_idx = current_idx
-    previous_cor = current_cor
-maze["error"] = error
-
-maze["is_attentive"] = maze["subject"].map(part_dict)
-maze = maze[(maze["type"] != "practice") & (maze["rt"] < 5000) & (maze["rt"] > 100) & (maze["is_attentive"] == True) & (maze["word_num"] !=0) & (maze["error"] == 0)]
-
-maze_sent_len = {idx : length for idx, length in enumerate([len(re.sub("\n", "", s).split()) for s in open("corpora/maze_sentences.txt").readlines()])}
-
-maze_rt = []
-for sent_n in tqdm(list(set(maze.sent_n))):
-    temp = maze[maze.sent_n == sent_n]
-    for n in range(maze_sent_len[sent_n]):
-        therow = temp[temp.word_num == n]
-        if therow.empty:
-            pass
-        else:
-            if n == 0:
-                pass
-            else:
-                maze_rt.append(therow["rt"].tolist())
-maze_rt = [rt for rt in maze_rt if len(rt) > 1]
-
-out_maze = progressive_splithalf(maze_rt)
-nobs(maze_rt) # 5.85898485468686
-
-########
-# MECO #
-########
-
-meco = pd.read_csv(PROJECT_ROOT / "data/Meco/Meco_l1.csv", index_col=None)
-meco = meco.iloc[: , 1:]; print("N (with NA) =", len(meco))
-meco = meco[meco['ia'].notna()]; print("N (no NA) =",len(meco))
-meco["trialid"] = meco.trialid.astype(int)
-meco["itemid"] = meco.itemid.astype(int)
-meco["ianum"] = meco.ianum.astype(int)
-meco["unique"] = meco.trialid.astype(str)+"-"+meco.ianum.astype(str)+"-"+meco.lang
-meco = meco[~meco["subid"].isin(["ee_09", "ee_22", "ru_8"])] # wrong itemid assignment (as in 1.2 release)
-
-meco['firstrun.dur'] = meco['firstrun.dur'].fillna(0)
-
-out = []
-for textid in set(meco.trialid):
-    print(textid)
-    temp = meco[(meco["lang"] == "en") & (meco["trialid"] == textid)]
-    therange = range(1, max(temp.ianum)+1)
-    temp_out = []
-    temp_out_unique = []
-    for itemindex in therange:
-        try:
-            token = list(set(temp[temp.ianum == itemindex].ia))
-            unique = list(set(temp[temp.ianum == itemindex].unique))
-            if len(token) > 1:
-                print(textid, itemindex, token)
-            temp_out_unique.append(unique[0])
-            temp_out.append(token[0])
-        except IndexError:
-            print(language, textid, itemindex)
-    out.append([textid, temp_out, temp_out_unique])
-
-meco_rt = []
-for text in tqdm(out):
-    ids = text[2]
-    for uniq in ids[1:]:
-        temp = meco[meco.unique == uniq] # fpass, count NaN (i.e. skips) as 0
-        temp['firstrun.dur'] = temp['firstrun.dur'].fillna(0)
-        meco_rt.append(temp["firstrun.dur"])
-meco_rt = [c.tolist() for c in meco_rt]
-
-out_meco = progressive_splithalf(meco_rt)
-nobs(meco_rt) # 40.13740458015267
-
-########
-# ZuCo #
-########
-
-out = pd.read_csv(PROJECT_ROOT / "data/ZuCo/ET_data.csv")
-out = out.fillna(0)
-
-out["unique"] = out["idx"].astype(str) + "-" + out["word_idx"].astype(str)
-out = out[out.word_idx != 0]
-       
-zuco_rt = []
-for uniq in tqdm(set(out["unique"])):
-    temp = out[out.unique == uniq]
-    idx = len(temp) // 2
-    gd = temp["gd"].tolist()
-    zuco_rt.append(gd)
-    
-out_zuco = progressive_splithalf(zuco_rt)
-nobs(zuco_rt) # 17.435381519888562
-
-#############
-# Michaelov #
-#############
-
-# [removed: Michaelov N400 dataset is not shipped with the repo]
-# df = pd.read_csv(".../michaelov_n400/N400_data.csv")
-# df1 = df.groupby(["Subject", "Sentence"], as_index=False, sort=False).agg({'Cloze':"mean", 'N400':"mean", 'PlausibilityJudgement':"mean", "Condition":"max"})
-# grouped_mich = df1.groupby(["Sentence"], as_index=False).agg({'N400': list})
-# mich_data = grouped_mich["N400"].tolist()
-# out_mich = progressive_splithalf(mich_data)
-
-###########
-# Pereira #
-###########
-
-df = pd.read_parquet("pereira_1/Pereira.parquet.gzip", columns=['UID', 'Sentence', 'ROI', 'EffectSize'])
-
-lang_rois = ["Lang_LH_IFGorb", "Lang_LH_IFG", "Lang_LH_MFG", "Lang_LH_AntTemp", "Lang_LH_PostTemp"]
-pereira = df[df.ROI.isin(lang_rois)]
-pereira['ROI'] = pereira['ROI'].cat.remove_unused_categories()
-
-# get average sentence-level response
-grouped  = pereira.groupby(["UID", "ROI", "Sentence"]).agg({"EffectSize" : "mean"}) # first avg voxels in [part, roi, sent]
-grouped1 = grouped.groupby(["UID", "Sentence"]).agg({"EffectSize" : "mean"}) # then avg rois in [part, sent]
-grouped2 = grouped1.groupby(["Sentence"]).agg({"EffectSize" : list}) # then avg rois in sent
-
-pereira_data = grouped2["EffectSize"].tolist()
-pereira_data = [[x for x in row if not (isinstance(x, float) and np.isnan(x))] for row in pereira_data]
-
-
-# from utils import loadmat1
-
-# datadir = "/media/drive2/Datasets/Pereira/data/"
-
-# def load_brain_data_Pereira(path):
-#     subject_data = loadmat1(datadir+path+"/examples_384sentences.mat")
-#     subject_images = subject_data["examples"]
-    
-#     subject_areas = loadmat1(datadir+path+"/data_384sentences.mat")
-#     lang_rois = subject_areas["meta"]["rois"][1]
-#     roi_masks = subject_areas["meta"]["roiMultimask"][1]
-    
-#     # filtering per ROI
-#     dict_roi = {}
-#     for roi_name, roi_idx in zip(lang_rois, list(range(1, max(roi_masks)+1))):
-#         subj_roi = subject_images[:,roi_masks == roi_idx]
-#         dict_roi[roi_name] = subj_roi
-    
-#     dict_roi["all"] = subject_images[:,roi_masks != 0]
-    
-#     return dict_roi
-
-# participants = ["M02", "M04", "M07", "M08", "M09", "M14", "M15", "P01"]
-# brain_data = [load_brain_data_Pereira(p) for p in participants]
-
-# pereira_data = {i : [] for i in range(384)}
-# for part in brain_data:
-#     part_act = part["all"].mean(axis=1)
-#     for i, act in enumerate(part_act):
-#         pereira_data[i].append(act)
-# pereira_data = list(pereira_data.values())
-
-out_pereira = progressive_splithalf(pereira_data)
-nobs(pereira_data) # 7.837320574162679
-
-######
-# HP #
-######
-
-part_f = np.load("fMRI/fMRI/data_subject_F.npy")
-part_h = np.load("fMRI/fMRI/data_subject_H.npy")
-part_i = np.load("fMRI/fMRI/data_subject_I.npy")
-part_j = np.load("fMRI/fMRI/data_subject_J.npy")
-part_k = np.load("fMRI/fMRI/data_subject_K.npy")
-part_l = np.load("fMRI/fMRI/data_subject_L.npy")
-part_m = np.load("fMRI/fMRI/data_subject_M.npy")
-part_n = np.load("fMRI/fMRI/data_subject_N.npy")
-
-roi = np.load('fMRI/fMRI/HP_subj_roi_inds.npy', allow_pickle=True)
-roi = roi.tolist()
-
-parts = [part_f, part_h, part_i, part_j, part_k, part_l, part_m, part_n]
-partn = ["F", "H", "I", "J", "K", "L", "M", "N"]
-roin =  ["all", "PostTemp", "AntTemp", "AngularG", "IFG", "MFG", "IFGorb", "pCingulate"]
-
-the_roi = "all"
-hp_data = {i : [] for i in range(1211)}
-for part_act, part_name in zip(parts, partn):
-    part = part_act[:,roi[part_name][the_roi]].mean(axis=1)
-    for i, act in enumerate(part):
-        hp_data[i].append(act)
-hp_data = list(hp_data.values())
-
-out_hp = progressive_splithalf(hp_data)
-nobs(hp_data) # 8
-
-################
-# NatStor fMRI #
-################
-
-ns = pd.read_csv("natstor_fmri/NaturalStories_TimeSeries_20220615.csv")
-
-d_story_groups = {"kingofbirds" : ["StoriesAud_4_kingofbirds_N", "Stories_ToM_4_kingofbirds_N", "Stories_4_kingofbirds_N"],
-                  "elvis" : ["StoriesAud_5_elvis_T", "Stories_ToM_5_elvis_T", "Stories_5_elvis_T", "ISCmega_elvis"], # ISCmega_elvis removed (different n° of TRs)
-                  "aqua" : ["Stories_ToM_2_aqua_T", "Stories_2_aqua_T", "StoriesAud_2_aqua_T"],
-                  "tulips" : ["Stories_9_tulips_T"],
-                  "boar" : ["Stories_ToM_1_boar_T", "Stories_1_boar_T", "StoriesAud_1_boar_T"],
-                  "tree" : ["ISCmega_tree"], 
-                  "highschool" : ["Stories_ToM_7_highschool_N", "Stories_7_highschool_N"],
-                  "matchstickseller" : ["Stories_3_matchstickseller_N"],
-                  "mrsticky" : ["Stories_6_mrsticky_N"]}
-
-def split_half(timeseries, n_splits=100):
-    n_rows, n_cols = timeseries.shape
-    correlations = np.zeros(n_splits)
-
-    for i in range(n_splits):
-        np.random.seed(i)
-        indices = np.random.permutation(n_rows)
-        half = n_rows // 2
-        group1_indices = indices[:half]
-        group2_indices = indices[half:]
-
-        # get mean for two groups
-        mean1 = np.mean(timeseries[group1_indices, :], axis=0)
-        mean2 = np.mean(timeseries[group2_indices, :], axis=0)
-
-        corr, _ = pearsonr(mean1, mean2)
-        correlations[i] = corr
-
-    return np.mean(correlations), np.std(correlations)
-
-lang_rois = ['Lang_LH_AntTemp', 'Lang_LH_IFG', 'Lang_LH_IFGorb', 'Lang_LH_MFG', 'Lang_LH_PostTemp']
-ns_tr_columns = ["T_" + str(n) for n in range(1, 227)]
-
-d_timeseries = {group : [] for group in d_story_groups.keys()} # all ts of individual subjects
-for story_group, story_list in d_story_groups.items():
-    temp = ns[(ns.Story.isin(story_list)) & (ns.ROI.isin(lang_rois))].copy().dropna(axis=1, how="all")
-    story_parts = temp.UID.unique()
-    # print(len(story_parts))
-    for part in story_parts:
-        if story_group == "elvis": # ISCmega_elvis had different N° of TRs
-            elvis_columns = ["T_" + str(n) for n in range(1, 152)]
-            thepart = temp[temp.UID == part].filter(elvis_columns).mean(axis=0).tolist()
-            d_timeseries[story_group].append(thepart)
-        else:
-            thepart = temp[temp.UID == part].filter(ns_tr_columns).mean(axis=0).tolist()
-            d_timeseries[story_group].append(thepart)
-
-d_timeseries = {k : np.array(v) for k, v in d_timeseries.items()}
-
-# OPTION 1: one reliab plot per story
-d_reliab = {}
-for k, v in d_timeseries.items():
-    the_ts = v.T.tolist() # from (items, parts) to (parts, items)
-    d_reliab[k] = progressive_splithalf(the_ts)
-
-# OPTION 2: one single reliab for the dataset
-natstor_fmri_data = []
-for k, v in d_timeseries.items():
-    the_ts = v.T.tolist()
-    natstor_fmri_data.extend(the_ts)
-
-out_natstor_fmri = progressive_splithalf(natstor_fmri_data)
-nobs(natstor_fmri_data) # 27.183734939759034
-
-###########
-# Control #
-###########
-
-control = pd.read_csv("control_fmri/data/brain-lang-data_participant_20230728.csv")
-control = control[(control["roi"] == "lang_LH_netw")]
-
-control_bold = []
-for uniq in tqdm(set(control["sentence"])):
-    temp = control[control.sentence == uniq]
-    bold = temp["response_target"].tolist()
-    control_bold.append(bold)
-
-out_control = progressive_splithalf(control_bold)
-nobs(control_bold) # 6.25
-
-###############################################################################
-
-############
-# plotting #
-############
-
-def plot_group(dfs, names, title = "", themax = 0, ylim = None, do_shifts = False, shifts = None):
-    plt.figure(figsize = (4, 3), dpi = 300)
-    idx = 0
-    for out_all, name in zip(dfs, names):
-        plt.errorbar(out_all['n'], out_all['m'], yerr=out_all['sd'], fmt='-', capsize=0, linewidth = 2, elinewidth=2, markeredgewidth=0, alpha = .8)
-        newmax = out_all['n'].max()
-        if do_shifts:
-            plt.text(out_all['n'].max() + shifts[idx][0], out_all['m'].iloc[-1] + shifts[idx][1], name, fontsize = 12)
-            print(out_all['n'].max() + shifts[idx][0])
-            idx += 1
-        else:
-            plt.text(out_all['n'].max() + 0.05 * newmax, out_all['m'].iloc[-1], name, fontsize = 12)
-            if newmax > themax:
-                themax = newmax
-    xlim = max([1, themax + (0.3 * themax)])
-    print(xlim)
-    plt.xlabel('Sample size')
-    plt.xlim(None, xlim)
+            plt.text(newmax + 0.05 * newmax, out_all["m"].iloc[-1], name, fontsize=12)
+            themax = max(themax, newmax)
+    plt.xlim(None, max(1, themax + 0.3 * themax))
     plt.ylim(None, ylim)
-    plt.ylabel('R')
-    plt.title(title, fontsize = 18)
+    plt.xlabel("Sample size")
+    plt.ylabel("R")
+    plt.title(title, fontsize=18)
     plt.grid(True)
-    plt.show()
-    
-# ET
-plot_group([out_eye, out_provo, out_meco, out_zuco], names = ["UCL$_{ET}$", "Provo", "MECO-en", "ZuCo-2"], title = "Eye-tracking", do_shifts = True, shifts = [[3, -.05], [3, 0], [-22, +.04], [-19, .05]], themax = 90, ylim = 1)
+    FIGDIR.mkdir(parents=True, exist_ok=True)
+    for ext in ("svg", "png"):
+        plt.savefig(FIGDIR / f"{fname}.{ext}", bbox_inches="tight")
+    plt.close()
+    print(f"wrote figures/reliability/{fname}.svg/.png")
 
-# SPR
-plot_group([out_natstor, out_brown, out_spr], names = ["NatStor$_{SPR}$", "Brown", "UCL$_{SPR}$"], title = "Self-paced reading", themax = 90, ylim = 0.76)
 
-# N400
-#plot_group([out_n400, out_mich], names = ["UCL$_{N400}$", "Michaelov"], title = "N400", do_shifts = True, shifts = [[1, .01], [-7, .05]], themax = 24.5)
-plot_group([out_n400], names = ["UCL$_{N400}$"], title = "N400", do_shifts = True, shifts = [[1, .01], [-7, .05]], themax = 24.5)
+def make_figures(R):
+    plot_group("eyetracking", [R["eye"], R["provo"], R["meco"], R["zuco"]],
+               ["UCL$_{ET}$", "Provo", "MECO-en", "ZuCo-2"], title="Eye-tracking",
+               shifts=[[3, -.05], [3, 0], [-22, +.04], [-19, .05]], ylim=1)
+    plot_group("spr", [R["natstor"], R["brown"], R["spr"]],
+               ["NatStor$_{SPR}$", "Brown", "UCL$_{SPR}$"], title="Self-paced reading",
+               themax=90, ylim=0.76)
+    plot_group("n400", [R["n400"]], ["UCL$_{N400}$"], title="N400",
+               shifts=[[1, .01]], themax=24.5)
+    plot_group("maze", [R["maze"]], ["NatStor$_{Maze}$"], title="Maze", themax=9)
+    plot_group("fmri_sentences", [R["control"], R["pereira"]], ["Control", "Pereira"],
+               title="fMRI, sentences")
+    plot_group("fmri_stories", [R["natstor_fmri"], R["hp"]],
+               ["NatStor$_{fMRI}$", "Harry Potter"], title="fMRI, stories", themax=84)
 
-# Maze
-plot_group([out_maze], names = ["NatStor$_{Maze}$"], title = "Maze", themax = 9)
 
-# fMRI
-plot_group([out_control, out_pereira], names = ["Control", "Pereira"], title = "fMRI, sentences")
-plot_group([out_natstor_fmri, out_hp], names = ["NatStor$_{fMRI}$", "Harry Potter"], title = "fMRI, stories", themax = 84)
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--replot", action="store_true", help="plot from cache; do not recompute")
+    args = ap.parse_args()
+    if args.replot:
+        with open(CACHE, "rb") as fh:
+            R = pickle.load(fh)
+    else:
+        R = compute_all()
+    make_figures(R)
 
-tosave = [out_eye, out_provo, out_meco, out_zuco, out_natstor, out_brown, out_spr, out_maze, out_n400, out_control, out_pereira, out_natstor_fmri, out_hp]  # [removed out_mich: Michaelov not in repo]
-with open("other/reliab_size", 'wb') as file:
-    pickle.dump(tosave, file)
 
-with open("other/reliab_size", 'rb') as file:
-    (
-        out_eye, out_provo, out_meco, out_zuco,
-        out_natstor, out_brown, out_spr, out_maze,
-        out_n400, out_control, out_pereira,
-        out_natstor_fmri, out_hp
-    ) = pickle.load(file)
+if __name__ == "__main__":
+    main()
