@@ -99,11 +99,13 @@ def paper_figure(stem, title, conds, pk, outdir):
             heights.append(float(df.loc[m, k]))
             yerr.append(float(df.loc[m, f"{k}_sd"]) / sqrt(10))
             colors.append(c)
-    fig, ax = plt.subplots(figsize=(5 / 1.4, 3.5 / 1.4), dpi=300)
-    ax.set_axisbelow(True)
-    ax.yaxis.grid(True, which="major", color="#666666", lw=0.5)
-    ax.bar(pos, heights, width=0.9, color=colors, yerr=yerr, capsize=2,
-           error_kw={"lw": 0.8}, zorder=5)
+    # geometry/styling identical to the original plotting.py base_plot, so the files
+    # drop straight into the Overleaf source (same size, same scale).
+    fig, ax = plt.subplots(figsize=(5 / 1.7, 3.5 / 1.7), dpi=300)
+    ax.grid(axis="y", which="major", color="#666666", linestyle="-", zorder=0)
+    ax.minorticks_on()
+    ax.grid(axis="y", which="minor", color="#999999", linestyle="-", alpha=0.2, zorder=3)
+    ax.bar(pos, heights, width=0.9, color=colors, yerr=yerr, capsize=2, zorder=5)
     ax.set_ylim(0, 1)                                   # fixed across every dataset
     ax.set_yticks(np.arange(0, 1.01, 0.2))              # identical grid everywhere
     # three nested bracket levels, placed at the SAME height across all model-groups
@@ -125,12 +127,9 @@ def paper_figure(stem, title, conds, pk, outdir):
     ax.set_xticks(centers)
     ax.set_xticklabels([MODEL_LABELS[m] for m in models], rotation=35, ha="right",
                        rotation_mode="anchor", fontsize=11)
-    ax.set_ylabel("r", fontsize=12)
+    ax.set_ylabel("r")
     ax.set_title(title, fontsize=16)
-    ax.tick_params(axis="x", which="both", bottom=False)
-    for s in ("top", "right"):
-        ax.spines[s].set_visible(False)
-    fig.tight_layout()
+    ax.tick_params(axis="x", which="both", bottom=False, top=False, labelbottom=True)
     outdir.mkdir(parents=True, exist_ok=True)
     for ext in ("svg", "png"):
         fig.savefig(outdir / f"{stem}.{ext}", bbox_inches="tight")
@@ -220,21 +219,20 @@ def decomposition_figures(model="gpt2_medium"):
         cols = [c for c in DECOMP_ORDER if c in df.columns]
         pos = [DECOMP_POS[DECOMP_ORDER.index(c)] for c in cols]
         colors = [DECOMP_BLUE[len(c)] for c in cols]
-        fig, ax = plt.subplots(figsize=(5 / 1.4, 3.5 / 1.4), dpi=300)
-        ax.set_axisbelow(True)
-        ax.yaxis.grid(True, which="major", color="#666666", lw=0.5)
+        # geometry/styling identical to the original plot_sfl_decomposed.py
+        fig, ax = plt.subplots(figsize=(5 / 1.7, 3.5 / 1.7), dpi=300)
+        ax.grid(axis="y", which="major", color="#666666", linestyle="-", zorder=0)
+        ax.minorticks_on()
+        ax.grid(axis="y", which="minor", color="#999999", linestyle="-", alpha=0.2, zorder=3)
         ax.bar(pos, df.loc["m", cols].to_numpy(float), width=0.9, color=colors,
-               yerr=df.loc["sd", cols].to_numpy(float) / sqrt(10), capsize=2,
-               error_kw={"lw": 0.8}, zorder=5)
+               yerr=df.loc["sd", cols].to_numpy(float) / sqrt(10), capsize=2, zorder=5)
         ax.set_xticks(pos)
-        ax.set_xticklabels(cols, fontsize=12)
-        ax.set_ylabel("r", fontsize=12)
+        ax.set_xticklabels(cols, fontsize=13)
+        ax.tick_params(axis="y", labelsize=13)
+        ax.set_ylabel("r")
         ax.set_ylim(-0.1, 0.9)
-        ax.set_title(title, fontsize=16)
-        ax.tick_params(axis="x", which="both", bottom=False)
-        for s in ("top", "right"):
-            ax.spines[s].set_visible(False)
-        fig.tight_layout()
+        ax.set_title(title, fontsize=20)
+        ax.tick_params(axis="x", which="both", bottom=False, top=False, labelbottom=True)
         DECOMPDIR.mkdir(parents=True, exist_ok=True)
         for ext in ("svg", "png"):
             fig.savefig(DECOMPDIR / f"{stem}.{ext}", bbox_inches="tight")
