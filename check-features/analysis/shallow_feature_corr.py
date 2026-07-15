@@ -55,7 +55,7 @@ def main():
 
     # ---- N400: surprisal / logfreq / length ----
     n = pd.read_csv(RES / "n400_xl_predictions.csv")
-    da = pd.read_csv(ROOT / "UCL_reading_all.csv")
+    da = pd.read_csv(ROOT / "data/UCL_reading_all.csv")
     dni = da.dropna(subset=["s_GPT2_small"])
     filtr = np.array([("." not in x) and ("," not in x) for x in dni["word"]])
     yv = np.asarray(dni["N400"], float)[filtr]

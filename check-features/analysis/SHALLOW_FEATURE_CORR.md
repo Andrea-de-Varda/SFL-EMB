@@ -3,31 +3,30 @@
 ## Pereira — corr(prediction, sentence length)   n=627
 | predictor | r with length |
 |---|---|
-| EMB (act) | +0.277 |
-| EMB (sum) | +0.564 |
-| SFL+RFF | +0.758 |
+| EMB | +0.249 |
+| SFL+RFF | +0.753 |
 
 ## Tuckute — corr(prediction, feature)   rated subset n=1000
-| feature | group | EMB (act) | EMB (sum) | SFL+RFF |
-|---|---|---|---|---|
-| rating_imageability_mean | semantic | -0.499 | -0.411 | -0.246 |
-| rating_physical_mean | semantic | -0.444 | -0.367 | -0.109 |
-| rating_places_mean | semantic | -0.372 | -0.314 | -0.068 |
-| rating_others_thoughts_mean | semantic | -0.084 | -0.060 | -0.177 |
-| rating_valence_mean | semantic | -0.144 | -0.143 | -0.097 |
-| rating_arousal_mean | semantic | -0.089 | -0.062 | -0.177 |
-| rating_sense_mean | semantic | -0.294 | -0.277 | -0.429 |
-| avg_word_length | form | +0.214 | +0.204 | +0.433 |
-| avg_word_freq_zipf | form | -0.120 | -0.123 | -0.438 |
-| rating_frequency_mean | form | -0.254 | -0.239 | -0.515 |
-| rating_conversational_mean | form | -0.198 | -0.198 | -0.413 |
-| rating_gram_mean | form | -0.329 | -0.307 | -0.430 |
-| log-prob-pcfg_mean | form | -0.168 | -0.174 | -0.347 |
-| dep_length_mean | form | +0.029 | +0.033 | +0.095 |
+| feature | group | EMB | SFL+RFF |
+|---|---|---|---|
+| rating_imageability_mean | semantic | -0.532 | -0.230 |
+| rating_physical_mean | semantic | -0.475 | -0.103 |
+| rating_places_mean | semantic | -0.417 | -0.057 |
+| rating_others_thoughts_mean | semantic | -0.074 | -0.153 |
+| rating_valence_mean | semantic | -0.157 | -0.098 |
+| rating_arousal_mean | semantic | -0.099 | -0.140 |
+| rating_sense_mean | semantic | -0.287 | -0.415 |
+| avg_word_length | form | +0.188 | +0.417 |
+| avg_word_freq_zipf | form | -0.116 | -0.355 |
+| rating_frequency_mean | form | -0.252 | -0.473 |
+| rating_conversational_mean | form | -0.176 | -0.372 |
+| rating_gram_mean | form | -0.325 | -0.429 |
+| log-prob-pcfg_mean | form | -0.157 | -0.311 |
+| dep_length_mean | form | +0.058 | +0.143 |
 
 ## UCL-N400 — corr(prediction, covariate)   n=1505
-| covariate | EMB (act) | EMB (sum) | SFL+RFF |
-|---|---|---|---|
-| surprisal | -0.305 | -0.252 | -0.588 |
-| log-frequency | +0.331 | +0.278 | +0.493 |
-| length | -0.251 | -0.228 | -0.314 |
+| covariate | EMB | SFL+RFF |
+|---|---|---|
+| surprisal | -0.319 | -0.702 |
+| log-frequency | +0.368 | +0.565 |
+| length | -0.281 | -0.337 |
