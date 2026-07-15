@@ -33,6 +33,7 @@ resume. Merge afterwards into the single table the plotting code reads.
     python appendix/layerwise_logitlens.py --plot            # figures from the csv
 """
 import argparse
+import json
 import os
 import pickle
 import re
@@ -308,13 +309,29 @@ def dataset_csv(name):
 
 
 def done_layers(name):
-    """Layers already computed for this dataset (resume support)."""
+    """Layers already computed for this dataset (resume support).
+
+    A layer only counts as done if it carries the per-fold r vectors: rows written
+    before those columns existed must be recomputed, not silently skipped.
+    """
     p = dataset_csv(name)
-    return set(pd.read_csv(p).layer) if p.exists() else set()
+    if not p.exists():
+        return set()
+    d = pd.read_csv(p)
+    if "emb_folds" not in d.columns or "sfl_folds" not in d.columns:
+        return set()
+    d = d.dropna(subset=["emb_folds", "sfl_folds"])
+    return set(d.layer)
 
 
 def run_dataset(name, spec, ex):
     done = done_layers(name)
+    p = dataset_csv(name)
+    if p.exists() and not done:
+        # stale pre-fold-vector schema: drop it so the file is rewritten with the new
+        # header (appending new columns to an old header would misalign the csv).
+        print(f"  [{name}] existing csv lacks per-fold r -- recomputing from scratch")
+        p.unlink()
     E, S, fr, ln = get_features(name, spec, ex)
     rows = []
     kind = spec["kind"]
@@ -372,9 +389,13 @@ def run_dataset(name, spec, ex):
 
         r_e = fit.score(X=Xe, y=y, folds=folds, backend=BACKEND, warn_boundary=False)
         r_s = fit.score(X=Xs, y=y, folds=folds, backend=BACKEND, warn_boundary=False)
+        # keep the PER-FOLD r vectors: the paper's significance test is a paired
+        # permutation over folds, which fold means/SDs cannot support.
         rows.append(dict(dataset=name, group=spec["group"], layer=li,
                          emb_r=r_e[0], emb_sd=r_e[1], sfl_r=r_s[0], sfl_sd=r_s[1],
-                         n=len(y)))
+                         n=len(y), n_folds=len(folds),
+                         emb_folds=json.dumps([float(v) for v in r_e[2]]),
+                         sfl_folds=json.dumps([float(v) for v in r_s[2]])))
         print(f"  {name:<13} layer {li:2d}: EMB {r_e[0]:.4f}  SFL_lens {r_s[0]:.4f}", flush=True)
         # append to THIS dataset's own file: array tasks never share a writer
         p = dataset_csv(name)

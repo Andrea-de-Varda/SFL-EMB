@@ -70,8 +70,18 @@ for a laptop GPU (~30 s per cell => hours). Each dataset writes its **own** csv
 completed `(dataset, layer)` cell is skipped — **re-submitting the same job resumes**
 rather than redoing work. Progress: `tail -f logs/sfl_layerwise_<jobid>_0.out`.
 
-Provo / Meco-en / ZuCo-2 / UCL_ET were already computed locally and are committed, so
-those tasks skip them in seconds.
+Each row stores the **per-fold r vectors** (`emb_folds` / `sfl_folds`), which the
+paired permutation test needs; fold means/SDs alone cannot support it. Rows written
+before those columns existed are detected and recomputed, not skipped — so the first
+run under this schema redoes all 13 datasets.
+
+Then, locally:
+
+```bash
+python appendix/layerwise_logitlens.py --merge
+python appendix/layerwise_significance.py   # paired permutation test vs standard SFL
+python appendix/layerwise_plot.py
+```
 
 ## Figures / appendix (run LOCALLY after pulling results — not on the login node)
 
