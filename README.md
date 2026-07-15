@@ -132,8 +132,33 @@ content (−0.48 vs −0.10).
 > mean-pooled it drops to r = 0.219 (length corr −0.065), i.e. below EMB (0.381).
 > Sentence length alone correlates r = 0.381 with the Pereira response. Sum-pooling
 > *inflates* the SFL_RFF baseline, so it is conservative w.r.t. the paper's claim — but
-> the SI text must say "summed" (it did say "averaged"; corrected), and switching to
-> mean-pooling would make EMB > SFL_RFF in 5/5 datasets and require a full RFF re-run.
+> the SI text must say "summed" (it did say "averaged"; corrected). **Decision (2026-07-15):
+> keep sum-pooling** (original convention, conservative). Switching to mean-pooling would
+> make EMB > SFL_RFF in 5/5 datasets but requires a full RFF re-run.
+
+**Pereira length control** (`appendix/pereira_length_control.py` → `results/pereira_length_control.csv`;
+runs locally, ~10 min on one GPU). Asks what SFL_RFF and EMB add *on top of* sentence
+length. Banded ridge (`banded_split=1`) for the concatenations, else the 1-dim length
+scalar gets over-shrunk to control the D-dim block. Mean over the 5 models:
+
+| condition | mean r |
+|---|---|
+| length alone | 0.3803 |
+| SFL_RFF | 0.4802 |
+| EMB | 0.3886 |
+| length+SFL_RFF | 0.4788 |
+| length+EMB | 0.4762 |
+
+Length is **redundant** with SFL_RFF (−0.0014) but adds a lot to EMB (**+0.0876**) —
+direct confirmation that sum-pooled RFF has length baked in and mean-pooled EMB does
+not. Given length, the two are **statistically indistinguishable** (0.4788 vs 0.4762,
+n.s. in 5/5 models, p = 0.26–0.79), so the Pereira exception is carried entirely by
+sentence length.
+
+> ⚠️ **Not supported:** "SFL_RFF adds little over length." It adds **+0.0985** (sig 5/5) —
+> essentially the same as EMB's **+0.0960** (sig 4/5). SFL_RFF is not reducible to word
+> count; beyond length it still carries aggregate surprisal and frequency. The defensible
+> claim is the equalization one above, which is what the SI says.
 
 Reported SI numbers (mean over the 5 models, `results/*_results.csv`):
 EMB − SFL_RFF = +0.107 (NatStor-fMRI), +0.085 (Wehbe2014), +0.044 (Tuckute2024),
