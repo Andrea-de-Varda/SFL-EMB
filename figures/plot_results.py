@@ -245,11 +245,13 @@ def decomposition_figures(model="gpt2_medium"):
 
 
 # ---------------------------------------------------------------- model-size boxplots
-# Effect of model size: within each dataset z-score r across the 5 models, then show the
-# distribution (across datasets) of that z per model -> whether r rises/falls with size.
-# Restores the original plotting.py `bxplt`, one box per model, per condition.
+# Effect of model size: within each dataset z-score r across the 5 models, then box the
+# distribution (across datasets) of that z per model. One small figure per condition x
+# {behavioral, brain}, identical to the original plotting.py `bxplt`.
 MSIZE_CONDS = [("sfl", "SFL"), ("emb", "EMB"), ("all", r"EMB$^\frown$SFL")]
-MSIZE_BLUE = ["#cfe8f7", "#8ec3e0", "#5a9bc4", "#2f6f9f", "#0000CD"]   # light->dark by size
+MSIZE_LABELS = ["GPT", "GPT2$_{124M}$", "GPT2$_{355M}$", "GPT2$_{774M}$", "GPT2$_{1.5B}$"]
+MSIZE_COLORS = ["pink", "lightblue", "lightgreen", "indianred"]   # 5th box left default (as in paper)
+MSIZEDIR = FIGDIR / "model_size"
 
 
 def _zbox_data(group, cond):
@@ -270,30 +272,29 @@ def _zbox_data(group, cond):
     return per_model
 
 
-def modelsize_boxplots():
-    labels = [MODEL_LABELS[m] for m in MODEL_ORDER]
+def _bxplt(data, title, fname):
     meanprops = {"marker": "s", "markerfacecolor": "black", "markeredgecolor": "black", "markersize": 4}
-    fig, axes = plt.subplots(2, 3, figsize=(9, 5), dpi=200)
-    for row, (group, gname) in enumerate([(BEHAVIORAL, "behavioral"), (BRAIN, "brain")]):
-        for col, (cond, clab) in enumerate(MSIZE_CONDS):
-            ax = axes[row, col]
-            bp = ax.boxplot(_zbox_data(group, cond), vert=True, patch_artist=True,
-                            tick_labels=labels, showmeans=True, meanprops=meanprops, whis=5)
-            for patch, c in zip(bp["boxes"], MSIZE_BLUE):
-                patch.set_facecolor(c)
-            plt.setp(bp["medians"], color="black")
-            ax.axhline(0, color="#999999", lw=0.6, zorder=0)
-            ax.set_ylim(-2.1, 2.1)
-            ax.set_ylabel(r"$z(r)$" if col == 0 else "", fontsize=10)
-            ax.set_title(f"{clab} — {gname}", fontsize=11)
-            ax.set_xticklabels(labels, rotation=35, ha="right", rotation_mode="anchor", fontsize=7)
-            for s in ("top", "right"):
-                ax.spines[s].set_visible(False)
-    fig.tight_layout()
+    fig = plt.figure(dpi=300, figsize=(3.75 / 2.3, 2.5 / 2.3))
+    bp = plt.boxplot(data, vert=True, patch_artist=True, tick_labels=MSIZE_LABELS,
+                     showmeans=True, meanprops=meanprops, whis=5)
+    plt.ylabel(r"$z(r)$", labelpad=-5)
+    plt.xticks(fontsize=10, rotation=35, ha="right", rotation_mode="anchor")
+    for patch, color in zip(bp["boxes"], MSIZE_COLORS):
+        patch.set_facecolor(color)
+    plt.setp(bp["medians"], color="black")
+    plt.ylim(-2.1, 2.1)
+    plt.title(title)
+    MSIZEDIR.mkdir(parents=True, exist_ok=True)
     for ext in ("svg", "png"):
-        fig.savefig(FIGDIR / f"model_size.{ext}", bbox_inches="tight")
+        fig.savefig(MSIZEDIR / f"{fname}.{ext}", bbox_inches="tight")
     plt.close(fig)
-    print("wrote figures/model_size.svg/.png")
+
+
+def modelsize_boxplots():
+    for group, gname in [(BEHAVIORAL, "behavioral"), (BRAIN, "brain")]:
+        for cond, clab in MSIZE_CONDS:
+            _bxplt(_zbox_data(group, cond), clab, f"{gname}_{cond}")
+    print("wrote model-size boxplots -> figures/model_size/  (6 figures)")
 
 
 if __name__ == "__main__":
