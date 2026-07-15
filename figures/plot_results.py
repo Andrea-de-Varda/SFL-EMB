@@ -74,64 +74,49 @@ def _ns(p):
 
 
 # ---------------------------------------------------------------- per-dataset (paper)
-# Bracket placement is the original plotting.py `barplot_annotate_brackets` verbatim:
-# the bracket sits `dh` above the taller of the two bars (dh/barh are axes fractions),
-# and the label uses the default font size.
-def _annotate_bracket(ax, num1, num2, center, height, yerr=None, dh=.05, barh=.05,
-                      fs=None, label=True):
-    """Draw one bracket; return its (x_mid, y_top). ``label=False`` omits the 'n.s.'
-    text, so a group of brackets can share a single label."""
-    lx, ly = center[num1], height[num1]
-    rx, ry = center[num2], height[num2]
-    if yerr:
-        ly += yerr[num1]
-        ry += yerr[num2]
-    ax_y0, ax_y1 = ax.get_ylim()
-    dh *= (ax_y1 - ax_y0)
-    barh *= (ax_y1 - ax_y0)
-    y = max(ly, ry) + dh
+# Bracket geometry. Levels are placed ONCE per panel and shared by every bar triplet,
+# so a given level sits at the same height across models:
+#   level 1 = VSHIFT above the tallest MARKED bar (+ its error bar) in the panel --
+#             a taller bar that carries no bracket does not count;
+#   level 2 = VSHIFT above the top of level 1;  level 3 = VSHIFT above level 2.
+# Within a triplet the drawn brackets fill the levels from the bottom up, so a triplet
+# with a single n.s. pair keeps it at level 1 rather than floating.
+VSHIFT = .03      # gap: bars -> level 1, and between levels (axes fraction)
+BARH = .05        # bracket arm height (axes fraction), as in the original
+
+
+def _bracket_at(ax, num1, num2, center, y, barh, label=True):
+    """Draw one bracket with its baseline at absolute height ``y``; return (x_mid, y_top).
+    ``label=False`` omits the 'n.s.' text so a triplet can share a single label."""
+    lx, rx = center[num1], center[num2]
     ax.plot([lx, lx, rx, rx], [y, y + barh, y + barh, y], c="black")
     mid = ((lx + rx) / 2, y + barh)
     if label:
-        kwargs = dict(ha="center", va="bottom")
-        if fs is not None:
-            kwargs["fontsize"] = fs
-        ax.text(mid[0], mid[1] + 0.002, "n.s.", **kwargs)
+        ax.text(mid[0], mid[1] + 0.002, "n.s.", ha="center", va="bottom")
     return mid
 
 
-# Per-dataset bracket tuning, verbatim from the original base_plot call sites.
-# Defaults (as in the original signature): dh1=dh2=dh3=.03, barh1=barh2=barh3=.05.
-# dhlist2/dhlist3 give a per-model dh for levels 2/3 (the original `annotate=False` path).
-PAPER_TUNING = {
-    "provo_fpass":  dict(barh2=.018),
-    "provo_ffix":   dict(barh2=.018),
-    "provo_totfix": dict(barh2=.018),
-    "ucl_spr":      dict(dh2=.22),
-    "HP":           dict(dh1=.07, dhlist2=[.4, .3, .3, .3, .3],
-                         dhlist3=[.52, .42, .44, .43, .43]),
-    # Brain sets where EMB ~= EMB+SFL: the EMB-SFL (L1) and EMB-all (L3) brackets
-    # otherwise land on top of each other, so L3 is lifted per-model clear of L1's
-    # label -- and left low for models where L1 is not drawn.
-    "ucl_n400_n400":  dict(dhlist3=[.03, .14, .14, .03, .03]),
-    # natstorfmri: gpt2_medium lifted to sit level with GPT's tallest bracket.
-    "natstorfmri":    dict(dhlist3=[.16, .18, .117, .03, .03]),
-}
-
-# Same idea for the RFF variant (a new figure, so nothing to copy from the paper):
-# only the brain sets where EMB ~= SFL_RFF+EMB stack more than one bracket.
-RFF_TUNING = {
-    "HP":          dict(dhlist2=[.21, .23, .215, .205, .03],
-                        dhlist3=[.35, .35, .35, .35, .19]),
-    "natstorfmri": dict(dhlist3=[.17, .17, .03, .141, .03]),
-    "pereira":     dict(dhlist2=[.16, .158, .03, .161, .165]),
-}
+def _levels(marked_top, barh, vspace):
+    """Absolute y for bracket levels 1..3. ``vspace`` = {level: extra gap below it},
+    so bumping a level pushes it AND everything above it up."""
+    out, y = [], marked_top
+    for lvl in (1, 2, 3):
+        y += vspace.get(lvl, 0.0) + VSHIFT
+        out.append(y)
+        y += barh                       # next level starts above this bracket's top
+    return out
 
 
-def paper_figure(stem, title, conds, pk, outdir, tuning=None):
+# Manual per-dataset, per-level extra vertical space (axes fraction). Level is 1/2/3.
+#   "HP": {2: .04}   -> adds .04 of space below level 2 (levels 2 and 3 move up)
+PAPER_VSPACE = {}
+RFF_VSPACE = {}
+
+
+def paper_figure(stem, title, conds, pk, outdir, vspace=None):
     """One per-dataset paper figure: 3 bars/model, fixed y-axis (0..1), n.s. brackets.
     ``conds`` is a 3-entry [(col,label,colour)]; ``pk`` the bracket p-keys (bar0-bar1,
-    bar1-bar2, bar0-bar2); ``tuning`` the per-plot dh/barh overrides (see PAPER_TUNING);
+    bar1-bar2, bar0-bar2); ``vspace`` per-level extra gaps (see PAPER_VSPACE);
     ``outdir`` where to write <stem>.{svg,png}."""
     df = _load(stem)
     if df is None:
@@ -154,28 +139,31 @@ def paper_figure(stem, title, conds, pk, outdir, tuning=None):
     ax.bar(pos, heights, width=0.9, color=colors, yerr=yerr, capsize=2, zorder=5)
     ax.set_ylim(0, 1)                                   # fixed across every dataset
     ax.set_yticks(np.arange(0, 1.01, 0.2))              # identical grid everywhere
-    # n.s. brackets, placed exactly as in the original (dh above the taller bar)
-    t = dict(dh1=.03, dh2=.03, dh3=.03, barh1=.05, barh2=.05, barh3=.05,
-             dhlist2=None, dhlist3=None)
-    t.update(tuning or {})
+    # which n.s. brackets each triplet draws (fixed pair order: left, right, spanning)
     p01, p12, p02 = (list(df.loc[models, pk[0]]),
                      list(df.loc[models, pk[1]]),
                      list(df.loc[models, pk[2]]))
+    drawn, marked = [], set()
     for g in range(n):
         b = 3 * g
-        dh2 = t["dhlist2"][g] if t["dhlist2"] else t["dh2"]
-        dh3 = t["dhlist3"][g] if t["dhlist3"] else t["dh3"]
-        drawn = [(i, j, dh, bh) for i, j, is_ns, dh, bh in (
-            (b,     b + 1, _ns(p01[g]), t["dh1"], t["barh1"]),
-            (b + 1, b + 2, _ns(p12[g]), dh2,      t["barh2"]),
-            (b,     b + 2, _ns(p02[g]), dh3,      t["barh3"])) if is_ns]
-        # with 2-3 n.s. pairs in a triplet, draw the brackets but label them once
-        single = len(drawn) == 1
-        mids = [_annotate_bracket(ax, i, j, pos, heights, yerr, dh=dh, barh=bh, label=single)
-                for i, j, dh, bh in drawn]
-        if not single and mids:
-            x, y = max(mids, key=lambda m: m[1])          # above the topmost bracket
-            ax.text(x, y + 0.002, "n.s.", ha="center", va="bottom")
+        d = [(i, j) for i, j, is_ns in ((b, b + 1, _ns(p01[g])),
+                                        (b + 1, b + 2, _ns(p12[g])),
+                                        (b, b + 2, _ns(p02[g]))) if is_ns]
+        drawn.append(d)
+        marked.update(k for pair in d for k in pair)
+    if marked:
+        # levels shared by every triplet, measured off the tallest MARKED bar only
+        top = max(heights[k] + yerr[k] for k in marked)
+        lv = _levels(top, BARH, vspace or {})
+        for d in drawn:
+            if not d:
+                continue
+            single = len(d) == 1
+            mids = [_bracket_at(ax, i, j, pos, lv[k], BARH, label=single)
+                    for k, (i, j) in enumerate(d)]
+            if not single:                                # one shared label, on top
+                x, y = max(mids, key=lambda m: m[1])
+                ax.text(x, y + 0.002, "n.s.", ha="center", va="bottom")
     centers = [pos[3 * g + 1] for g in range(n)]
     ax.set_xticks(centers)
     ax.set_xticklabels([MODEL_LABELS[m] for m in models], rotation=35, ha="right",
@@ -191,10 +179,10 @@ def paper_figure(stem, title, conds, pk, outdir, tuning=None):
 
 def paper_figures():
     for stem, title in PAPER_STEMS:
-        # EMB / SFL / EMB+SFL -- with the paper's hand-tuned bracket placement
-        paper_figure(stem, title, MAIN, MAIN_PK, PAPERDIR, tuning=PAPER_TUNING.get(stem))
+        # EMB / SFL / EMB+SFL
+        paper_figure(stem, title, MAIN, MAIN_PK, PAPERDIR, vspace=PAPER_VSPACE.get(stem))
         # EMB / SFL_RFF / SFL_RFF+EMB -- new figure
-        paper_figure(stem, title, RFF3, RFF3_PK, PAPERDIR_RFF, tuning=RFF_TUNING.get(stem))
+        paper_figure(stem, title, RFF3, RFF3_PK, PAPERDIR_RFF, vspace=RFF_VSPACE.get(stem))
     nd = sum((RESULTS / f'{s}_results.csv').exists() for s, _ in PAPER_STEMS)
     print(f"wrote per-dataset paper figures -> figures/paper/ + figures/paper_rff/  ({nd} datasets)")
 
