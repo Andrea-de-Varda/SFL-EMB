@@ -95,6 +95,55 @@ Extraction is **ex novo**: `src/extract.py` runs the model for both embeddings
 (mean over sub-word tokens) and surprisal (sum over sub-word tokens) every run,
 caching to `cache/` (git-ignored, regenerable). No precomputed activations are used.
 
+### Manuscript re-sync (2026-07-15): figures + every reported number
+
+The manuscript originally reported the **pre-refactor** run. Banded ridge, ex-novo
+extraction and passage-level Pereira CV change every fitted value, so all figures and
+all reported numbers were regenerated. The TikZ infrastructure is untouched.
+
+**Figures** — `python figures/sync_to_overleaf.py` (map + checksum audit; `--check`
+to dry-run). 52 of the 55 images the compiled document references are regenerated;
+`legend.png` is kept (MAIN palette unchanged) and 2 are schematics with no fitted
+values. Audit confirms no referenced image is unmapped and no map entry is unused.
+
+**Diagram line widths** (`figure.tex` panel A) — `python figures/tikz_diagram_widths.py`.
+width = |mean_models(r_SFL − r_EMB)| × 20; the constant 20 is recovered from the
+original figure (old width / old published delta = 20.000 ± 0.01 on all six datasets
+whose deltas the paper reported). **NatStor-SPR flipped sides**: SFL now wins it
+(+0.0199; was −0.0027), so its line moves from the EMB node to the SFL node.
+
+**Claims that changed qualitatively** (not just the digits):
+
+| claim | was | now |
+|---|---|---|
+| Maze better predicted by EMB | Δ = −0.0437 | Δ = −0.0097, n.s. in 5/5 → tied |
+| EMB vs SFL n.s. only in Wehbe2014 | Wehbe only | Wehbe 5/5 n.s.; UCL-N400 4/5; NatStor-fMRI 2/5 |
+| NatStor-fMRI: `all` ≈ EMB (negative) | −0.0399 | **+0.0345** (sign flip) |
+| smallest GPT-2 always lowest on brain | all predictors | true for SFL/`all`; **false for EMB** (large 0.3482 < small 0.3505) |
+| UCL-SPR decomposition: surprisal highest | S | L (0.266) ≈ S (0.263); S still > F |
+| both NatStor datasets: S/F/L similar | both | NatStor-SPR yes; **Maze: S clearly highest** |
+| best held-in eye-tracking layer | 3 | **4** |
+
+Unchanged and verified: behavioral model-size claims (GPT-2-124M best for SFL and
+EMB; 355M slightly ahead for `all`); brain decomposition (S wins all but Wehbe2014,
+where F wins; L lowest in all 5); Table 1 N + reliability (data-only — Pereira 627,
+ZuCo 6461, UCL-N400 1505, UCL-ET 1726, UCL-SPR 1316 all reproduce; reliability mean
+0.5131 → "0.51", range 0.16–0.93).
+
+Consistency check: Provo/gpt2_medium SFL r = 0.865330 from three independent code
+paths (main pipeline, `src/decompose`, `appendix/layer_sweep`).
+
+### Methods text vs code discrepancies found (2026-07-15)
+
+| paper said | code does | resolution |
+|---|---|---|
+| "10 candidate penalties $10^{-5}$–$10^4$" | `ALPHAS = logspace(-6, 6, 13)` | text corrected to 13, $10^{-6}$–$10^{6}$ |
+| "10-fold CV throughout" | NatStor-fMRI is **leave-one-story-out, 9 folds** (`loso=True`); confirmed empirically — its permutation p values are multiples of $2^{-9}$, every other dataset $2^{-10}$ | text corrected |
+| (silent) | per-fold `StandardScaler` on X and y, `fit_intercept=False` | text now states it |
+| (silent) | banded ridge for SFL+EMB; GroupKFold for Pereira | documented earlier |
+| "unfixated → gaze 0" | Provo/Meco `fillna(0)`; ZuCo has no NaN (16 zeros already); UCL-ET has neither | vacuous, not violated — no change |
+| "RFF pooled by averaging" | RFF is **sum**-pooled | text corrected to "summed" |
+
 ### Where this is written up (Overleaf: `6a56bd55cbb8310ac4c1e6db/`)
 
 All manuscript additions are wrapped in `\new{...}` (defined in the preamble) so
