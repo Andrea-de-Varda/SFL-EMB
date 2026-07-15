@@ -18,11 +18,18 @@ Correctness: GPT2Model already applies ln_f to the last hidden state, so ln_f is
 applied only to layers < last. The last layer therefore reproduces the model's true
 surprisal exactly -- asserted at runtime (--selftest).
 
-One model (GPT-2 355M), all 13 datasets, every layer. Runs locally on one GPU.
+One model (GPT-2 355M), all 13 datasets, every layer. Too heavy for a laptop
+(~25 layers x 13 datasets x 2 ridge fits); run it on the cluster:
+
+    sbatch cluster/slurm_layerwise.sh          # 4-GPU array, one bucket per task
+
+Each dataset writes its OWN csv under appendix/layerwise/ (never a shared file), so
+array tasks cannot race, and any completed (dataset, layer) cell is skipped on
+resume. Merge afterwards into the single table the plotting code reads.
 
     python appendix/layerwise_logitlens.py --selftest        # validate the lens only
-    python appendix/layerwise_logitlens.py                   # all datasets (resumes)
     python appendix/layerwise_logitlens.py --datasets Provo,UCL_SPR
+    python appendix/layerwise_logitlens.py --merge           # per-dataset csvs -> one
     python appendix/layerwise_logitlens.py --plot            # figures from the csv
 """
 import argparse
@@ -45,8 +52,8 @@ from src.models import MODELS
 
 MODEL = "gpt2_medium"
 DATA = PROJECT_ROOT / "data"
-OUT = PROJECT_ROOT / "appendix/layerwise_logitlens.csv"
-SURP_CACHE = PROJECT_ROOT / "cache/layerwise_surp"
+OUT_DIR = PROJECT_ROOT / "appendix/layerwise"          # one csv per dataset (array-safe)
+OUT = PROJECT_ROOT / "appendix/layerwise_logitlens.csv"  # merged table
 BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 
 warnings.filterwarnings("ignore", message="Solving ridge is slower")
@@ -296,7 +303,18 @@ def get_features(name, spec, ex):
 # =========================================================================== #
 # per-layer design matrices, mirroring the main pipeline for each geometry
 # =========================================================================== #
-def run_dataset(name, spec, ex, done):
+def dataset_csv(name):
+    return OUT_DIR / f"{name}.csv"
+
+
+def done_layers(name):
+    """Layers already computed for this dataset (resume support)."""
+    p = dataset_csv(name)
+    return set(pd.read_csv(p).layer) if p.exists() else set()
+
+
+def run_dataset(name, spec, ex):
+    done = done_layers(name)
     E, S, fr, ln = get_features(name, spec, ex)
     rows = []
     kind = spec["kind"]
@@ -307,7 +325,7 @@ def run_dataset(name, spec, ex, done):
         layers = sorted(E[0])
 
     for li in layers:
-        if (name, li) in done:
+        if li in done:
             continue
         if kind == "word":
             mask = spec.get("mask", np.ones(len(spec["y"]), bool))
@@ -358,8 +376,10 @@ def run_dataset(name, spec, ex, done):
                          emb_r=r_e[0], emb_sd=r_e[1], sfl_r=r_s[0], sfl_sd=r_s[1],
                          n=len(y)))
         print(f"  {name:<13} layer {li:2d}: EMB {r_e[0]:.4f}  SFL_lens {r_s[0]:.4f}", flush=True)
-        pd.DataFrame(rows).to_csv(
-            OUT, mode="a", header=not OUT.exists(), index=False)
+        # append to THIS dataset's own file: array tasks never share a writer
+        p = dataset_csv(name)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(rows).to_csv(p, mode="a", header=not p.exists(), index=False)
         rows = []
     del E, S
 
@@ -378,28 +398,52 @@ def selftest():
         print(f"           layer {li:2d}: mean surprisal {np.nanmean(lens[li]):7.3f} nats")
 
 
+def merge():
+    """Concatenate the per-dataset csvs into the single table the plots read."""
+    parts = []
+    for name in ORDER:
+        p = dataset_csv(name)
+        if p.exists():
+            parts.append(pd.read_csv(p).drop_duplicates("layer", keep="last"))
+    if not parts:
+        sys.exit(f"nothing to merge under {OUT_DIR}")
+    df = pd.concat(parts, ignore_index=True)
+    df.to_csv(OUT, index=False)
+    n = df.groupby("dataset").layer.count()
+    print(n.to_string())
+    print(f"\n{len(df)} cells over {df.dataset.nunique()}/{len(ORDER)} datasets -> {OUT}")
+    missing = [d for d in ORDER if d not in set(df.dataset)]
+    if missing:
+        print("MISSING datasets:", ", ".join(missing))
+    return df
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--datasets", default=",".join(ORDER))
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--merge", action="store_true")
     ap.add_argument("--plot", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.merge:
+        return merge()
     if a.plot:
         from layerwise_plot import plot_all
         return plot_all(pd.read_csv(OUT))
     selftest()
-    done = set()
-    if OUT.exists():
-        d = pd.read_csv(OUT)
-        done = set(zip(d.dataset, d.layer))
-        print(f"resuming: {len(done)} (dataset, layer) cells already done")
     ex = Extractor(MODEL)
     for name in a.datasets.split(","):
-        print(f"=== {name} ===", flush=True)
-        run_dataset(name, SPECS[name](), ex, done)
-    print(f"\nwrote {OUT}")
+        if not name:
+            continue
+        todo = sorted(set(range(MODELS[MODEL]["last_layer"] + 1)) - done_layers(name))
+        if not todo:
+            print(f"=== {name}: already complete, skipping ===", flush=True)
+            continue
+        print(f"=== {name} ({len(todo)} layers to do) ===", flush=True)
+        run_dataset(name, SPECS[name](), ex)
+    print(f"\nwrote per-dataset csvs under {OUT_DIR}")
 
 
 if __name__ == "__main__":

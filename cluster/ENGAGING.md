@@ -57,11 +57,31 @@ Both scripts extract embeddings/surprisal fresh and cache them under `cache/`
 (git-ignored), so re-runs skip extraction. Outputs: `results/<dataset>_..._results.csv`
 plus per-fold prediction files.
 
+## Layer-matched EMB vs SFL (logit lens)
+
+```bash
+sbatch cluster/slurm_layerwise.sh
+squeue -u $USER                       # 4 tasks: sfl_layerwise_<jobid>_{0,1,2,3}
+```
+
+`--array=0-3`, one A100 per task, 13 datasets x 25 layers x 2 ridge fits. Too heavy
+for a laptop GPU (~30 s per cell => hours). Each dataset writes its **own** csv
+(`appendix/layerwise/<dataset>.csv`), so array tasks never share a writer and any
+completed `(dataset, layer)` cell is skipped — **re-submitting the same job resumes**
+rather than redoing work. Progress: `tail -f logs/sfl_layerwise_<jobid>_0.out`.
+
+Provo / Meco-en / ZuCo-2 / UCL_ET were already computed locally and are committed, so
+those tasks skip them in seconds.
+
 ## Figures / appendix (run LOCALLY after pulling results — not on the login node)
 
 ```bash
 python figures/plot_results.py                 # main + RFF + decomposition + model-size
+python figures/sync_to_overleaf.py             # copy every figure into the Overleaf tree (+ audit)
+python figures/verify_paper_numbers.py         # re-derive every reported number, assert vs the .tex
 python appendix/layer_sweep.py                 # A4 layer sweep (gpt2_medium)
+python appendix/layerwise_logitlens.py --merge # per-dataset csvs -> appendix/layerwise_logitlens.csv
+python appendix/layerwise_plot.py              # -> figures/layerwise/{behavior,brain}.png
 python appendix/reliability_and_size.py        # A5 reliability (CPU, from raw data; caches to cache/)
 python appendix/reliability_and_size.py --replot   # re-plot A5 from cache, no recompute
 python check-features/predict_features.py      # SFL_RFF meaning-vs-form probe
