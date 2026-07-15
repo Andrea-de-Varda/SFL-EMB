@@ -1,7 +1,0 @@
-updated 21 results CSV(s): HP_results.csv, brown_results.csv, control_results.csv, maze_maze_results.csv, meco_ffix_results.csv, meco_fpass_results.csv, meco_totfix_results.csv, natstor_spr_results.csv, natstorfmri_results.csv, pereira_results.csv, provo_ffix_results.csv, provo_fpass_results.csv, provo_totfix_results.csv, ucl_et_ffix_results.csv, ucl_et_fpass_results.csv, ucl_et_totfix_results.csv, ucl_n400_n400_results.csv, ucl_spr_results.csv, zuco_ffix_results.csv, zuco_fpass_results.csv, zuco_totfix_results.csv
-wrote per-dataset paper figures -> figures/paper/ + figures/paper_rff/  (21 datasets)
-wrote figures/main_behavioral.svg/.png
-wrote figures/main_brain.svg/.png
-wrote figures/rff_behavioral.svg/.png
-wrote figures/rff_brain.svg/.png
-wrote figures/sfl_decomposition.svg/.png

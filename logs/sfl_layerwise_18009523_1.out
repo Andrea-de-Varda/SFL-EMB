@@ -1,0 +1,71 @@
+[task 1] ensuring deps + models are ready ...
+all deps present.
+warming up gpt (openai-gpt) ...
+warming up gpt2_small (gpt2) ...
+warming up gpt2_medium (gpt2-medium) ...
+warming up gpt2_large (gpt2-large) ...
+warming up gpt2_xl (gpt2-xl) ...
+all 5 models cached.
+[task 1] datasets: Brown,NatStor_fMRI,Meco-en
+[selftest] last-layer logit lens == model surprisal (max diff 0.00e+00)  OK
+[selftest] layers returned: 25 (0..24)
+           layer  0: mean surprisal  78.333 nats
+           layer  1: mean surprisal   9.643 nats
+           layer 12: mean surprisal   6.981 nats
+           layer 24: mean surprisal   4.985 nats
+=== Brown (25 layers to do) ===
+  Brown         layer  0: EMB 0.5004  SFL_lens 0.5683
+  Brown         layer  1: EMB 0.4671  SFL_lens 0.5658
+  Brown         layer  2: EMB 0.4834  SFL_lens 0.5652
+  Brown         layer  3: EMB 0.5015  SFL_lens 0.5646
+  Brown         layer  4: EMB 0.5123  SFL_lens 0.5644
+  Brown         layer  5: EMB 0.5173  SFL_lens 0.5654
+  Brown         layer  6: EMB 0.5159  SFL_lens 0.5660
+  Brown         layer  7: EMB 0.5179  SFL_lens 0.5640
+  Brown         layer  8: EMB 0.5164  SFL_lens 0.5631
+  Brown         layer  9: EMB 0.5231  SFL_lens 0.5624
+  Brown         layer 10: EMB 0.5225  SFL_lens 0.5590
+  Brown         layer 11: EMB 0.5225  SFL_lens 0.5566
+  Brown         layer 12: EMB 0.5208  SFL_lens 0.5559
+  Brown         layer 13: EMB 0.5138  SFL_lens 0.5548
+  Brown         layer 14: EMB 0.5087  SFL_lens 0.5530
+  Brown         layer 15: EMB 0.5029  SFL_lens 0.5508
+  Brown         layer 16: EMB 0.5023  SFL_lens 0.5482
+  Brown         layer 17: EMB 0.4953  SFL_lens 0.5480
+  Brown         layer 18: EMB 0.4944  SFL_lens 0.5458
+  Brown         layer 19: EMB 0.4893  SFL_lens 0.5433
+  Brown         layer 20: EMB 0.4829  SFL_lens 0.5433
+  Brown         layer 21: EMB 0.4756  SFL_lens 0.5409
+  Brown         layer 22: EMB 0.4699  SFL_lens 0.5400
+  Brown         layer 23: EMB 0.4618  SFL_lens 0.5377
+  Brown         layer 24: EMB 0.4555  SFL_lens 0.5376
+=== NatStor_fMRI (25 layers to do) ===
+  NatStor_fMRI  layer  0: EMB 0.4113  SFL_lens 0.1870
+  NatStor_fMRI  layer  1: EMB 0.4153  SFL_lens 0.1879
+  NatStor_fMRI  layer  2: EMB 0.4239  SFL_lens 0.1886
+  NatStor_fMRI  layer  3: EMB 0.4480  SFL_lens 0.1925
+  NatStor_fMRI  layer  4: EMB 0.4499  SFL_lens 0.1949
+  NatStor_fMRI  layer  5: EMB 0.4543  SFL_lens 0.1978
+  NatStor_fMRI  layer  6: EMB 0.4675  SFL_lens 0.1999
+  NatStor_fMRI  layer  7: EMB 0.4664  SFL_lens 0.2008
+  NatStor_fMRI  layer  8: EMB 0.4654  SFL_lens 0.1990
+  NatStor_fMRI  layer  9: EMB 0.4663  SFL_lens 0.2031
+  NatStor_fMRI  layer 10: EMB 0.4618  SFL_lens 0.2101
+  NatStor_fMRI  layer 11: EMB 0.4637  SFL_lens 0.2172
+  NatStor_fMRI  layer 12: EMB 0.4682  SFL_lens 0.2252
+  NatStor_fMRI  layer 13: EMB 0.4781  SFL_lens 0.2336
+  NatStor_fMRI  layer 14: EMB 0.4736  SFL_lens 0.2430
+  NatStor_fMRI  layer 15: EMB 0.4625  SFL_lens 0.2464
+  NatStor_fMRI  layer 16: EMB 0.4564  SFL_lens 0.2567
+  NatStor_fMRI  layer 17: EMB 0.4643  SFL_lens 0.2559
+  NatStor_fMRI  layer 18: EMB 0.4726  SFL_lens 0.2515
+  NatStor_fMRI  layer 19: EMB 0.4666  SFL_lens 0.2501
+  NatStor_fMRI  layer 20: EMB 0.4596  SFL_lens 0.2442
+  NatStor_fMRI  layer 21: EMB 0.4530  SFL_lens 0.2468
+  NatStor_fMRI  layer 22: EMB 0.4562  SFL_lens 0.2561
+  NatStor_fMRI  layer 23: EMB 0.4441  SFL_lens 0.2718
+  NatStor_fMRI  layer 24: EMB 0.4402  SFL_lens 0.2698
+=== Meco-en: already complete, skipping ===
+
+wrote per-dataset csvs under /orcd/data/evelina9/001/USERS/devar_ag/SFL-EMB/appendix/layerwise
+[task 1] done.
