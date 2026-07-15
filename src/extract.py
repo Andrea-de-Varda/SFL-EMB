@@ -132,21 +132,56 @@ class Extractor:
         enc, word_ids = self._encode(words)
         input_ids = enc["input_ids"].to(self.device)
         logits = self.lm(input_ids=input_ids).logits[0]              # (T, V)
-        logp = torch.log_softmax(logits[:-1], dim=-1)               # predict t+1 from t
-        tok_surp = (-logp[torch.arange(logits.shape[0] - 1),
-                          input_ids[0, 1:]]).cpu().numpy()           # surprisal of tok 1..T-1
-        # tok_surp[i] is the surprisal of token i+1; token 0 has none.
-        surp_by_word = np.full(len(words), np.nan)
-        acc = np.zeros(len(words))
-        seen = np.zeros(len(words), dtype=bool)
-        for tpos in range(1, logits.shape[0]):
+        tok_surp = self._token_surprisal(logits, input_ids)
+        return self._sum_surp_by_word(tok_surp, word_ids, len(words))
+
+    @torch.no_grad()
+    def word_surprisal_all(self, words):
+        """Logit-lens surprisal at EVERY layer. ``{layer: (n_words,)}`` nats, [0]=nan.
+
+        Reads out each layer's hidden state through the model's own final layer norm
+        and (weight-tied) unembedding -- the "logit lens" \\citep{nostalgebraist2020}.
+        ``GPT2Model`` already applies ``ln_f`` to the LAST hidden state, so ln_f is
+        applied only to the earlier ones; consequently the last layer reproduces
+        :meth:`word_surprisal` exactly, which is the correctness check for this code.
+        """
+        enc, word_ids = self._encode(words)
+        input_ids = enc["input_ids"].to(self.device)
+        hs = self.lm(input_ids=input_ids).hidden_states
+        ln_f = getattr(self.lm.transformer, "ln_f", None)   # GPT-1 has none
+        head = self.lm.get_output_embeddings()
+        out = {}
+        for li in range(len(hs)):
+            h = hs[li][0]
+            if ln_f is not None and li < len(hs) - 1:
+                h = ln_f(h)
+            tok_surp = self._token_surprisal(head(h), input_ids)
+            out[li] = self._sum_surp_by_word(tok_surp, word_ids, len(words))
+        return out
+
+    # ------------------------------------------------------------------ #
+    @staticmethod
+    def _token_surprisal(logits, input_ids):
+        """(T-1,) surprisal in nats of tokens 1..T-1, predicted from position t-1."""
+        logp = torch.log_softmax(logits[:-1], dim=-1)
+        return (-logp[torch.arange(logits.shape[0] - 1),
+                      input_ids[0, 1:]]).float().cpu().numpy()
+
+    @staticmethod
+    def _sum_surp_by_word(tok_surp, word_ids, n_words):
+        """Sum sub-word surprisal per word. ``tok_surp[i]`` is the surprisal of token
+        i+1; token 0 has none, so the sentence-initial word is nan (dropped later)."""
+        surp_by_word = np.full(n_words, np.nan)
+        acc = np.zeros(n_words)
+        seen = np.zeros(n_words, dtype=bool)
+        for tpos in range(1, len(tok_surp) + 1):
             w = word_ids[tpos]
             if w is None:
                 continue
             acc[w] += tok_surp[tpos - 1]
             seen[w] = True
         surp_by_word[seen] = acc[seen]
-        surp_by_word[0] = np.nan  # sentence-initial word is dropped downstream
+        surp_by_word[0] = np.nan
         return surp_by_word
 
     @torch.no_grad()
@@ -210,3 +245,19 @@ class Extractor:
         surps = [self.word_surprisal(c) for c in self._chunks(words, n_splits, overlap)]
         out = [surps[0]] + [s[overlap:] for s in surps[1:]]
         return np.concatenate(out)
+
+    @torch.no_grad()
+    def chunked_word_features_all(self, words, n_splits=2, overlap=50):
+        """Per-layer per-word embeddings for a long passage (stitched like
+        :meth:`chunked_word_features`). Returns ``{layer: (n_words, dim)}``."""
+        per = [self.word_embeddings_all(c) for c in self._chunks(words, n_splits, overlap)]
+        return {li: np.vstack([per[0][li]] + [p[li][overlap:] for p in per[1:]])
+                for li in per[0]}
+
+    @torch.no_grad()
+    def chunked_word_surprisal_all(self, words, n_splits=2, overlap=50):
+        """Per-layer logit-lens surprisal for a long passage (stitched like
+        :meth:`chunked_word_surprisal`). Returns ``{layer: (n_words,)}``."""
+        per = [self.word_surprisal_all(c) for c in self._chunks(words, n_splits, overlap)]
+        return {li: np.concatenate([per[0][li]] + [p[li][overlap:] for p in per[1:]])
+                for li in per[0]}
