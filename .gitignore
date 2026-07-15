@@ -63,3 +63,4 @@ figures/decomp/
 # generated reliability figures
 figures/reliability/
 figures/model_size/
+figures/layerwise/

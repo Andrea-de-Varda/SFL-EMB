@@ -73,12 +73,15 @@ def plot_all(df):
             if i >= len(names) - ncol:
                 ax.set_xlabel("layer", fontsize=11)
         h, l = axes[0].get_legend_handles_labels()
-        (axes[len(names)] if len(names) < len(axes) else fig).legend(
-            h, l, fontsize=11, loc="center" if len(names) < len(axes) else "lower center",
-            frameon=False, ncol=1 if len(names) < len(axes) else 2)
         fig.suptitle(f"Layer-matched predictivity — {grp} (GPT-2$_{{355M}}$)",
                      fontsize=13, y=1.00)
-        fig.tight_layout()
+        if len(names) < len(axes):          # spare panel -> park the legend in it
+            axes[len(names)].legend(h, l, fontsize=12, loc="center", frameon=False)
+            fig.tight_layout()
+        else:                               # full grid -> reserve a strip underneath
+            fig.tight_layout(rect=[0, 0.06, 1, 1])
+            fig.legend(h, l, fontsize=12, loc="lower center", frameon=False,
+                       ncol=2, bbox_to_anchor=(0.5, 0.0))
         for ext in ("png", "svg"):
             fig.savefig(FIGDIR / f"{grp}.{ext}", bbox_inches="tight")
         plt.close(fig)
