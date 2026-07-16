@@ -1,0 +1,99 @@
+[task 3] ensuring deps + models are ready ...
+all deps present.
+warming up gpt (openai-gpt) ...
+warming up gpt2_small (gpt2) ...
+warming up gpt2_medium (gpt2-medium) ...
+warming up gpt2_large (gpt2-large) ...
+warming up gpt2_xl (gpt2-xl) ...
+all 5 models cached.
+[task 3] datasets: NatStor_Maze,Tuckute2024,UCL_ET
+[selftest] last-layer logit lens == model surprisal (max diff 0.00e+00)  OK
+[selftest] layers returned: 25 (0..24)
+           layer  0: mean surprisal  78.333 nats
+           layer  1: mean surprisal   9.643 nats
+           layer 12: mean surprisal   6.981 nats
+           layer 24: mean surprisal   4.985 nats
+=== NatStor_Maze (25 layers to do) ===
+  [NatStor_Maze] existing csv lacks per-fold r -- recomputing from scratch
+  NatStor_Maze  layer  0: EMB 0.4940  SFL_lens 0.4421
+  NatStor_Maze  layer  1: EMB 0.4916  SFL_lens 0.4419
+  NatStor_Maze  layer  2: EMB 0.5040  SFL_lens 0.4426
+  NatStor_Maze  layer  3: EMB 0.5357  SFL_lens 0.4448
+  NatStor_Maze  layer  4: EMB 0.5470  SFL_lens 0.4468
+  NatStor_Maze  layer  5: EMB 0.5636  SFL_lens 0.4495
+  NatStor_Maze  layer  6: EMB 0.5697  SFL_lens 0.4521
+  NatStor_Maze  layer  7: EMB 0.5773  SFL_lens 0.4535
+  NatStor_Maze  layer  8: EMB 0.5866  SFL_lens 0.4549
+  NatStor_Maze  layer  9: EMB 0.5888  SFL_lens 0.4566
+  NatStor_Maze  layer 10: EMB 0.5920  SFL_lens 0.4587
+  NatStor_Maze  layer 11: EMB 0.5898  SFL_lens 0.4617
+  NatStor_Maze  layer 12: EMB 0.5900  SFL_lens 0.4647
+  NatStor_Maze  layer 13: EMB 0.5906  SFL_lens 0.4693
+  NatStor_Maze  layer 14: EMB 0.5891  SFL_lens 0.4747
+  NatStor_Maze  layer 15: EMB 0.5911  SFL_lens 0.4805
+  NatStor_Maze  layer 16: EMB 0.5863  SFL_lens 0.4873
+  NatStor_Maze  layer 17: EMB 0.5795  SFL_lens 0.4924
+  NatStor_Maze  layer 18: EMB 0.5806  SFL_lens 0.4988
+  NatStor_Maze  layer 19: EMB 0.5737  SFL_lens 0.5011
+  NatStor_Maze  layer 20: EMB 0.5724  SFL_lens 0.5050
+  NatStor_Maze  layer 21: EMB 0.5661  SFL_lens 0.5093
+  NatStor_Maze  layer 22: EMB 0.5619  SFL_lens 0.5171
+  NatStor_Maze  layer 23: EMB 0.5517  SFL_lens 0.5212
+  NatStor_Maze  layer 24: EMB 0.5309  SFL_lens 0.5214
+=== Tuckute2024 (25 layers to do) ===
+  [Tuckute2024] existing csv lacks per-fold r -- recomputing from scratch
+  Tuckute2024   layer  0: EMB 0.3555  SFL_lens 0.2201
+  Tuckute2024   layer  1: EMB 0.3786  SFL_lens 0.2301
+  Tuckute2024   layer  2: EMB 0.3894  SFL_lens 0.2352
+  Tuckute2024   layer  3: EMB 0.3991  SFL_lens 0.2412
+  Tuckute2024   layer  4: EMB 0.4103  SFL_lens 0.2455
+  Tuckute2024   layer  5: EMB 0.4216  SFL_lens 0.2501
+  Tuckute2024   layer  6: EMB 0.4369  SFL_lens 0.2562
+  Tuckute2024   layer  7: EMB 0.4375  SFL_lens 0.2573
+  Tuckute2024   layer  8: EMB 0.4399  SFL_lens 0.2634
+  Tuckute2024   layer  9: EMB 0.4445  SFL_lens 0.2651
+  Tuckute2024   layer 10: EMB 0.4477  SFL_lens 0.2714
+  Tuckute2024   layer 11: EMB 0.4465  SFL_lens 0.2719
+  Tuckute2024   layer 12: EMB 0.4409  SFL_lens 0.2766
+  Tuckute2024   layer 13: EMB 0.4467  SFL_lens 0.2797
+  Tuckute2024   layer 14: EMB 0.4468  SFL_lens 0.2856
+  Tuckute2024   layer 15: EMB 0.4460  SFL_lens 0.2931
+  Tuckute2024   layer 16: EMB 0.4418  SFL_lens 0.2961
+  Tuckute2024   layer 17: EMB 0.4406  SFL_lens 0.2970
+  Tuckute2024   layer 18: EMB 0.4386  SFL_lens 0.2990
+  Tuckute2024   layer 19: EMB 0.4353  SFL_lens 0.3038
+  Tuckute2024   layer 20: EMB 0.4294  SFL_lens 0.3054
+  Tuckute2024   layer 21: EMB 0.4288  SFL_lens 0.3030
+  Tuckute2024   layer 22: EMB 0.4275  SFL_lens 0.3013
+  Tuckute2024   layer 23: EMB 0.4223  SFL_lens 0.2943
+  Tuckute2024   layer 24: EMB 0.4220  SFL_lens 0.2939
+=== UCL_ET (25 layers to do) ===
+  [UCL_ET] existing csv lacks per-fold r -- recomputing from scratch
+  UCL_ET        layer  0: EMB 0.7934  SFL_lens 0.7770
+  UCL_ET        layer  1: EMB 0.7996  SFL_lens 0.7884
+  UCL_ET        layer  2: EMB 0.8009  SFL_lens 0.7860
+  UCL_ET        layer  3: EMB 0.8051  SFL_lens 0.7882
+  UCL_ET        layer  4: EMB 0.8064  SFL_lens 0.7904
+  UCL_ET        layer  5: EMB 0.8061  SFL_lens 0.7905
+  UCL_ET        layer  6: EMB 0.8025  SFL_lens 0.7916
+  UCL_ET        layer  7: EMB 0.7953  SFL_lens 0.7917
+  UCL_ET        layer  8: EMB 0.7905  SFL_lens 0.7924
+  UCL_ET        layer  9: EMB 0.7887  SFL_lens 0.7922
+  UCL_ET        layer 10: EMB 0.7874  SFL_lens 0.7913
+  UCL_ET        layer 11: EMB 0.7822  SFL_lens 0.7913
+  UCL_ET        layer 12: EMB 0.7749  SFL_lens 0.7916
+  UCL_ET        layer 13: EMB 0.7701  SFL_lens 0.7901
+  UCL_ET        layer 14: EMB 0.7679  SFL_lens 0.7890
+  UCL_ET        layer 15: EMB 0.7636  SFL_lens 0.7871
+  UCL_ET        layer 16: EMB 0.7600  SFL_lens 0.7854
+  UCL_ET        layer 17: EMB 0.7543  SFL_lens 0.7845
+  UCL_ET        layer 18: EMB 0.7473  SFL_lens 0.7839
+  UCL_ET        layer 19: EMB 0.7442  SFL_lens 0.7834
+  UCL_ET        layer 20: EMB 0.7419  SFL_lens 0.7835
+  UCL_ET        layer 21: EMB 0.7358  SFL_lens 0.7828
+  UCL_ET        layer 22: EMB 0.7226  SFL_lens 0.7828
+  UCL_ET        layer 23: EMB 0.7106  SFL_lens 0.7829
+  UCL_ET        layer 24: EMB 0.6934  SFL_lens 0.7811
+
+wrote per-dataset csvs under /orcd/data/evelina9/001/USERS/devar_ag/SFL-EMB/appendix/layerwise
+[task 3] done.

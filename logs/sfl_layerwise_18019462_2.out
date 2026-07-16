@@ -1,0 +1,126 @@
+[task 2] ensuring deps + models are ready ...
+all deps present.
+warming up gpt (openai-gpt) ...
+warming up gpt2_small (gpt2) ...
+warming up gpt2_medium (gpt2-medium) ...
+warming up gpt2_large (gpt2-large) ...
+warming up gpt2_xl (gpt2-xl) ...
+all 5 models cached.
+[task 2] datasets: UCL_SPR,Wehbe2014,Pereira2018,ZuCo-2
+[selftest] last-layer logit lens == model surprisal (max diff 0.00e+00)  OK
+[selftest] layers returned: 25 (0..24)
+           layer  0: mean surprisal  78.333 nats
+           layer  1: mean surprisal   9.643 nats
+           layer 12: mean surprisal   6.981 nats
+           layer 24: mean surprisal   4.985 nats
+=== UCL_SPR (25 layers to do) ===
+  [UCL_SPR] existing csv lacks per-fold r -- recomputing from scratch
+  UCL_SPR       layer  0: EMB 0.3336  SFL_lens 0.3666
+  UCL_SPR       layer  1: EMB 0.3160  SFL_lens 0.3649
+  UCL_SPR       layer  2: EMB 0.3109  SFL_lens 0.3596
+  UCL_SPR       layer  3: EMB 0.3220  SFL_lens 0.3645
+  UCL_SPR       layer  4: EMB 0.3224  SFL_lens 0.3643
+  UCL_SPR       layer  5: EMB 0.3344  SFL_lens 0.3628
+  UCL_SPR       layer  6: EMB 0.3384  SFL_lens 0.3581
+  UCL_SPR       layer  7: EMB 0.3428  SFL_lens 0.3587
+  UCL_SPR       layer  8: EMB 0.3438  SFL_lens 0.3541
+  UCL_SPR       layer  9: EMB 0.3572  SFL_lens 0.3524
+  UCL_SPR       layer 10: EMB 0.3479  SFL_lens 0.3458
+  UCL_SPR       layer 11: EMB 0.3541  SFL_lens 0.3469
+  UCL_SPR       layer 12: EMB 0.3528  SFL_lens 0.3471
+  UCL_SPR       layer 13: EMB 0.3499  SFL_lens 0.3407
+  UCL_SPR       layer 14: EMB 0.3431  SFL_lens 0.3364
+  UCL_SPR       layer 15: EMB 0.3511  SFL_lens 0.3320
+  UCL_SPR       layer 16: EMB 0.3470  SFL_lens 0.3238
+  UCL_SPR       layer 17: EMB 0.3526  SFL_lens 0.3245
+  UCL_SPR       layer 18: EMB 0.3490  SFL_lens 0.3260
+  UCL_SPR       layer 19: EMB 0.3402  SFL_lens 0.3274
+  UCL_SPR       layer 20: EMB 0.3377  SFL_lens 0.3246
+  UCL_SPR       layer 21: EMB 0.3391  SFL_lens 0.3297
+  UCL_SPR       layer 22: EMB 0.3431  SFL_lens 0.3313
+  UCL_SPR       layer 23: EMB 0.3430  SFL_lens 0.3282
+  UCL_SPR       layer 24: EMB 0.3236  SFL_lens 0.3286
+=== Wehbe2014 (25 layers to do) ===
+  [Wehbe2014] existing csv lacks per-fold r -- recomputing from scratch
+  Wehbe2014     layer  0: EMB 0.2005  SFL_lens 0.1336
+  Wehbe2014     layer  1: EMB 0.2178  SFL_lens 0.2201
+  Wehbe2014     layer  2: EMB 0.2334  SFL_lens 0.2159
+  Wehbe2014     layer  3: EMB 0.2530  SFL_lens 0.2011
+  Wehbe2014     layer  4: EMB 0.2519  SFL_lens 0.2039
+  Wehbe2014     layer  5: EMB 0.2509  SFL_lens 0.1955
+  Wehbe2014     layer  6: EMB 0.2829  SFL_lens 0.2025
+  Wehbe2014     layer  7: EMB 0.2735  SFL_lens 0.1955
+  Wehbe2014     layer  8: EMB 0.2703  SFL_lens 0.1947
+  Wehbe2014     layer  9: EMB 0.2772  SFL_lens 0.1884
+  Wehbe2014     layer 10: EMB 0.2746  SFL_lens 0.1882
+  Wehbe2014     layer 11: EMB 0.2881  SFL_lens 0.1844
+  Wehbe2014     layer 12: EMB 0.2819  SFL_lens 0.1990
+  Wehbe2014     layer 13: EMB 0.2852  SFL_lens 0.1872
+  Wehbe2014     layer 14: EMB 0.2904  SFL_lens 0.1823
+  Wehbe2014     layer 15: EMB 0.3048  SFL_lens 0.1625
+  Wehbe2014     layer 16: EMB 0.2980  SFL_lens 0.1638
+  Wehbe2014     layer 17: EMB 0.2690  SFL_lens 0.1447
+  Wehbe2014     layer 18: EMB 0.2624  SFL_lens 0.1543
+  Wehbe2014     layer 19: EMB 0.2708  SFL_lens 0.1458
+  Wehbe2014     layer 20: EMB 0.2248  SFL_lens 0.1329
+  Wehbe2014     layer 21: EMB 0.2173  SFL_lens 0.1236
+  Wehbe2014     layer 22: EMB 0.2231  SFL_lens 0.1267
+  Wehbe2014     layer 23: EMB 0.2244  SFL_lens 0.1198
+  Wehbe2014     layer 24: EMB 0.2190  SFL_lens 0.1167
+=== Pereira2018 (25 layers to do) ===
+  [Pereira2018] existing csv lacks per-fold r -- recomputing from scratch
+  Pereira2018   layer  0: EMB 0.4715  SFL_lens -0.0068
+  Pereira2018   layer  1: EMB 0.4422  SFL_lens 0.0266
+  Pereira2018   layer  2: EMB 0.4540  SFL_lens 0.0083
+  Pereira2018   layer  3: EMB 0.4598  SFL_lens 0.0014
+  Pereira2018   layer  4: EMB 0.4656  SFL_lens 0.0051
+  Pereira2018   layer  5: EMB 0.4830  SFL_lens -0.0092
+  Pereira2018   layer  6: EMB 0.4744  SFL_lens -0.0199
+  Pereira2018   layer  7: EMB 0.4891  SFL_lens -0.0218
+  Pereira2018   layer  8: EMB 0.5057  SFL_lens -0.0263
+  Pereira2018   layer  9: EMB 0.5258  SFL_lens -0.0275
+  Pereira2018   layer 10: EMB 0.5223  SFL_lens -0.0014
+  Pereira2018   layer 11: EMB 0.5176  SFL_lens 0.0353
+  Pereira2018   layer 12: EMB 0.5124  SFL_lens 0.0442
+  Pereira2018   layer 13: EMB 0.5160  SFL_lens 0.1226
+  Pereira2018   layer 14: EMB 0.5134  SFL_lens 0.1493
+  Pereira2018   layer 15: EMB 0.5133  SFL_lens 0.1841
+  Pereira2018   layer 16: EMB 0.4971  SFL_lens 0.2047
+  Pereira2018   layer 17: EMB 0.4888  SFL_lens 0.2138
+  Pereira2018   layer 18: EMB 0.4520  SFL_lens 0.2164
+  Pereira2018   layer 19: EMB 0.4190  SFL_lens 0.2327
+  Pereira2018   layer 20: EMB 0.4092  SFL_lens 0.2283
+  Pereira2018   layer 21: EMB 0.3926  SFL_lens 0.2438
+  Pereira2018   layer 22: EMB 0.3813  SFL_lens 0.2314
+  Pereira2018   layer 23: EMB 0.3735  SFL_lens 0.2160
+  Pereira2018   layer 24: EMB 0.3533  SFL_lens 0.2021
+=== ZuCo-2 (25 layers to do) ===
+  [ZuCo-2] existing csv lacks per-fold r -- recomputing from scratch
+  ZuCo-2        layer  0: EMB 0.7675  SFL_lens 0.7452
+  ZuCo-2        layer  1: EMB 0.7666  SFL_lens 0.7538
+  ZuCo-2        layer  2: EMB 0.7772  SFL_lens 0.7546
+  ZuCo-2        layer  3: EMB 0.7880  SFL_lens 0.7576
+  ZuCo-2        layer  4: EMB 0.7907  SFL_lens 0.7602
+  ZuCo-2        layer  5: EMB 0.7889  SFL_lens 0.7618
+  ZuCo-2        layer  6: EMB 0.7868  SFL_lens 0.7635
+  ZuCo-2        layer  7: EMB 0.7823  SFL_lens 0.7649
+  ZuCo-2        layer  8: EMB 0.7782  SFL_lens 0.7658
+  ZuCo-2        layer  9: EMB 0.7773  SFL_lens 0.7664
+  ZuCo-2        layer 10: EMB 0.7708  SFL_lens 0.7665
+  ZuCo-2        layer 11: EMB 0.7634  SFL_lens 0.7663
+  ZuCo-2        layer 12: EMB 0.7613  SFL_lens 0.7655
+  ZuCo-2        layer 13: EMB 0.7571  SFL_lens 0.7652
+  ZuCo-2        layer 14: EMB 0.7536  SFL_lens 0.7640
+  ZuCo-2        layer 15: EMB 0.7508  SFL_lens 0.7631
+  ZuCo-2        layer 16: EMB 0.7454  SFL_lens 0.7628
+  ZuCo-2        layer 17: EMB 0.7404  SFL_lens 0.7624
+  ZuCo-2        layer 18: EMB 0.7313  SFL_lens 0.7623
+  ZuCo-2        layer 19: EMB 0.7305  SFL_lens 0.7624
+  ZuCo-2        layer 20: EMB 0.7212  SFL_lens 0.7626
+  ZuCo-2        layer 21: EMB 0.7144  SFL_lens 0.7632
+  ZuCo-2        layer 22: EMB 0.7041  SFL_lens 0.7642
+  ZuCo-2        layer 23: EMB 0.6906  SFL_lens 0.7669
+  ZuCo-2        layer 24: EMB 0.6729  SFL_lens 0.7661
+
+wrote per-dataset csvs under /orcd/data/evelina9/001/USERS/devar_ag/SFL-EMB/appendix/layerwise
+[task 2] done.

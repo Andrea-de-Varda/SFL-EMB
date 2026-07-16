@@ -1,0 +1,73 @@
+[task 0] ensuring deps + models are ready ...
+all deps present.
+warming up gpt (openai-gpt) ...
+warming up gpt2_small (gpt2) ...
+warming up gpt2_medium (gpt2-medium) ...
+warming up gpt2_large (gpt2-large) ...
+warming up gpt2_xl (gpt2-xl) ...
+all 5 models cached.
+[task 0] datasets: NatStor_SPR,UCL_N400,Provo
+[selftest] last-layer logit lens == model surprisal (max diff 0.00e+00)  OK
+[selftest] layers returned: 25 (0..24)
+           layer  0: mean surprisal  78.333 nats
+           layer  1: mean surprisal   9.643 nats
+           layer 12: mean surprisal   6.981 nats
+           layer 24: mean surprisal   4.985 nats
+=== NatStor_SPR (25 layers to do) ===
+  [NatStor_SPR] existing csv lacks per-fold r -- recomputing from scratch
+  NatStor_SPR   layer  0: EMB 0.4197  SFL_lens 0.4450
+  NatStor_SPR   layer  1: EMB 0.4159  SFL_lens 0.4368
+  NatStor_SPR   layer  2: EMB 0.4232  SFL_lens 0.4345
+  NatStor_SPR   layer  3: EMB 0.4380  SFL_lens 0.4325
+  NatStor_SPR   layer  4: EMB 0.4337  SFL_lens 0.4310
+  NatStor_SPR   layer  5: EMB 0.4373  SFL_lens 0.4310
+  NatStor_SPR   layer  6: EMB 0.4417  SFL_lens 0.4294
+  NatStor_SPR   layer  7: EMB 0.4393  SFL_lens 0.4277
+  NatStor_SPR   layer  8: EMB 0.4398  SFL_lens 0.4249
+  NatStor_SPR   layer  9: EMB 0.4415  SFL_lens 0.4230
+  NatStor_SPR   layer 10: EMB 0.4418  SFL_lens 0.4220
+  NatStor_SPR   layer 11: EMB 0.4341  SFL_lens 0.4216
+  NatStor_SPR   layer 12: EMB 0.4348  SFL_lens 0.4223
+  NatStor_SPR   layer 13: EMB 0.4319  SFL_lens 0.4223
+  NatStor_SPR   layer 14: EMB 0.4273  SFL_lens 0.4220
+  NatStor_SPR   layer 15: EMB 0.4224  SFL_lens 0.4213
+  NatStor_SPR   layer 16: EMB 0.4311  SFL_lens 0.4214
+  NatStor_SPR   layer 17: EMB 0.4253  SFL_lens 0.4236
+  NatStor_SPR   layer 18: EMB 0.4274  SFL_lens 0.4256
+  NatStor_SPR   layer 19: EMB 0.4302  SFL_lens 0.4236
+  NatStor_SPR   layer 20: EMB 0.4253  SFL_lens 0.4246
+  NatStor_SPR   layer 21: EMB 0.4173  SFL_lens 0.4251
+  NatStor_SPR   layer 22: EMB 0.4135  SFL_lens 0.4228
+  NatStor_SPR   layer 23: EMB 0.4021  SFL_lens 0.4191
+  NatStor_SPR   layer 24: EMB 0.4029  SFL_lens 0.4203
+=== UCL_N400: already complete, skipping ===
+=== Provo (25 layers to do) ===
+  [Provo] existing csv lacks per-fold r -- recomputing from scratch
+  Provo         layer  0: EMB 0.8492  SFL_lens 0.8530
+  Provo         layer  1: EMB 0.8389  SFL_lens 0.8524
+  Provo         layer  2: EMB 0.8467  SFL_lens 0.8540
+  Provo         layer  3: EMB 0.8557  SFL_lens 0.8561
+  Provo         layer  4: EMB 0.8570  SFL_lens 0.8576
+  Provo         layer  5: EMB 0.8527  SFL_lens 0.8589
+  Provo         layer  6: EMB 0.8516  SFL_lens 0.8598
+  Provo         layer  7: EMB 0.8462  SFL_lens 0.8608
+  Provo         layer  8: EMB 0.8440  SFL_lens 0.8615
+  Provo         layer  9: EMB 0.8387  SFL_lens 0.8619
+  Provo         layer 10: EMB 0.8304  SFL_lens 0.8615
+  Provo         layer 11: EMB 0.8291  SFL_lens 0.8621
+  Provo         layer 12: EMB 0.8261  SFL_lens 0.8618
+  Provo         layer 13: EMB 0.8189  SFL_lens 0.8619
+  Provo         layer 14: EMB 0.8184  SFL_lens 0.8621
+  Provo         layer 15: EMB 0.8145  SFL_lens 0.8620
+  Provo         layer 16: EMB 0.8089  SFL_lens 0.8619
+  Provo         layer 17: EMB 0.7997  SFL_lens 0.8609
+  Provo         layer 18: EMB 0.7949  SFL_lens 0.8603
+  Provo         layer 19: EMB 0.7882  SFL_lens 0.8593
+  Provo         layer 20: EMB 0.7812  SFL_lens 0.8593
+  Provo         layer 21: EMB 0.7687  SFL_lens 0.8597
+  Provo         layer 22: EMB 0.7602  SFL_lens 0.8609
+  Provo         layer 23: EMB 0.7489  SFL_lens 0.8645
+  Provo         layer 24: EMB 0.7181  SFL_lens 0.8653
+
+wrote per-dataset csvs under /orcd/data/evelina9/001/USERS/devar_ag/SFL-EMB/appendix/layerwise
+[task 0] done.
