@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Figures for the layer-wise EMB analysis.
+"""Per-dataset layer-wise figures, in the paper's small-plot style.
 
-Two figures, one per response type (behavior / brain). Each has one panel per
-dataset showing EMB predictivity as a function of layer, against the **standard
-SFL** predictor as a horizontal reference line.
+One figure per dataset (same geometry / title size / spines / grid as
+figures/plot_results.py:paper_figure, so they drop straight into the Overleaf
+TikZ blocks):
 
-SFL is layer-independent (surprisal from the model's final layer + log-frequency +
-length -- exactly the main analysis), so it is a constant, not a curve. Its value is
-read from results/<stem>_results.csv (gpt2_medium) and cross-checked against the
-layer-24 cell of the sweep, which is the same quantity computed by an independent
-code path.
+    EMB (blue)  predictivity of the layer-L embedding, across layers
+    SFL (green) the standard predictor -- layer-independent, so a flat reference
 
-Shaded bands are +/- 1 SEM over the 10 outer folds.
+The EMB line is drawn faded where it does NOT differ significantly from SFL
+(paired permutation test over folds, two-sided .025, UNCORRECTED) and solid where
+it does. Uncorrected is what the shading shows; the text reports the FDR-corrected
+ranges.
 
-    python appendix/layerwise_plot.py     # -> figures/layerwise/{behavior,brain}.png
+    python appendix/layerwise_plot.py     # -> figures/layerwise/<dataset>.{png,svg}
 """
 import sys
 from pathlib import Path
@@ -26,113 +26,120 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 CSV = ROOT / "appendix/layerwise_logitlens.csv"
+SIG = ROOT / "appendix/layerwise_significance.csv"
 FIGDIR = ROOT / "figures/layerwise"
 NFOLD = 10
 
-EMB_C, SFL_C = "#4b93c3", "#3f9e3f"
-ORDER = {
-    "behavior": ["Provo", "Meco-en", "ZuCo-2", "UCL_ET",
-                 "UCL_SPR", "Brown", "NatStor_SPR", "NatStor_Maze"],
-    "brain": ["UCL_N400", "Pereira2018", "Tuckute2024", "NatStor_fMRI", "Wehbe2014"],
-}
-NICE = {"UCL_ET": r"UCL$_{ET}$", "UCL_SPR": r"UCL$_{SPR}$", "UCL_N400": r"UCL$_{N400}$",
-        "NatStor_SPR": r"NatStor$_{SPR}$", "NatStor_Maze": r"NatStor$_{Maze}$",
-        "NatStor_fMRI": r"NatStor$_{fMRI}$"}
-STEM = {"Provo": "provo_fpass", "Meco-en": "meco_fpass", "ZuCo-2": "zuco_fpass",
-        "UCL_ET": "ucl_et_fpass", "UCL_SPR": "ucl_spr", "Brown": "brown",
-        "NatStor_SPR": "natstor_spr", "NatStor_Maze": "maze_maze",
-        "UCL_N400": "ucl_n400_n400", "Pereira2018": "pereira", "Tuckute2024": "control",
-        "NatStor_fMRI": "natstorfmri", "Wehbe2014": "HP"}
+# palette + geometry: identical to figures/plot_results.py
+EMB_C, SFL_C = "lightblue", "lightgreen"
+EMB_LINE = "#2b7bba"          # a readable stroke for the light-blue series
+SFL_LINE = "#3f9e3f"
+SPINE_LW, GRID_LW = 1.3, 0.4
+YLABEL_SIZE, YTICK_SIZE = 12, 11
+FADE = 0.28                   # alpha where EMB is n.s. vs SFL
+
+# (stem, pretty title), behavior first then brain -- the order of the TikZ blocks
+DATASETS = [
+    ("Provo", "Provo"), ("Meco-en", "Meco-en"), ("ZuCo-2", "ZuCo-2"), ("UCL_ET", "UCL-ET"),
+    ("UCL_SPR", "UCL-SPR"), ("Brown", "Brown"), ("NatStor_SPR", "NatStor-SPR"),
+    ("NatStor_Maze", "NatStor-Maze"),
+    ("UCL_N400", "UCL-N400"), ("Pereira2018", "Pereira2018"), ("Tuckute2024", "Tuckute2024"),
+    ("NatStor_fMRI", "NatStor-fMRI"), ("Wehbe2014", "Wehbe2014"),
+]
+YLIM = {"behavior": (0.25, 0.95), "brain": (0.05, 0.60)}
 
 
-def sfl_standard(name, df):
-    """(r, sd) of the standard SFL predictor, from the main results table.
-
-    Asserted equal to the sweep's layer-24 SFL cell (independent code path).
-    """
-    m = pd.read_csv(ROOT / f"results/{STEM[name]}_results.csv").set_index("model")
-    r, sd = float(m.loc["gpt2_medium", "sfl"]), float(m.loc["gpt2_medium", "sfl_sd"])
-    cell = df[(df.dataset == name) & (df.layer == df.layer.max())]
-    if len(cell):
-        assert abs(float(cell.iloc[0].sfl_r) - r) < 1e-4, \
-            f"{name}: main-pipeline SFL {r} != sweep layer-24 SFL {cell.iloc[0].sfl_r}"
-    return r, sd
-
-
-def group_ylim(names, df, pad=0.03, step=0.05):
-    """One y-range shared by every panel of a group: the span of everything drawn
-    (curves +/- SEM and the SFL band), padded and rounded outward to `step`."""
-    lo, hi = [], []
-    for nm in names:
-        d = df[df.dataset == nm]
-        e = d.emb_sd.to_numpy() / np.sqrt(NFOLD)
-        r, sd = sfl_standard(nm, df)
-        s = sd / np.sqrt(NFOLD)
-        lo += [float((d.emb_r.to_numpy() - e).min()), r - s]
-        hi += [float((d.emb_r.to_numpy() + e).max()), r + s]
-    lo, hi = min(lo) - pad, max(hi) + pad
-    return np.floor(lo / step) * step, np.ceil(hi / step) * step
+def runs(mask, x):
+    """Contiguous index runs where mask is True -> list of (start, stop) in x."""
+    out, i = [], 0
+    while i < len(mask):
+        if mask[i]:
+            j = i
+            while j + 1 < len(mask) and mask[j + 1]:
+                j += 1
+            out.append((i, j))
+            i = j + 1
+        else:
+            i += 1
+    return out
 
 
-def panel(ax, d, name, df, ylim):
+def figure(stem, title, d, sg, ylim):
     d = d.sort_values("layer")
     x = d.layer.to_numpy()
-    y, e = d.emb_r.to_numpy(), d.emb_sd.to_numpy() / np.sqrt(NFOLD)
-    ax.plot(x, y, color=EMB_C, lw=2.2, label="EMB (layer $L$)", zorder=3)
-    ax.fill_between(x, y - e, y + e, color=EMB_C, alpha=.25, lw=0, zorder=2)
+    y = d.emb_r.to_numpy()
+    e = d.emb_sd.to_numpy() / np.sqrt(NFOLD)
+    sfl = float(d[d.layer == d.layer.max()].iloc[0].sfl_r)
+    ssd = float(d[d.layer == d.layer.max()].iloc[0].sfl_sd) / np.sqrt(NFOLD)
+    sig = sg.sort_values("layer").sig.to_numpy().astype(bool)
 
-    r, sd = sfl_standard(name, df)
-    s = sd / np.sqrt(NFOLD)
-    ax.axhspan(r - s, r + s, color=SFL_C, alpha=.18, lw=0, zorder=1)
-    ax.axhline(r, color=SFL_C, ls="--", lw=2.2, label="SFL (standard)", zorder=3)
-
-    ax.set_title(NICE.get(name, name), fontsize=11)
-    ax.grid(alpha=.25, lw=.4)
-    ax.set_xlim(0, x.max())
-    ax.set_ylim(*ylim)                 # shared within a group (behavior / brain)
+    fig, ax = plt.subplots(figsize=(5 / 1.7, 3.5 / 1.7), dpi=300)
+    ax.grid(axis="y", which="major", color="#666666", linestyle="-", lw=GRID_LW, zorder=0)
+    ax.minorticks_on()
+    ax.grid(axis="y", which="minor", color="#999999", linestyle="-", lw=GRID_LW / 2,
+            alpha=0.2, zorder=1)
     for sp in ax.spines.values():
-        sp.set_linewidth(1.1)
+        sp.set_linewidth(SPINE_LW)
 
+    # SFL: flat reference (+/- SEM band)
+    ax.axhspan(sfl - ssd, sfl + ssd, color=SFL_C, alpha=.45, lw=0, zorder=2)
+    ax.axhline(sfl, color=SFL_LINE, ls="--", lw=2.0, zorder=4)
 
-def plot_all(df):
+    # EMB: faded everywhere, solid over the significant runs
+    ax.fill_between(x, y - e, y + e, color=EMB_C, alpha=.45, lw=0, zorder=3)
+    ax.plot(x, y, color=EMB_LINE, lw=2.0, alpha=FADE, zorder=5)
+    for a, b in runs(sig, x):
+        sl = slice(a, b + 1)
+        ax.plot(x[sl], y[sl], color=EMB_LINE, lw=2.4, alpha=1.0, zorder=6)
+
+    ax.set_xlim(0, x.max())
+    ax.set_ylim(*ylim)
+    ax.set_xticks([0, 6, 12, 18, 24])
+    ax.set_xlabel("layer", fontsize=YLABEL_SIZE)
+    ax.set_ylabel("r", fontsize=YLABEL_SIZE)
+    ax.tick_params(axis="both", labelsize=YTICK_SIZE)
+    ax.set_title(title, fontsize=16)
     FIGDIR.mkdir(parents=True, exist_ok=True)
-    for grp, names in ORDER.items():
-        names = [n for n in names if n in set(df.dataset)]
-        if not names:
-            continue
-        ncol = 4 if grp == "behavior" else 3
-        nrow = int(np.ceil(len(names) / ncol))
-        fig, axes = plt.subplots(nrow, ncol, figsize=(3.1 * ncol, 2.7 * nrow),
-                                 dpi=200, squeeze=False)
-        axes = axes.ravel()
-        ylim = group_ylim(names, df)
-        print(f"  {grp}: shared ylim = ({ylim[0]:.2f}, {ylim[1]:.2f})")
-        for ax, nm in zip(axes, names):
-            panel(ax, df[df.dataset == nm], nm, df, ylim)
-        for ax in axes[len(names):]:
-            ax.axis("off")
-        for i, ax in enumerate(axes[:len(names)]):
-            if i % ncol == 0:
-                ax.set_ylabel("$r$", fontsize=12)
-            if i >= len(names) - ncol:
-                ax.set_xlabel("layer", fontsize=11)
-        h, l = axes[0].get_legend_handles_labels()
-        fig.suptitle(f"EMB by layer vs standard SFL — {grp} (GPT-2$_{{355M}}$)",
-                     fontsize=13, y=1.00)
-        if len(names) < len(axes):
-            axes[len(names)].legend(h, l, fontsize=12, loc="center", frameon=False)
-            fig.tight_layout()
-        else:
-            fig.tight_layout(rect=[0, 0.06, 1, 1])
-            fig.legend(h, l, fontsize=12, loc="lower center", frameon=False,
-                       ncol=2, bbox_to_anchor=(0.5, 0.0))
-        for ext in ("png", "svg"):
-            fig.savefig(FIGDIR / f"{grp}.{ext}", bbox_inches="tight")
-        plt.close(fig)
-        print(f"wrote {FIGDIR}/{grp}.png  ({len(names)} datasets)")
+    for ext in ("svg", "png"):
+        fig.savefig(FIGDIR / f"{stem}.{ext}", bbox_inches="tight")
+    plt.close(fig)
+
+
+def legend_figure():
+    """Standalone legend, matching figures/legend.png in style."""
+    from matplotlib.patches import FancyBboxPatch
+    from matplotlib.lines import Line2D
+    fig = plt.figure(figsize=(1266 / 157.48, 760 / 157.48), dpi=157.48)
+    ax = fig.add_axes([0, 0, 1, 1]); ax.axis("off")
+    ax.add_patch(FancyBboxPatch((0.05, 0.06), 0.90, 0.88,
+                                boxstyle="round,pad=0,rounding_size=0.05",
+                                linewidth=4, edgecolor="lightgray", facecolor="white",
+                                transform=ax.transAxes))
+    ax.add_line(Line2D([0.12, 0.30], [0.68, 0.68], color=EMB_LINE, lw=5,
+                       transform=ax.transAxes))
+    ax.text(0.36, 0.68, "EMB (layer $L$)", fontsize=30, va="center", transform=ax.transAxes)
+    ax.add_line(Line2D([0.12, 0.30], [0.38, 0.38], color=SFL_LINE, lw=5, ls="--",
+                       transform=ax.transAxes))
+    ax.text(0.36, 0.38, "SFL", fontsize=30, va="center", transform=ax.transAxes)
+    fig.savefig(FIGDIR / "legend_layerwise.png", dpi=157.48)
+    plt.close(fig)
+
+
+def main():
+    if not (CSV.exists() and SIG.exists()):
+        sys.exit("run appendix/layerwise_logitlens.py --merge and "
+                 "appendix/layerwise_significance.py first")
+    d = pd.read_csv(CSV)
+    s = pd.read_csv(SIG)
+    for stem, title in DATASETS:
+        g = d[d.dataset == stem]
+        sg = s[s.dataset == stem]
+        assert len(g) == len(sg) == 25, f"{stem}: {len(g)} cells / {len(sg)} tests"
+        grp = "brain" if g.group.iloc[0] == "brain" else "behavior"
+        figure(stem, title, g, sg, YLIM[grp])
+    legend_figure()
+    print(f"wrote {len(DATASETS)} per-dataset figures + legend -> {FIGDIR}")
 
 
 if __name__ == "__main__":
-    if not CSV.exists():
-        sys.exit(f"missing {CSV} -- run appendix/layerwise_logitlens.py first")
-    plot_all(pd.read_csv(CSV))
+    main()

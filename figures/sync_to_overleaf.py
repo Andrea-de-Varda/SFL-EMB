@@ -91,6 +91,21 @@ MAP = {
     "hp-rff.png": "paper_rff/HP.png",
     "ucln400-rff.png": "paper_rff/ucl_n400_n400.png",
     "legend_rff.png": "legend_rff.png",
+    # ---- figure-layerwise.tex (appendix/layerwise_plot.py) ----
+    "provo-lw.png": "layerwise/Provo.png",
+    "meco-lw.png": "layerwise/Meco-en.png",
+    "zuco-lw.png": "layerwise/ZuCo-2.png",
+    "uclet-lw.png": "layerwise/UCL_ET.png",
+    "uclspr-lw.png": "layerwise/UCL_SPR.png",
+    "brown-lw.png": "layerwise/Brown.png",
+    "natstorspr-lw.png": "layerwise/NatStor_SPR.png",
+    "natstormaze-lw.png": "layerwise/NatStor_Maze.png",
+    "ucln400-lw.png": "layerwise/UCL_N400.png",
+    "pereira-lw.png": "layerwise/Pereira2018.png",
+    "control-lw.png": "layerwise/Tuckute2024.png",
+    "natstorfmri-lw.png": "layerwise/NatStor_fMRI.png",
+    "hp-lw.png": "layerwise/Wehbe2014.png",
+    "legend_layerwise.png": "layerwise/legend_layerwise.png",
 }
 
 KEEP = {"legend.png"}   # still correct: MAIN palette unchanged
