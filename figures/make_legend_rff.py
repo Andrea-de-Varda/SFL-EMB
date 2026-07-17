@@ -30,16 +30,18 @@ def main():
     ax.axis("off")
 
     # rounded outer frame, matching legend.png
-    ax.add_patch(FancyBboxPatch((0.07, 0.05), 0.86, 0.90,
+    ax.add_patch(FancyBboxPatch((0.05, 0.05), 0.90, 0.90,
                                 boxstyle="round,pad=0,rounding_size=0.04",
                                 linewidth=4, edgecolor="lightgray",
                                 facecolor="white", transform=ax.transAxes))
 
-    ys = [0.74, 0.45, 0.16]          # patch bottoms, evenly spaced like the original
-    for y, (label, colour) in zip(ys, ENTRIES):
-        ax.add_patch(Rectangle((0.11, y), 0.21, 0.11, facecolor=colour,
+    # bigger patches + text, spread to fill the frame (was small, mostly white space)
+    centers = [0.74, 0.50, 0.26]     # row centers, evenly spaced in the frame
+    bh, bw = 0.17, 0.25              # patch height / width
+    for cy, (label, colour) in zip(centers, ENTRIES):
+        ax.add_patch(Rectangle((0.10, cy - bh / 2), bw, bh, facecolor=colour,
                                edgecolor="none", transform=ax.transAxes))
-        ax.text(0.39, y + 0.055, label, fontsize=34, va="center", ha="left",
+        ax.text(0.40, cy, label, fontsize=46, va="center", ha="left",
                 transform=ax.transAxes)
 
     out = FIGDIR / "legend_rff.png"

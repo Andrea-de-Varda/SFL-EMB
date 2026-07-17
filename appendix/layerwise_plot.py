@@ -115,12 +115,13 @@ def legend_figure():
                                 boxstyle="round,pad=0,rounding_size=0.05",
                                 linewidth=4, edgecolor="lightgray", facecolor="white",
                                 transform=ax.transAxes))
-    ax.add_line(Line2D([0.12, 0.30], [0.68, 0.68], color=EMB_LINE, lw=5,
+    # bigger strokes + text, spread to fill the frame (was small, mostly white space)
+    ax.add_line(Line2D([0.10, 0.34], [0.70, 0.70], color=EMB_LINE, lw=8,
                        transform=ax.transAxes))
-    ax.text(0.36, 0.68, "EMB (layer $L$)", fontsize=30, va="center", transform=ax.transAxes)
-    ax.add_line(Line2D([0.12, 0.30], [0.38, 0.38], color=SFL_LINE, lw=5, ls="--",
+    ax.text(0.40, 0.70, "EMB (layer $L$)", fontsize=40, va="center", transform=ax.transAxes)
+    ax.add_line(Line2D([0.10, 0.34], [0.30, 0.30], color=SFL_LINE, lw=8, ls="--",
                        transform=ax.transAxes))
-    ax.text(0.36, 0.38, "SFL", fontsize=30, va="center", transform=ax.transAxes)
+    ax.text(0.40, 0.30, "SFL", fontsize=40, va="center", transform=ax.transAxes)
     fig.savefig(FIGDIR / "legend_layerwise.png", dpi=157.48)
     plt.close(fig)
 
