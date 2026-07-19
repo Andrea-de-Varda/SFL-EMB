@@ -3,253 +3,223 @@
 Code and data for **de Varda et al., _"Behavioral and Brain Responses to Language
 Reflect Different Levels of Linguistic Representation."_**
 
-The paper compares two families of per-word predictors as models of human reading
+The study compares two families of per-word predictors as models of human reading
 and brain responses:
 
 - **SFL** — three scalars per word: **s**urprisal (from a language model),
   log-**f**requency (SUBTLEX), and word **l**ength.
-- **EMB** — the model's final-layer hidden state for the word (768–1600 dims).
+- **EMB** — the language model's final-layer hidden state for the word (768–1600
+  dimensions).
 
-**Main finding:** SFL predicts *reading behavior* better; EMB predicts *brain
-responses* better. Behavior is a compressed readout; the brain retains richer
-representational content. A random-Fourier-feature (RFF) expansion of SFL tests how
-much of EMB's brain advantage is dimensionality/pooling rather than content.
+Across 8 behavioral and 5 neural datasets, SFL predicts *reading behavior* better
+while EMB predicts *brain responses* better: behavior reflects a compressed,
+effort-based readout, whereas the brain retains richer representational content.
 
-Five models are used (same model for surprisal and embeddings within an analysis):
-`openai-gpt`, `gpt2`, `gpt2-medium`, `gpt2-large`, `gpt2-xl`.
+Five models are used, the same model supplying both surprisal and embeddings within
+an analysis: `openai-gpt`, `gpt2`, `gpt2-medium`, `gpt2-large`, `gpt2-xl`.
+
+---
+
+## Installation
+
+```bash
+conda env create -f environment.yml
+conda activate sfl-emb
+```
+
+The GPU ridge backend (`himalaya`) needs CUDA; without a GPU, pass
+`SFL_BACKEND=sklearn` (below) to run everything on CPU.
+
+## Quick start
+
+```bash
+# one dataset, one model (fast smoke test)
+SFL_MODELS=gpt2_small python probe_pereira.py
+
+# one dataset, all five models
+python probe_pereira.py
+
+# every dataset x 5 models x 5 conditions
+bash cluster/run_all.sh
+```
+
+Two environment variables control every entry point:
+
+- `SFL_MODELS` — comma-separated subset of
+  `gpt,gpt2_small,gpt2_medium,gpt2_large,gpt2_xl` (default: all five).
+- `SFL_BACKEND` — `himalaya` (GPU, default) or `sklearn` (CPU). The two agree to
+  ~1e-4.
 
 ---
 
 ## Repository layout
 
 ```
-src/            shared pipeline (import as a package)
-  extract.py      transformers embeddings + surprisal (mean/sum over sub-words)
-  fit.py          ridge encoding; himalaya (GPU, default) or sklearn backend
-  rff.py          random-Fourier-feature SFL expansion + pooling helpers
-  conditions.py   the 5-condition runner + permutation significance
-  behavioral.py   word-level & spillover drivers (eye-tracking, SPR, maze, EEG)
-  brain.py        sentence-level & TR-level drivers (fMRI)
-  models.py       the 5 models (dims, last layer, tokenizer separators)
-  significance.py paired permutation test on fold-level r
-  paths.py        repo-root resolution
-  prep/           one-off data-prep (passage labels, whisper timings, TR series)
-probe_*.py      one script per dataset (13 total)
-appendix/       layer sweep (A4) and reliability (A5) analyses
-figures/        plotting scripts + rendered figures
-  make_legend_rff.py  standalone legend asset for the SFL_RFF SI figure
-cluster/        run_all.sh, slurm_engaging.sh, ENGAGING.md
-data/           all curated input data (see below)
-results/        all outputs (<dataset>_..._results.csv + per-fold predictions)
-paper/          manuscript + PAPER_SUMMARY.md
+src/                importable pipeline package
+  extract.py          transformers embeddings + surprisal (per-word, sub-word aligned)
+  fit.py              ridge encoding, cross-validation, banded ridge
+  rff.py              random-Fourier-feature SFL expansion + word/TR pooling
+  conditions.py       the 5-condition runner
+  significance.py     paired permutation test on fold-level r
+  behavioral.py       word-level & spillover drivers (eye-tracking, SPR, maze, EEG)
+  brain.py            sentence-level & TR-level drivers (fMRI)
+  decompose.py        surprisal / frequency / length decomposition
+  models.py           the 5 models (dims, last layer, tokenizer separators)
+  paths.py            repo-root resolution
+  prep/               one-off data prep (passage labels, Whisper timings, TR series)
+
+probe_*.py            one driver per dataset (13); reads data/, writes results/
+inspect_predicted_extremes.py   per-item predicted-response inspection (GPT-2-XL)
+
+appendix/            supplementary analyses (layer sweep, reliability, RFF controls)
+check-features/      what SFL_RFF vs EMB encode (meaning vs surface form)
+figures/             plotting + Overleaf figure sync + numeric-audit scripts
+cluster/             SLURM scripts + environment setup for MIT Engaging
+data/                all curated input data (see Datasets)
+results/             fitted outputs (CSV summaries + per-fold predictions)
+paper/               manuscript summary
 ```
 
 `data/` holds every input: the behavioral corpora (`Provo/`, `Meco/`, `ZuCo/`,
 `UCL_ET_CORPUS/`, `Brown/`, `NaturalStories/`, `ERP_Frank/`), `subtlex.xlsx`,
 `corpora/` (sentence lists), and the brain datasets under
 `data/{pereira,tuckute,natstor_fmri,wehbe}/`. Large raw arrays (fMRI subject `.npy`,
-audio, the Tuckute table) are `.gitignore`d — back them up externally.
+audio, the Tuckute response table) are `.gitignore`d — keep them backed up
+externally. Embeddings and surprisal are recomputed from the raw text on every run
+and cached under `cache/` (git-ignored, regenerable); no precomputed activations are
+stored.
 
 ---
 
 ## The pipeline
 
-Every dataset runs **5 predictor conditions**. EMB is mean-pooled (over sub-words,
-and over words for the pooled datasets):
+Each dataset is fit under **5 predictor conditions**:
 
-1. `sfl` · 2. `emb` · 3. `all` (SFL+EMB) · 4. `sfl_rff` · 5. `sfl_rff_emb`
-
-where `sfl_rff` projects SFL through random Fourier features to `D` = the model's
-hidden size (dimensionality-matched to EMB), RBF bandwidth by the median heuristic,
-everything fit on the training fold only (leakage-safe).
-
-**Fitting** (`src/fit.py`): ridge regression, **10-fold sequential** outer CV
-(GroupKFold by passage for Pereira; leave-one-story-out for NatStor-fMRI), alpha
-chosen by inner `KFold(5)` over a log grid, per-fold `StandardScaler` on X and y
-with `fit_intercept=False`. The **himalaya** GPU backend is the default and agrees
-with the **sklearn** backend to ~1e-4. Significance is a paired permutation test on
-the fold-level r values.
-
-### Methods notes (for the paper)
-
-- **Banded ridge for SFL+EMB.** A single global ridge α on the concatenation of the
-  3 SFL scalars with the 768–1600 EMB dims is a bad compromise: to control the large
-  EMB block it over-shrinks the 3 strong SFL coefficients, so `SFL+EMB` can score
-  *below* SFL alone (e.g. Provo first-pass: SFL 0.866, single-α `all` 0.852). This is
-  a regularization artefact — the concatenation cannot be worse than its best block
-  under proper regularization — and per-fold standardization exposes it (raw features
-  hide it via an *implicit* scale-based per-feature penalty). Fix: **banded ridge** —
-  a separate penalty per feature block (Nunez-Elizalde 2019; Dupré la Tour 2022).
-  We select the between-block penalty ratio on a deterministic grid by inner CV
-  (`src/fit.py:_banded_fit_predict`), which restores `all ≥ max(SFL, EMB)` (Provo:
-  0.879). Applied to `all` only; `sfl_rff_emb` is two same-width D-dim blocks (RFF vs
-  EMB) with no size mismatch, so single-α is already monotone.
-- **Why `SFL_RFF+EMB` looked "too good".** It never had the heterogeneity problem
-  (both blocks are D-dim), so it was fine while `SFL+EMB` was artificially low. With
-  banded ridge the `all` bars rise and the comparison is honest.
-- **Sub-word / word pooling.** EMB is mean-pooled over sub-words (and over words for
-  sentence/TR datasets). Surprisal is always summed over sub-words; length/frequency
-  are unaffected.
-
-Extraction is **ex novo**: `src/extract.py` runs the model for both embeddings
-(mean over sub-word tokens) and surprisal (sum over sub-word tokens) every run,
-caching to `cache/` (git-ignored, regenerable). No precomputed activations are used.
-
-### Manuscript re-sync (2026-07-15): figures + every reported number
-
-The manuscript originally reported the **pre-refactor** run. Banded ridge, ex-novo
-extraction and passage-level Pereira CV change every fitted value, so all figures and
-all reported numbers were regenerated. The TikZ infrastructure is untouched.
-
-**Figures** — `python figures/sync_to_overleaf.py` (map + checksum audit; `--check`
-to dry-run). 52 of the 55 images the compiled document references are regenerated;
-`legend.png` is kept (MAIN palette unchanged) and 2 are schematics with no fitted
-values. Audit confirms no referenced image is unmapped and no map entry is unused.
-
-**Diagram line widths** (`figure.tex` panel A) — `python figures/tikz_diagram_widths.py`.
-width = |mean_models(r_SFL − r_EMB)| × 20; the constant 20 is recovered from the
-original figure (old width / old published delta = 20.000 ± 0.01 on all six datasets
-whose deltas the paper reported). **NatStor-SPR flipped sides**: SFL now wins it
-(+0.0199; was −0.0027), so its line moves from the EMB node to the SFL node.
-
-**Claims that changed qualitatively** (not just the digits):
-
-| claim | was | now |
-|---|---|---|
-| Maze better predicted by EMB | Δ = −0.0437 | Δ = −0.0097, n.s. in 5/5 → tied |
-| EMB vs SFL n.s. only in Wehbe2014 | Wehbe only | Wehbe 5/5 n.s.; UCL-N400 4/5; NatStor-fMRI 2/5 |
-| NatStor-fMRI: `all` ≈ EMB (negative) | −0.0399 | **+0.0345** (sign flip) |
-| smallest GPT-2 always lowest on brain | all predictors | true for SFL/`all`; **false for EMB** (large 0.3482 < small 0.3505) |
-| UCL-SPR decomposition: surprisal highest | S | L (0.266) ≈ S (0.263); S still > F |
-| both NatStor datasets: S/F/L similar | both | NatStor-SPR yes; **Maze: S clearly highest** |
-| best held-in eye-tracking layer | 3 | **4** |
-
-Unchanged and verified: behavioral model-size claims (GPT-2-124M best for SFL and
-EMB; 355M slightly ahead for `all`); brain decomposition (S wins all but Wehbe2014,
-where F wins; L lowest in all 5); Table 1 N + reliability (data-only — Pereira 627,
-ZuCo 6461, UCL-N400 1505, UCL-ET 1726, UCL-SPR 1316 all reproduce; reliability mean
-0.5131 → "0.51", range 0.16–0.93).
-
-Consistency check: Provo/gpt2_medium SFL r = 0.865330 from three independent code
-paths (main pipeline, `src/decompose`, `appendix/layer_sweep`).
-
-### Methods text vs code discrepancies found (2026-07-15)
-
-| paper said | code does | resolution |
-|---|---|---|
-| "10 candidate penalties $10^{-5}$–$10^4$" | `ALPHAS = logspace(-6, 6, 13)` | text corrected to 13, $10^{-6}$–$10^{6}$ |
-| "10-fold CV throughout" | NatStor-fMRI is **leave-one-story-out, 9 folds** (`loso=True`); confirmed empirically — its permutation p values are multiples of $2^{-9}$, every other dataset $2^{-10}$ | text corrected |
-| (silent) | per-fold `StandardScaler` on X and y, `fit_intercept=False` | text now states it |
-| (silent) | banded ridge for SFL+EMB; GroupKFold for Pereira | documented earlier |
-| "unfixated → gaze 0" | Provo/Meco `fillna(0)`; ZuCo has no NaN (16 zeros already); UCL-ET has neither | vacuous, not violated — no change |
-| "RFF pooled by averaging" | RFF is **sum**-pooled | text corrected to "summed" |
-
-### Where this is written up (Overleaf: `6a56bd55cbb8310ac4c1e6db/`)
-
-All manuscript additions are wrapped in `\new{...}` (defined in the preamble) so
-they render **blue** for review. To accept every edit, redefine it as
-`\newcommand{\new}[1]{#1}`.
-
-| Change | Manuscript location |
+| condition | predictor |
 |---|---|
-| SFL_RFF analysis (concern → procedure → results, neural only) | SI subsection `sec:appendix-rff` ("Dimensionality control") |
-| SFL_RFF figure (fMRI 2×2 + EEG, TikZ, mimics `figure-indep-contrib.tex`) | `figures/figure-rff.tex`, `fig:rff` |
-| Qualitative observation: SFL_RFF and EMB predict from *different* features | last paragraph of `sec:appendix-rff` |
-| "qualitative results hold under non-linear projections of SFL" | Results, brain subsection |
-| Banded ridge for SFL+EMB | Methods → Analyses |
-| Passage-level (GroupKFold) CV for Pereira | Methods → Analyses |
+| `sfl` | surprisal, log-frequency, length |
+| `emb` | final-layer embedding (D dims) |
+| `all` | `sfl` ⌢ `emb` (banded ridge) |
+| `sfl_rff` | SFL projected into D random Fourier features |
+| `sfl_rff_emb` | `sfl_rff` ⌢ `emb` |
 
-Figure assets are copied from `figures/paper_rff/` into the Overleaf tree with an
-`-rff` suffix; the legend is generated by `figures/make_legend_rff.py` (colours must
-stay in sync with `RFF3` in `figures/plot_results.py`).
+`sfl_rff` matches EMB in dimensionality: SFL is projected into `D` = the model's
+hidden size via random Fourier features (an RBF-kernel approximation), with the RBF
+bandwidth set by the median heuristic. Scaler, bandwidth and projection are fit on
+the training fold only (leakage-safe).
 
-**Qualitative observation (GPT-2-XL).** Regenerate with
-`python inspect_predicted_extremes.py pereira control n400` (writes
-`results_extremes/*_xl_{report.md,predictions.csv}`), then
-`python check-features/analysis/shallow_feature_corr.py` → `SHALLOW_FEATURE_CORR.md`.
-At comparable predictivity the two predictors' out-of-fold predictions agree only
-moderately (Pereira 0.39, UCL-N400 0.46, Tuckute 0.56) and track different things:
-SFL_RFF → sentence length (Pereira 0.75 vs EMB 0.25), word length/frequency (Tuckute
-0.42 / −0.36 vs EMB 0.19 / −0.12); EMB → imageability (−0.53 vs −0.23) and physical
-content (−0.48 vs −0.10).
+**Fitting** (`src/fit.py`). Ridge regression with 10-fold cross-validation. The ridge
+penalty α is chosen per training fold by inner 5-fold CV over a log-spaced grid.
+Predictors and responses are standardized within each training fold (train-fit
+statistics applied to the test fold), so the penalty acts uniformly across features.
+Predictivity is the Pearson *r* between held-out predictions and the measured
+response, averaged across folds.
 
-> ⚠️ **Open: RFF pooling is SUM, not MEAN** (`src/brain.py:60`, `src/rff.py:99,143`) —
-> inherited from the original scripts, while EMB and the SFL base are MEAN-pooled.
-> Summing `D` bounded random features makes a sentence's SFL_RFF vector scale with its
-> word count, so it encodes sentence length by construction. This *is* the Pereira
-> exception: with GPT-2-XL, SFL_RFF sum-pooled scores r = 0.480 (length corr 0.753);
-> mean-pooled it drops to r = 0.219 (length corr −0.065), i.e. below EMB (0.381).
-> Sentence length alone correlates r = 0.381 with the Pereira response. Sum-pooling
-> *inflates* the SFL_RFF baseline, so it is conservative w.r.t. the paper's claim — but
-> the SI text must say "summed" (it did say "averaged"; corrected). **Decision (2026-07-15):
-> keep sum-pooling** (original convention, conservative). Switching to mean-pooling would
-> make EMB > SFL_RFF in 5/5 datasets but requires a full RFF re-run.
+**Cross-validation schemes.** Sequential (unshuffled) 10-fold everywhere, except:
 
-**Pereira length control** (`appendix/pereira_length_control.py` → `results/pereira_length_control.csv`;
-runs locally, ~10 min on one GPU). Asks what SFL_RFF and EMB add *on top of* sentence
-length. Banded ridge (`banded_split=1`) for the concatenations, else the 1-dim length
-scalar gets over-shrunk to control the D-dim block. Mean over the 5 models:
+- **Pereira2018** — leave whole passages out (`GroupKFold` on passage id), so
+  sentences from one passage never split across train and test.
+- **NatStor-fMRI** — leave one story out (9 folds).
 
-| condition | mean r |
-|---|---|
-| length alone | 0.3803 |
-| SFL_RFF | 0.4802 |
-| EMB | 0.3886 |
-| length+SFL_RFF | 0.4788 |
-| length+EMB | 0.4762 |
+**Significance** (`src/significance.py`). A paired permutation test on the per-fold
+*r* values: for two conditions scored on the same folds, enumerate all 2ⁿ sign-flips
+of the paired fold differences and report the fraction at least as extreme as
+observed.
 
-Length is **redundant** with SFL_RFF (−0.0014) but adds a lot to EMB (**+0.0876**) —
-direct confirmation that sum-pooled RFF has length baked in and mean-pooled EMB does
-not. Given length, the two are **statistically indistinguishable** (0.4788 vs 0.4762,
-n.s. in 5/5 models, p = 0.26–0.79), so the Pereira exception is carried entirely by
-sentence length.
+### Predictor construction
 
-> ⚠️ **Not supported:** "SFL_RFF adds little over length." It adds **+0.0985** (sig 5/5) —
-> essentially the same as EMB's **+0.0960** (sig 4/5). SFL_RFF is not reducible to word
-> count; beyond length it still carries aggregate surprisal and frequency. The defensible
-> claim is the equalization one above, which is what the SI says.
+- **Embeddings** are mean-pooled over a word's sub-word tokens (and, for
+  sentence/TR datasets, over the words in the unit).
+- **Surprisal** is summed over a word's sub-word tokens; frequency and length are
+  word-level.
+- **Spillover.** Self-paced-reading datasets concatenate the predictors for words
+  *i*, *i*−1, *i*−2 (both SFL and EMB); the eye-tracking and maze datasets use word
+  *i* only.
+- **TR-level fMRI** (Wehbe2014, NatStor-fMRI) pools per-word predictors into 2 s TRs
+  and concatenates four lagged TR blocks for the hemodynamic delay.
+- **RFF pooling.** For datasets aggregated above the word (all fMRI), the RFF
+  features are summed within each unit, while EMB and the SFL base are mean-pooled.
 
-Reported SI numbers (mean over the 5 models, `results/*_results.csv`):
-EMB − SFL_RFF = +0.107 (NatStor-fMRI), +0.085 (Wehbe2014), +0.044 (Tuckute2024),
-+0.006 (UCL-N400), **−0.092 (Pereira2018)**; mean over the four = 0.061.
-SFL_RFF+EMB − SFL_RFF: mean 0.084; significant in 5/5 models for UCL-N400 (0.080),
-Tuckute2024 (0.089), NatStor-fMRI (0.141); 1/5 for Wehbe2014 (0.082); **0/5 for
-Pereira2018 (0.030)**.
+### Banded ridge for `all`
+
+A single global α on the concatenation of the 3 SFL scalars with the 768–1600 EMB
+dimensions over-shrinks the few strong SFL coefficients in order to control the large
+EMB block, so `all` could otherwise score below `sfl` alone. `all` therefore uses
+**banded ridge** — a separate penalty per feature block (Nunez-Elizalde 2019; Dupré
+la Tour 2022), with the between-block penalty ratio chosen on a deterministic grid by
+inner CV (`src/fit.py:_banded_fit_predict`). `sfl_rff_emb` is two equal-width D-dim
+blocks, so a single α is already well-behaved there.
+
+### Outputs
+
+Per target, `results/<dataset>_<target>_results.csv` has one row per model and
+columns for each condition's mean *r* and SD plus the permutation *p*-values for the
+key contrasts. The per-fold *r* vectors are written alongside as
+`results/<prefix>_<condition>_predictions` (pickled lists), which the significance
+and plotting code read.
 
 ---
 
-## Running it
+## Supplementary analyses
 
-```bash
-conda env create -f environment.yml && conda activate sfl-emb
+- **`src/decompose.py`** (invoked by the drivers) — predictivity of surprisal,
+  frequency and length individually and in every subset, for the SFL decomposition
+  figure.
+- **`appendix/layer_sweep.py`** — EMB predictivity by layer for the behavioral
+  held-in/held-out layer analysis (GPT-2-medium).
+- **`appendix/layerwise_logitlens.py`** — layer-matched EMB-vs-SFL comparison across
+  all datasets and layers; `layerwise_significance.py` runs the paired permutation
+  test per (dataset, layer) and `layerwise_plot.py` renders the per-dataset panels.
+  Heavy — run on the cluster (`cluster/slurm_layerwise.sh`); see `cluster/ENGAGING.md`.
+- **`appendix/reliability_and_size.py`** — split-half reliability of each dataset as
+  a function of sample size (CPU, from the raw data; `--replot` re-uses the cache).
+- **`appendix/pereira_length_control.py`** — what SFL_RFF and EMB add on top of
+  sentence length in Pereira2018.
+- **`check-features/`** — probes what SFL, SFL_RFF and EMB encode by predicting
+  hand-annotated sentence features (`predict_features.py`) and correlating model
+  predictions with those features (`analysis/`).
 
-# one dataset, one model (quick check)
-SFL_MODELS=gpt2_small python probe_pereira.py
+---
 
-# everything (13 datasets x 5 models x 5 conditions)
-bash cluster/run_all.sh
-```
+## Figures and manuscript
 
-Env vars: `SFL_MODELS` (comma-separated subset of
-`gpt,gpt2_small,gpt2_medium,gpt2_large,gpt2_xl`; default all) and `SFL_BACKEND`
-(`himalaya` default, or `sklearn`).
+The manuscript lives in a separate Overleaf/LaTeX project. The figure scripts here
+generate the assets and copy them in:
 
-On MIT Engaging: `sbatch cluster/slurm_engaging.sh` (single GPU), or
-`sbatch cluster/slurm_engaging_array.sh` to run across **3 GPUs in parallel** — a
-SLURM job array that statically partitions the 13 datasets into cost-balanced
-buckets (one GPU each, per-task logs, no re-runs since results/cache are per-dataset).
-A `flock`-guarded warmup downloads the 5 models once. See `cluster/ENGAGING.md`.
-
-Results land in `results/`: one `results/<dataset>_<target>_results.csv` per
-target (rows = models; columns = the 5 conditions' mean r + sd + permutation
-p-values), plus per-fold r vectors `results/<prefix>_<condition>_predictions`.
+- **`figures/plot_results.py`** — the main per-dataset bar figures, the SFL_RFF
+  variants, the SFL decomposition, and the model-size boxplots.
+- **`figures/tikz_diagram_widths.py`** — line widths for the SFL-vs-EMB summary
+  diagram (proportional to the per-dataset *r* gap).
+- **`figures/make_legend_rff.py`** — standalone legend for the SFL_RFF figure.
+- **`figures/sync_to_overleaf.py`** — copies every generated figure into the Overleaf
+  tree under the name each `\includegraphics` expects, with a checksum audit that no
+  referenced image is missing and no mapping is stale.
+- **`figures/verify_paper_numbers.py`** — re-derives every fitted number reported in
+  the manuscript from `results/` and checks it against the LaTeX source.
 
 ---
 
 ## Datasets (13)
 
-Behavioral (8): Provo, Meco-en, ZuCo-2, UCL-ET, UCL-SPR, Brown, NatStor-SPR,
-NatStor-Maze. Brain (5): UCL-N400 (EEG), Wehbe2014 & NatStor-fMRI (TR fMRI),
-Pereira2018 & Tuckute2024 (sentence fMRI). See `paper/PAPER_SUMMARY.md` for the
-per-dataset sample sizes, measures, and preprocessing rules; the probe sample sizes
-reproduce that table.
+Behavioral (8): Provo, Meco-en, ZuCo-2, UCL-ET (eye-tracking); UCL-SPR, Brown,
+NatStor-SPR (self-paced reading); NatStor-Maze (maze).
+Neural (5): UCL-N400 (EEG); Wehbe2014, NatStor-fMRI (TR-level fMRI); Pereira2018,
+Tuckute2024 (sentence-level fMRI).
+
+Each dataset has one `probe_<name>.py` driver. See `paper/PAPER_SUMMARY.md` for
+per-dataset sample sizes, measures and preprocessing rules.
+
+---
+
+## Running on the cluster (MIT Engaging)
+
+```bash
+sbatch cluster/slurm_engaging.sh            # all datasets, single GPU
+sbatch cluster/slurm_engaging_array.sh      # 3 GPUs in parallel (job array)
+sbatch cluster/slurm_layerwise.sh           # layer-matched analysis (4-GPU array)
+```
+
+The array scripts partition the datasets into cost-balanced buckets, one per GPU,
+with per-task logs and per-dataset outputs (so re-submitting resumes rather than
+recomputes). A `flock`-guarded warmup installs any missing dependencies and downloads
+the five models once. Details in `cluster/ENGAGING.md`.
