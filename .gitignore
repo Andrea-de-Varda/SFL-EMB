@@ -55,8 +55,8 @@ figures/*.png
 figures/paper/
 figures/paper_rff/
 
-# overleaf
-6a56bd55cbb8310ac4c1e6db/*
+# overleaf (a nested git repo; ignore the whole dir, not just its contents)
+6a56bd55cbb8310ac4c1e6db/
 
 # generated SFL-decomposition figures
 figures/decomp/
