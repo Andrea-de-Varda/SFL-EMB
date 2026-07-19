@@ -79,7 +79,8 @@ and neural recordings on the same sentences. `N` is the number of data points
 | 🔵 | **Pereira2018** | BOLD | fMRI (visual) | sentence | 627 | 0.28 | `probe_pereira.py` |
 | 🔵 | **Tuckute2024** | BOLD | fMRI (visual) | sentence | 2,000 | 0.22 | `probe_tuckute.py` |
 
-See `paper/PAPER_SUMMARY.md` for citations and per-dataset preprocessing.
+Each dataset's preprocessing (filtering, aggregation, exclusions) is documented in
+the docstring of its `probe_<name>.py` driver.
 
 ---
 
@@ -105,6 +106,10 @@ Two environment variables control every entry point:
   `gpt,gpt2_small,gpt2_medium,gpt2_large,gpt2_xl` (default: all five).
 - **`SFL_BACKEND`** — `himalaya` (GPU ridge, default) or `sklearn` (CPU). The two
   agree to ~1e-4, so you can develop on CPU and scale up on a GPU.
+
+Everything runs on a single machine with a decent GPU — the full sweep (13 datasets ×
+5 models × 5 conditions) just takes a while. For faster turnaround it can be
+parallelized across GPUs on a cluster (see below).
 
 Results land in `results/<dataset>_<target>_results.csv`: one row per model, columns
 for each condition's mean *r* and SD plus permutation *p*-values.
@@ -149,7 +154,7 @@ flowchart LR
     X --> C["conditions.py<br/>5 predictor sets"]
     C --> F["fit.py<br/>ridge · CV · banded ridge"]
     F --> R["results/<br/>mean r + permutation p"]
-    R --> P["figures/<br/>plots + Overleaf sync"]
+    R --> P["figures/<br/>result plots"]
 ```
 
 ---
@@ -172,7 +177,7 @@ src/                importable pipeline package
 probe_*.py            one driver per dataset (13); reads data/, writes results/
 appendix/            supplementary analyses (layer sweep, reliability, RFF controls)
 check-features/      what SFL_RFF vs EMB encode (meaning vs surface form)
-figures/             plotting, Overleaf figure sync, numeric-audit scripts
+figures/             result plots
 cluster/             SLURM scripts + environment setup for MIT Engaging
 data/                all curated input data
 results/             fitted outputs (CSV summaries + per-fold predictions)
@@ -201,21 +206,20 @@ keep them backed up externally.
 
 ---
 
-## Reproducing the figures
-
-The manuscript lives in a separate LaTeX project; the scripts here generate its assets:
+## Figures
 
 - `figures/plot_results.py` — per-dataset bar figures, SFL_RFF variants, SFL
-  decomposition, model-size boxplots.
-- `figures/sync_to_overleaf.py` — copies every figure into the Overleaf tree with a
-  checksum audit (no referenced image missing, no stale mapping).
-- `figures/verify_paper_numbers.py` — re-derives every fitted number in the manuscript
-  from `results/` and checks it against the LaTeX source.
+  decomposition, and model-size boxplots, from `results/`.
 - `docs/make_hero.py` — the summary figure at the top of this README.
 
 ---
 
-## Running on the cluster (MIT Engaging)
+## Running on a cluster
+
+The SLURM scripts in `cluster/` are **written and tuned for the MIT Engaging
+cluster** (partition names, module loads, GPU types, conda setup). On another cluster
+they'll need editing — the `#SBATCH` headers and the environment setup in
+`cluster/env.sh` in particular — but the structure carries over.
 
 ```bash
 sbatch cluster/slurm_engaging.sh            # all datasets, single GPU
