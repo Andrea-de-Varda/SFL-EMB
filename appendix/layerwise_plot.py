@@ -9,9 +9,9 @@ TikZ blocks):
     SFL (green) the standard predictor -- layer-independent, so a flat reference
 
 The EMB line is drawn faded where it does NOT differ significantly from SFL
-(paired permutation test over folds, two-sided .025, UNCORRECTED) and solid where
-it does. Uncorrected is what the shading shows; the text reports the FDR-corrected
-ranges.
+(paired permutation test over folds, exact two-sided p, Benjamini-Hochberg
+corrected across all dataset x layer cells, q <= .05) and solid where it does --
+the same criterion the text reports.
 
     python appendix/layerwise_plot.py     # -> figures/layerwise/<dataset>.{png,svg}
 """
@@ -71,7 +71,7 @@ def figure(stem, title, d, sg, ylim):
     e = d.emb_sd.to_numpy() / np.sqrt(NFOLD)
     sfl = float(d[d.layer == d.layer.max()].iloc[0].sfl_r)
     ssd = float(d[d.layer == d.layer.max()].iloc[0].sfl_sd) / np.sqrt(NFOLD)
-    sig = sg.sort_values("layer").sig.to_numpy().astype(bool)
+    sig = sg.sort_values("layer").sig_bh.to_numpy().astype(bool)
 
     fig, ax = plt.subplots(figsize=(5 / 1.7, 3.5 / 1.7), dpi=300)
     ax.grid(axis="y", which="major", color="#666666", linestyle="-", lw=GRID_LW, zorder=0)

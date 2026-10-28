@@ -10,9 +10,9 @@ layer-24 cell -- the same folds as every EMB cell, which is what makes the test
 paired. That cell is asserted equal to the main pipeline's SFL for gpt2_medium.
 
 Two columns of significance are written:
-  * ``sig``    -- uncorrected, two-sided at .025 per tail (what the figure shading shows);
+  * ``sig``    -- uncorrected, two-sided at .025 per tail (kept for reference);
   * ``sig_bh`` -- exact two-sided p (``p_two``), Benjamini-Hochberg corrected across all
-                  dataset x layer cells (``q_bh`` <= .05); this is what the paper text reports.
+                  dataset x layer cells (``q_bh`` <= .05); this is what the paper text and figure report.
 
     python appendix/layerwise_significance.py
         -> appendix/layerwise_significance.csv  + a per-measurement-type summary
