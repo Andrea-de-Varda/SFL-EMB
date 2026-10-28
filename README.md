@@ -1,6 +1,6 @@
 # SFL-EMB
 
-### Behavioral and brain responses to language reflect different levels of linguistic representation
+### Using language models to relate behavioral and brain responses in human language comprehension
 
 Code and data for **de Varda, Berzak, Fedorenko & Levy**. A single analytic framework
 for asking a question that behavioral and neural language research usually answer
@@ -14,25 +14,25 @@ We compare two families of per-word predictors, both derived from the *same* lan
 model, across **8 behavioral and 5 neural datasets**:
 
 - 🟢 **SFL** — three interpretable scalars per word: **s**urprisal, log-**f**requency,
-  word **l**ength. The classic "effort" account of processing difficulty.
+  word **l**ength. They reflect the classic "effort" account of processing difficulty.
 - 🔵 **EMB** — the model's final-layer embedding for the word (768–1600 dims): rich,
-  contextual, meaning-bearing representation.
+  contextual representation which includes linguistic meaning.
 
-> **Take-home.** SFL predicts **reading behavior** better; EMB predicts **brain
+> **TL;DR:** SFL predicts **reading behavior** better; EMB predicts **brain
 > responses** better. Behavior looks like a *compressed, effort-based readout* of
 > language processing, while the brain retains far more of the high-dimensional
-> representational content. The dissociation holds even on the *same sentences* read
+> representational content. The dissociation holds even on the same sentences read
 > under both modalities (the UCL and NatStories corpora), so it reflects the measures
 > themselves, not the stimuli.
 
 Because every dataset runs through one identical pipeline — same models, same ridge
 estimator, same cross-validation and significance test — this repo is also a general
-tool for **putting behavioral and neural evidence on the same footing** and asking
+tool for **comparing behavioral and neural data** and asking
 which representations each modality is sensitive to.
 
 ---
 
-## What the pipeline does
+## The pipeline
 
 ```mermaid
 flowchart LR
@@ -47,13 +47,13 @@ flowchart LR
 Each dataset is fit under **five predictor conditions**, so we can read off both
 absolute predictivity and what each predictor adds over the other:
 
-| condition | predictor | asks |
+| condition | predictor | encodes |
 |---|---|---|
-| `sfl` | surprisal, log-freq, length | how far do 3 effort features go? |
-| `emb` | LM embedding (D dims) | how far does the full representation go? |
-| `all` | `sfl` ⌢ `emb` | does EMB add anything over SFL? |
-| `sfl_rff` | SFL → D random Fourier features | is EMB's edge just dimensionality? |
-| `sfl_rff_emb` | `sfl_rff` ⌢ `emb` | does EMB add over a dimensionality-matched SFL? |
+| `sfl` | surprisal, log-freq, length | effort |
+| `emb` | LM embedding (D dims) | full representation |
+| `all` | `sfl` ⌢ `emb` | effort+representation |
+| `sfl_rff` | SFL → D random Fourier features | dimensionality expanded in SFL |
+| `sfl_rff_emb` | `sfl_rff` ⌢ `emb` | dimensionality expanded SFL + representation |
 
 ---
 
@@ -111,7 +111,7 @@ Everything runs on a single machine with a decent GPU — the full sweep (13 dat
 5 models × 5 conditions) just takes a while. For faster turnaround it can be
 parallelized across GPUs on a cluster (see below).
 
-Results land in `results/<dataset>_<target>_results.csv`: one row per model, columns
+Results end up in `results/<dataset>_<target>_results.csv`: one row per model, columns
 for each condition's mean *r* and SD plus permutation *p*-values.
 
 ### System requirements
