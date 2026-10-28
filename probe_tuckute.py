@@ -21,9 +21,16 @@ BACKEND = os.environ.get("SFL_BACKEND", "himalaya")
 CACHE = PROJECT_ROOT / "cache"
 RESULTS = PROJECT_ROOT / "results"
 
-df = pd.read_csv(PROJECT_ROOT / "data/tuckute/brain-lang-data_participant_20230728.csv")
-df = df[df["roi"] == "lang_LH_netw"]
-g = df.groupby("sentence", sort=True)["response_target"].mean()   # one response per sentence
+# The per-sentence averaged response is shipped in the repo (tuckute_lang_avg.csv);
+# the large participant-level table is only needed to regenerate it.
+AVG = PROJECT_ROOT / "data/tuckute/tuckute_lang_avg.csv"
+if AVG.exists():
+    g = pd.read_csv(AVG, float_precision="round_trip").set_index("sentence")["response_target"]
+else:
+    df = pd.read_csv(PROJECT_ROOT / "data/tuckute/brain-lang-data_participant_20230728.csv")
+    df = df[df["roi"] == "lang_LH_netw"]
+    g = df.groupby("sentence", sort=True)["response_target"].mean()   # one response per sentence
+    g.reset_index().to_csv(AVG, index=False, float_format="%.17g")
 sentences = [str(s).split() for s in g.index]
 y = g.to_numpy()
 print(f"Tuckute2024: {len(sentences)} sentences")

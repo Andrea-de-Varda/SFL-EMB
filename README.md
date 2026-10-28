@@ -114,6 +114,53 @@ parallelized across GPUs on a cluster (see below).
 Results land in `results/<dataset>_<target>_results.csv`: one row per model, columns
 for each condition's mean *r* and SD plus permutation *p*-values.
 
+### System requirements
+
+- **OS:** Linux. Tested on Ubuntu 26.04 LTS (laptop, CPU only) and on the MIT Engaging cluster (Linux, NVIDIA A100 GPUs). Nothing in the code is Linux-specific, but other operating systems have not been tested.
+- **Software:** the dependencies in `environment.yml` (Python 3.11). Tested with numpy 2.3.5, scipy 1.16.3, pandas 2.3.3, scikit-learn 1.8.0, matplotlib 3.10.8, torch 2.9.1, transformers 4.57.5, himalaya 0.4.11, pyreadr 0.5.6 and openpyxl 3.1.5.
+- **Hardware:** no non-standard hardware is required. A CUDA GPU speeds up embedding extraction and the `himalaya` backend, but everything also runs on CPU with `SFL_BACKEND=sklearn`. About 16 GB of RAM is enough for the demo; the largest models (`gpt2_large`, `gpt2_xl`) and the long word-level datasets benefit from more memory or a GPU.
+- **Disk/network:** the pretrained models are downloaded from the Hugging Face Hub on first use (about 0.5 GB for `gpt2`, about 6 GB for all five models).
+
+### Installation
+
+`conda env create -f environment.yml` followed by `conda activate sfl-emb`. Typical install time on a normal desktop computer is roughly 10–20 minutes, most of it spent downloading PyTorch.
+
+### Demo
+
+The repository includes the processed data for every dataset, so the demo needs no extra downloads beyond the model weights. On a CPU-only machine:
+
+```bash
+SFL_MODELS=gpt2_small SFL_BACKEND=sklearn python probe_pereira.py
+```
+
+Expected output (Pearson *r* averaged over the 10 cross-validation folds; values may differ in the third or fourth decimal across backends and library versions):
+
+```
+Pereira2018: 627 sentences, 168 passages
+  pereira_gpt2_small             sfl          r = 0.1763  (sd 0.1189)
+  pereira_gpt2_small             emb          r = 0.4086  (sd 0.1004)
+  pereira_gpt2_small             all          r = 0.4291  (sd 0.1084)
+  pereira_gpt2_small             sfl_rff      r = 0.4855  (sd 0.0926)
+  pereira_gpt2_small             sfl_rff_emb  r = 0.5191  (sd 0.0876)
+```
+
+The script also writes `results/pereira_results.csv`. Expected run time is about 2 minutes on a 16-thread laptop CPU, plus the one-off model download. Note that the demo overwrites the shipped `results/pereira_results.csv` with a single-model table; restore it with `git checkout results/pereira_results.csv`.
+
+### Running on your own data
+
+Each `probe_*.py` driver is a thin wrapper that loads one dataset and passes it to one of four entry points. To analyze a new English dataset, write an analogous driver:
+
+- **Word-level responses without spill-over** (e.g. eye-tracking, Maze, ERP): `src.behavioral.run_word_dataset(dataset, sentences, targets, models, results_dir, cache_dir)`, where `sentences` is a list of whitespace-tokenized sentences and `targets` maps a target name to a response vector aligned to the non-initial words of each sentence (see `probe_ucl_et.py`).
+- **Word-level responses with spill-over** (e.g. self-paced reading): `src.behavioral.run_spill_dataset(...)`, which additionally takes the sentence id of each word (see `probe_ucl_spr.py`).
+- **Sentence-level responses** (e.g. sentence-wise fMRI): `src.brain.run_sentence_dataset(dataset, sentences, y, models, results_dir, cache_dir, groups=None)`, with one response per sentence; pass `groups` to hold out groups of sentences together (see `probe_pereira.py`).
+- **TR-level responses to continuous text** (e.g. story fMRI): `src.brain.run_tr_dataset(dataset, stories, models, results_dir, cache_dir)`, where each story provides its words, the TR index of each word and the response per TR (see `probe_wehbe.py`).
+
+Each entry point fits all five predictor conditions and writes `results/<dataset>_results.csv` in the format described above. Word frequencies come from SUBTLEX-US (`data/subtlex.xlsx`), so new datasets should be in English.
+
+### Reproducing the paper
+
+`bash cluster/run_all.sh` (or the SLURM scripts below) reruns all 13 datasets × 5 models × 5 conditions; `figures/plot_results.py` then regenerates the figures from `results/`. The supplementary analyses are listed under "Beyond the main comparison" below. Some of them (split-half reliability, the layer sweep, and the feature checks for Wehbe2014 and Tuckute2024) need the participant-level data, which are too large to ship and can be downloaded from the original sources (Wehbe2014: https://doi.org/10.5061/dryad.gt413; Tuckute2024: https://osf.io/ru38b/). The main analyses use the participant-averaged responses included in `data/`.
+
 ---
 
 ## How it works

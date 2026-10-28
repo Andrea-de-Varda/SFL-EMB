@@ -66,3 +66,6 @@ figures/reliability/
 figures/model_size/
 figures/layerwise/
 appendix/layerwise_significance.csv
+
+paper/*
+6a56bd55cbb8310ac4c1e6db/*

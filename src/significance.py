@@ -41,6 +41,27 @@ def permutation_statistic(a1, a2):
     return (sum(d >= mean_diff for d in diffs) + 1) / 2 ** len(a1)
 
 
+def two_sided_p(p_one, n):
+    """Exact two-sided p from the one-sided P(D >= d) returned by permutation_statistic.
+
+    The 2**n sign-flip distribution is symmetric, so the opposite tail is
+    P(D <= d) = 1 - P(D >= d) + 1/2**n (the identity permutation sits in both tails).
+    """
+    return min(1.0, 2 * min(p_one, 1 - p_one + 1 / 2 ** n))
+
+
+def benjamini_hochberg(p):
+    """Benjamini-Hochberg adjusted p-values (q-values) for a 1-D array of p-values."""
+    p = np.asarray(p, dtype=float)
+    m = len(p)
+    order = np.argsort(p)
+    q = p[order] * m / np.arange(1, m + 1)
+    q = np.minimum.accumulate(q[::-1])[::-1]
+    out = np.empty(m)
+    out[order] = np.minimum(q, 1.0)
+    return out
+
+
 def significance_testing(name1, name2, results_dir="results"):
     """Compare two saved conditions by their per-fold r vectors."""
     d = Path(results_dir)

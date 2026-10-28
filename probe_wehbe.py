@@ -30,9 +30,16 @@ FM = PROJECT_ROOT / "data/wehbe"
 SUBJECTS = ["F", "H", "I", "J", "K", "L", "M", "N"]
 
 # brain response: mean over "all" language voxels, then over participants -> (1211,)
-roi = np.load(FM / "HP_subj_roi_inds.npy", allow_pickle=True).tolist()
-y = np.mean([np.load(FM / f"data_subject_{p}.npy")[:, roi[p]["all"]].mean(axis=1)
-             for p in SUBJECTS], axis=0)
+# The averaged response is shipped in the repo (wehbe_lang_avg.npy); the ~2 GB
+# per-subject arrays are only needed to regenerate it.
+AVG = FM / "wehbe_lang_avg.npy"
+if AVG.exists():
+    y = np.load(AVG)
+else:
+    roi = np.load(FM / "HP_subj_roi_inds.npy", allow_pickle=True).tolist()
+    y = np.mean([np.load(FM / f"data_subject_{p}.npy")[:, roi[p]["all"]].mean(axis=1)
+                 for p in SUBJECTS], axis=0)
+    np.save(AVG, y)
 
 # per-run [20:-15] trim of the (lagged) TR predictors -> the 1211 kept TR rows
 runs = np.load(FM / "runs_fmri.npy")
